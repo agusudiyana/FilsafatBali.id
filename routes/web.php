@@ -7,12 +7,23 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AjaranController;
 use Illuminate\Support\Facades\Route;
 
+/*
+|--------------------------------------------------------------------------
+| Halaman Utama (PUBLIC)
+|--------------------------------------------------------------------------
+*/
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
+/*
+|--------------------------------------------------------------------------
+| AUTH ROUTES
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth'])->group(function () {
 
+    // Redirect dashboard sesuai role
     Route::get('/dashboard', function () {
 
         if (auth()->user()->role == 'admin') {
@@ -27,21 +38,46 @@ Route::middleware(['auth'])->group(function () {
 
     })->name('dashboard');
 
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN
+    |--------------------------------------------------------------------------
+    */
     Route::get('/admin', [AdminController::class, 'index'])
         ->middleware('role:admin')
         ->name('admin.dashboard');
 
+    /*
+    |--------------------------------------------------------------------------
+    | PENULIS
+    |--------------------------------------------------------------------------
+    */
     Route::get('/penulis', [PenulisController::class, 'index'])
         ->middleware('role:penulis')
         ->name('penulis.dashboard');
 
+    /*
+    |--------------------------------------------------------------------------
+    | PENGGUNA
+    |--------------------------------------------------------------------------
+    */
     Route::get('/pengguna', [PenggunaController::class, 'index'])
         ->middleware('role:pengguna')
         ->name('pengguna.dashboard');
 
+    /*
+    |--------------------------------------------------------------------------
+    | CRUD AJARAN (ADMIN ONLY)
+    |--------------------------------------------------------------------------
+    */
     Route::resource('ajaran', AjaranController::class)
         ->middleware('role:admin');
 
+    /*
+    |--------------------------------------------------------------------------
+    | PROFILE
+    |--------------------------------------------------------------------------
+    */
     Route::get('/profile', [ProfileController::class, 'edit'])
         ->name('profile.edit');
 
@@ -50,6 +86,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::delete('/profile', [ProfileController::class, 'destroy'])
         ->name('profile.destroy');
+
 });
 
 require __DIR__.'/auth.php';
