@@ -1,58 +1,109 @@
-<x-app-layout>
+@extends('admin.layouts.app')
 
-    <div class="p-6">
+@section('content')
 
-        <h1 class="text-3xl font-bold mb-4">
-            Data Ajaran
-        </h1>
+<div>
+
+    <div class="flex justify-between items-center mb-6">
+
+        <div>
+
+            <h1 class="text-3xl font-bold text-[#1A110A]">
+                Data Ajaran Tetua
+            </h1>
+
+            <p class="text-gray-500 mt-1">
+                Kelola seluruh ajaran yang ada di FilsafatBali.id
+            </p>
+
+        </div>
 
         <a href="{{ route('ajaran.create') }}"
-           class="bg-blue-500 text-white px-4 py-2 rounded">
+            class="bg-[#992B20] hover:bg-[#7E1F17] text-white px-5 py-3 rounded-lg">
+
             + Tambah Ajaran
+
         </a>
 
-        @if(session('success'))
-            <div style="margin-top:15px; color:green;">
-                {{ session('success') }}
-            </div>
-        @endif
+    </div>
 
-        <table border="1" cellpadding="10" cellspacing="0" class="mt-4">
+    @if(session('success'))
 
-            <tr>
-                <th>No</th>
-                <th>Judul</th>
-                <th>Penulis</th>
-                <th>Status</th>
-                <th>Aksi</th>
-            </tr>
+        <div class="bg-green-100 text-green-700 p-4 rounded-lg mb-5">
 
-            @forelse($ajarans as $a)
+            {{ session('success') }}
+
+        </div>
+
+    @endif
+
+    <div class="bg-white rounded-xl shadow overflow-hidden">
+
+        <table class="w-full">
+
+            <thead class="bg-[#F5E6CC]">
 
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $a->judul }}</td>
-                    <td>{{ $a->penulis }}</td>
-                    <td>{{ $a->status }}</td>
 
-                    <td>
+                    <th class="p-4 text-left">No</th>
+                    <th class="p-4 text-left">Judul</th>
+                    <th class="p-4 text-left">Penulis</th>
+                    <th class="p-4 text-left">Status</th>
+                    <th class="p-4 text-left">Aksi</th>
 
-                        <a href="{{ route('ajaran.edit', $a->id) }}">
-                            ✏ Edit
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                @forelse($ajarans as $a)
+
+                <tr class="border-t">
+
+                    <td class="p-4">
+                        {{ $loop->iteration }}
+                    </td>
+
+                    <td class="p-4">
+                        {{ $a->judul }}
+                    </td>
+
+                    <td class="p-4">
+                        {{ $a->penulis }}
+                    </td>
+
+                    <td class="p-4">
+
+                        <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
+
+                            {{ $a->status }}
+
+                        </span>
+
+                    </td>
+
+                    <td class="p-4 flex gap-3">
+
+                        <a href="{{ route('ajaran.edit',$a->id) }}"
+                            class="text-blue-600">
+
+                            Edit
+
                         </a>
 
-                        |
-
-                        <form action="{{ route('ajaran.destroy', $a->id) }}"
-                              method="POST"
-                              style="display:inline;">
+                        <form action="{{ route('ajaran.destroy',$a->id) }}"
+                            method="POST">
 
                             @csrf
                             @method('DELETE')
 
                             <button type="submit"
-                                onclick="return confirm('Yakin ingin menghapus data ini?')">
-                                🗑 Hapus
+                                onclick="return confirm('Yakin ingin menghapus data ini?')"
+                                class="text-red-600">
+
+                                Hapus
+
                             </button>
 
                         </form>
@@ -61,18 +112,26 @@
 
                 </tr>
 
-            @empty
+                @empty
 
                 <tr>
-                    <td colspan="5" align="center">
-                        Belum ada data.
+
+                    <td colspan="5" class="p-8 text-center text-gray-500">
+
+                        Belum ada data ajaran.
+
                     </td>
+
                 </tr>
 
-            @endforelse
+                @endforelse
+
+            </tbody>
 
         </table>
 
     </div>
 
-</x-app-layout>
+</div>
+
+@endsection
