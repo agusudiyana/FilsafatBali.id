@@ -50,16 +50,15 @@
                 <div class="relative overflow-hidden">
 
                     <img src="{{ asset('images/timunmas.jpg') }}"
-                        class="w-full h-56 object-contain transition-transform duration-700 group-hover:scale-110"
-
-                    <!-- Overlay -->
+                        class="w-full h-56 object-contain transition-transform duration-700 group-hover:scale-110" <!--
+                        Overlay -->
                     <div class="absolute inset-0 bg-black/30 transition-all duration-500 group-hover:bg-black/45"></div>
 
                     <!-- Tombol Detail -->
                     <button
                         onclick="openSatua(
-                        'Jalak Bali',
-                        'Leucopsar rothschildi',
+                        'Ni Ketimun Mas',
+                        'Golden Cucumber Girl',
                         'Kritis',
                         '{{ asset('images/timunmas.jpg') }}',
                         'Hutan musim gugur dan sabana di bagian barat Bali terutama kawasan Taman Nasional Bali Barat.',
@@ -70,14 +69,21 @@
                         class="absolute inset-0 flex items-center justify-center
                         opacity-0 group-hover:opacity-100 transition">
 
-                        <span
-                            class="bg-[#F3E8D7]
-                            px-5 py-2
+                        <a href="#"
+                            class="bg-[#F7F0E7]
+                            text-[#6F4B2A]
+                            px-4 py-2
                             rounded-full
-                            text-[#6A4321]
-                            font-semibold text-sm">
-                            Detail
-                        </span>
+                            text-xs
+                            font-semibold
+                            flex items-center gap-2
+                            shadow-lg">
+
+                            <i data-feather="info" class="w-3 h-3"></i>
+
+                            DETAIL
+
+                        </a>
 
                     </button>
 
@@ -90,11 +96,12 @@
                     </h3>
 
                     <p class="text-[#8F7A61] italic text-sm">
-                        This is Cucumber Mas
+                        Golden Cucumber Girl
                     </p>
 
                     <p class="text-[#C7B39A] mt-4 leading-7">
-                        Cerita rakyat tentang seorang anak perempuan dari timun yang lari dari raksasa dengan bantuan benda sakti
+                        Cerita rakyat tentang seorang anak perempuan dari timun yang lari dari raksasa dengan bantuan
+                        benda sakti
                     </p>
                     <div
                         class="mt-5 flex items-center justify-between
@@ -125,19 +132,27 @@
 
                 <div class="relative overflow-hidden">
 
-                    <img src="{{ asset('images/penyu hijau.jpeg') }}"
+                    <img src="{{ asset('images/siapselem.jpg') }}"
                         class="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110">
 
                     <!-- Overlay -->
                     <div class="absolute inset-0 bg-black/30 transition-all duration-500 group-hover:bg-black/45"></div>
 
                     <!-- Tombol Detail -->
-                    <div
-                        class="absolute inset-0
-                        flex items-center justify-center
-                        opacity-0
-                        group-hover:opacity-100
-                        transition-all duration-500">
+                    <button
+                        onclick="openSatua(
+                        'I Siap Selem',
+                        'The Black Chicken',
+                        'SATUA',
+                        '{{ asset('images/siapselem.jpg') }}',
+                        'I Siap Selem adalah satua Bali yang menceritakan seekor induk ayam hitam beserta tujuh anaknya.',
+                        'I Siap Selem<br>I Doglagan<br>Enam anak ayam lainnya',
+                        '1. Hidup bersama.<br>2. Anak-anak bermain.<br>3. I Doglagan tersesat.<br>4. Sang induk mencari.<br>5. Keluarga berkumpul kembali.',
+                        'Kasih sayang ibu, kepedulian, dan kebersamaan keluarga.',
+                        'Cinta seorang ibu tidak mengenal batas dan keluarga harus saling menjaga.'
+                        )"
+                        class="absolute inset-0 flex items-center justify-center
+                        opacity-0 group-hover:opacity-100 transition-all duration-500">
 
                         <a href="#"
                             class="bg-[#F7F0E7]
@@ -155,7 +170,8 @@
 
                         </a>
 
-                    </div>
+
+                    </button>
 
                 </div>
                 <div class="p-6">
@@ -165,11 +181,12 @@
                     </h3>
 
                     <p class="text-[#8F7A61] italic text-sm">
-                        I'm Ready Selem
+                        The Black Chicken
                     </p>
 
                     <p class="text-[#C7B39A] mt-4 leading-7">
-                        Cerita rakyat tradisional Bali yang mengisahkan tentang seekor induk ayam hitam bernama I Siap Selem dan ketujuh anaknya, termasuk si bungsu yang bernama I Doglagan
+                        Cerita rakyat tradisional Bali yang mengisahkan tentang seekor induk ayam hitam bernama I Siap
+                        Selem dan ketujuh anaknya, termasuk si bungsu yang bernama I Doglagan
                     </p>
                     <div
                         class="mt-5 flex items-center justify-between
@@ -200,20 +217,37 @@
 
                 <div class="relative overflow-hidden">
 
-                    <img src="{{ asset('images/kera ekor panjang.jpeg') }}"
+                    <img src="{{ asset('images/ilutung.jpg') }}"
                         class="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110">
 
                     <!-- Overlay -->
                     <div class="absolute inset-0 bg-black/30 transition-all duration-500 group-hover:bg-black/45"></div>
 
                     <!-- Tombol Detail -->
-                    <div
-                        class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
+                    <button
+                        onclick="openSatua(
+                        'I Lutung teken I Kekua',
+                        'The Lutung and the Monkey',
+                        'SATUA',
+                        '{{ asset('images/ilutung.jpg') }}',
+                        'Persahabatan lutung dan monyet yang diuji oleh sifat serakah.',
+                        'I Lutung<br>I Kekua',
+                        '1. Bersahabat.<br>2. Mencari makanan.<br>3. Serakah.<br>4. Bertengkar.<br>5. Menyesal.',
+                        'Jangan serakah dan jangan mengkhianati teman.',
+                        'Persahabatan lebih berharga daripada keuntungan sesaat.'
+                        )"
+                        class="absolute inset-0 flex items-center justify-center
+                        opacity-0 group-hover:opacity-100 transition-all duration-500">
 
                         <a href="#"
-                            class="bg-[#F7F0E7] text-[#6F4B2A]
-                            px-4 py-2 rounded-full text-xs font-semibold
-                            flex items-center gap-2 shadow-lg">
+                            class="bg-[#F7F0E7]
+                            text-[#6F4B2A]
+                            px-4 py-2
+                            rounded-full
+                            text-xs
+                            font-semibold
+                            flex items-center gap-2
+                            shadow-lg">
 
                             <i data-feather="info" class="w-3 h-3"></i>
 
@@ -221,7 +255,8 @@
 
                         </a>
 
-                    </div>
+
+                    </button>
 
 
                 </div>
@@ -229,15 +264,16 @@
                 <div class="p-6">
 
                     <h3 style="font-family:'Cormorant Garamond',serif;" class="text-4xl text-white font-bold">
-                        I Lutung Teken I Kekua 
+                        I Lutung teken I Kekua
                     </h3>
 
                     <p class="text-[#8F7A61] italic text-sm">
-                        Macaca fascicularis
+                        The Lutung and the Monkey
                     </p>
 
                     <p class="text-[#C7B39A] mt-4 leading-7">
-                        Satwa yang banyak dijumpai di kawasan pura dan hutan Bali.
+                        I Lutung tekén I Kekua adalah cerita rakyat Bali tentang persahabatan monyet dan kura-kura yang
+                        berisi sifat licik, rasa serakah, dan akibat buruk.
                     </p>
                     <div
                         class="mt-5 flex items-center justify-between
@@ -267,18 +303,40 @@
 
                 <div class="relative overflow-hidden">
 
-                    <img src="{{ asset('images/landak jawa.jpg') }}"
+                    <img src="{{ asset('images/ibawang.jpeg') }}"
                         class="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110">
 
                     <div class="absolute inset-0 bg-black/30 transition-all duration-500 group-hover:bg-black/45"></div>
 
-                    <div
-                        class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
+                    <button
+                        onclick="openSatua(
+                            'Ni Bawang teken Ni Kesuna',
+                            'The Tale of Ni Bawang and Ni Kesuna',
+                            'SATUA',
+                            '{{ asset('images/ibawang.jpeg') }}',
+
+                            'Ni Bawang teken Ni Kesuna merupakan satua Bali yang mengisahkan dua saudara dengan sifat yang sangat berbeda. Ni Bawang dikenal rajin, sabar, dan berhati baik, sedangkan Ni Kesuna pemalas, iri hati, dan sering berbuat curang.',
+
+                            'Ni Bawang<br>Ni Kesuna<br>Ibu',
+
+                            '1. Ni Bawang hidup sederhana dan rajin.<br>2. Ni Kesuna iri kepada saudaranya.<br>3. Ni Bawang mendapat balasan karena kebaikannya.<br>4. Ni Kesuna mencoba meniru dengan niat buruk.<br>5. Ni Kesuna menerima akibat dari keserakahannya.',
+
+                            'Rajin bekerja, bersikap jujur, rendah hati, dan tidak iri terhadap orang lain.',
+
+                            'Setiap perbuatan memiliki konsekuensi. Kebaikan akan membawa kebahagiaan, sedangkan keserakahan akan membawa penderitaan.'
+                            )"
+                        class="absolute inset-0 flex items-center justify-center
+                            opacity-0 group-hover:opacity-100 transition-all duration-500">
 
                         <a href="#"
-                            class="bg-[#F7F0E7] text-[#6F4B2A]
-                            px-4 py-2 rounded-full text-xs font-semibold
-                            flex items-center gap-2 shadow-lg">
+                            class="bg-[#F7F0E7]
+                            text-[#6F4B2A]
+                            px-4 py-2
+                            rounded-full
+                            text-xs
+                            font-semibold
+                            flex items-center gap-2
+                            shadow-lg">
 
                             <i data-feather="info" class="w-3 h-3"></i>
 
@@ -286,36 +344,26 @@
 
                         </a>
 
-                    </div>
 
-                    <span
-                        class="absolute bottom-3 right-3
-                        bg-[#2E8B57]
-                        text-white
-                        text-[10px]
-                        font-bold
-                        uppercase
-                        px-2 py-1
-                        rounded">
+                    </button>
 
-                        AMAN
-
-                    </span>
 
                 </div>
 
                 <div class="p-6">
 
                     <h3 style="font-family:'Cormorant Garamond',serif;" class="text-4xl text-white font-bold">
-                        Landak Jawa
+                        Ni Bawang teken Ni Kesuna
                     </h3>
 
                     <p class="text-[#8F7A61] italic text-sm">
-                        Hystrix javanica
+                        The Tale of Ni Bawang and Ni Kesuna
                     </p>
 
                     <p class="text-[#C7B39A] mt-4 leading-7">
-                        Hewan nokturnal yang dalam mitologi Bali dipercaya sebagai penjaga tanah dari roh jahat.
+                        Ni Bawang teken Ni Kesuna inggih punika silih tunggil satua Bali (cerita rakyat) sané nyritayang
+                        indik kalih nyame malianan parilaku, inggih punika Ni Bawang sané belas asih tur rajin, sekadi
+                        Ni Kesuna sané sombong tur males.
                     </p>
                     <div
                         class="mt-5 flex items-center justify-between
@@ -345,19 +393,41 @@
 
                 <div class="relative overflow-hidden">
 
-                    <img src="{{ asset('images/elang jawa.jpg') }}"
+                    <img src="{{ asset('images/tuwung.jpg') }}"
                         class="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110">
 
                     <div class="absolute inset-0 bg-black/30 transition-all duration-500 group-hover:bg-black/45">
                     </div>
 
-                    <div
-                        class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
+                    <button
+                        onclick="openSatua(
+                        'I Tuwung Kuning',
+                        'Yellow Eggplant',
+                        'SATUA',
+                        '{{ asset('images/tuwung.jpg') }}',
+
+                        'I Tuwung Kuning adalah satua Bali yang menceritakan penyesalan orang tua, perjuangan hidup seorang anak, serta pertemuan kembali keluarga yang telah lama berpisah.',
+
+                        'I Tuwung Kuning<br>Ayah<br>Ibu',
+
+                        '1. Terjadi kesalahpahaman dalam keluarga.<br>2. Anak meninggalkan rumah.<br>3. Menjalani kehidupan yang penuh perjuangan.<br>4. Orang tua menyesali perbuatannya.<br>5. Keluarga dipertemukan kembali.',
+
+                        'Kasih sayang keluarga, kesabaran, kerja keras, dan pentingnya saling memaafkan.',
+
+                        'Hubungan keluarga merupakan ikatan yang sangat berharga. Penyesalan akan selalu datang terlambat apabila tidak saling menghargai.'
+                        )"
+                        class="absolute inset-0 flex items-center justify-center
+                        opacity-0 group-hover:opacity-100 transition-all duration-500">
 
                         <a href="#"
-                            class="bg-[#F7F0E7] text-[#6F4B2A]
-                            px-4 py-2 rounded-full text-xs font-semibold
-                            flex items-center gap-2 shadow-lg">
+                            class="bg-[#F7F0E7]
+                            text-[#6F4B2A]
+                            px-4 py-2
+                            rounded-full
+                            text-xs
+                            font-semibold
+                            flex items-center gap-2
+                            shadow-lg">
 
                             <i data-feather="info" class="w-3 h-3"></i>
 
@@ -365,38 +435,25 @@
 
                         </a>
 
-                    </div>
 
-                    <span
-                        class="absolute bottom-3 right-3
-                        bg-[#D5A13B]
-                        text-white
-                        text-[10px]
-                        font-bold
-                        uppercase
-                        px-2 py-1
-                        rounded">
+                    </button>
 
-                        TERANCAM
-
-                    </span>
 
                 </div>
 
                 <div class="p-6">
 
                     <h3 style="font-family:'Cormorant Garamond',serif;" class="text-4xl text-white font-bold">
-                        Elang Jawa
+                        I Tuwung Kuning
                     </h3>
 
                     <p class="text-[#8F7A61] italic text-sm">
-                        Nisaetusbartelsi
+                        yellow eggplant
                     </p>
 
                     <p class="text-[#C7B39A] mt-4 leading-7">
-                        Rajawali gunung yang menjadi inspirasi lambang Garuda Pancasila. Melambangkan kekuatan
-                        agung.
-                    </p>
+                        I Tuung Kuning adalah cerita rakyat atau satua Bali yang mengisahkan tentang penyesalan orang
+                        tua, perjuangan hidup, serta pertemuan kembali keluarga yang terpisah.
                     <div
                         class="mt-5 flex items-center justify-between
                         opacity-0 max-h-0 overflow-hidden
@@ -425,7 +482,7 @@
 
                 <div class="relative overflow-hidden">
 
-                    <img src="{{ asset('images/biawak air.jpeg') }}"
+                    <img src="{{ asset('images/ibelog.jpg') }}"
                         class="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110">
 
                     <div class="absolute inset-0 bg-black/30 transition-all duration-500 group-hover:bg-black/45">
@@ -434,47 +491,62 @@
                     <div
                         class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500">
 
-                        <a href="#"
-                            class="bg-[#F7F0E7] text-[#6F4B2A]
-                            px-4 py-2 rounded-full text-xs font-semibold
-                            flex items-center gap-2 shadow-lg">
+                        <button
+                            onclick="openSatua(
+                            'I Belog',
+                            'The Fool',
+                            'SATUA',
+                            '{{ asset('images/ibelog.jpg') }}',
 
-                            <i data-feather="info" class="w-3 h-3"></i>
+                            'I Belog adalah satua Bali yang mengisahkan seorang pemuda yang sangat polos dan sering salah memahami setiap nasihat yang diberikan ibunya sehingga menimbulkan berbagai kejadian lucu.',
 
-                            DETAIL
+                            'I Belog<br>Ibu',
 
-                        </a>
+                            '1. Ibu memberi nasihat kepada I Belog.<br>2. I Belog salah memahami setiap perintah.<br>3. Terjadi berbagai kejadian lucu.<br>4. I Belog belajar dari kesalahannya.<br>5. Menjadi pribadi yang lebih bijaksana.',
+
+                            'Pentingnya mendengarkan dengan baik, belajar sebelum bertindak, serta menghormati nasihat orang tua.',
+
+                            'Kebodohan bukanlah sebuah kesalahan apabila seseorang mau belajar. Pengetahuan dan kebijaksanaan diperoleh melalui pengalaman.'
+                            )"
+                            class="absolute inset-0 flex items-center justify-center
+                            opacity-0 group-hover:opacity-100 transition-all duration-500">
+
+                            <a href="#"
+                                class="bg-[#F7F0E7]
+                            text-[#6F4B2A]
+                            px-4 py-2
+                            rounded-full
+                            text-xs
+                            font-semibold
+                            flex items-center gap-2
+                            shadow-lg">
+
+                                <i data-feather="info" class="w-3 h-3"></i>
+
+                                DETAIL
+
+                            </a>
+
+
+                        </button>
 
                     </div>
-
-                    <span
-                        class="absolute bottom-3 right-3
-                        bg-[#2E8B57]
-                        text-white
-                        text-[10px]
-                        font-bold
-                        uppercase
-                        px-2 py-1
-                        rounded">
-
-                        AMAN
-
-                    </span>
 
                 </div>
 
                 <div class="p-6">
 
                     <h3 style="font-family:'Cormorant Garamond',serif;" class="text-4xl text-white font-bold">
-                        Biawak Air
+                        I Belog
                     </h3>
 
                     <p class="text-[#8F7A61] italic text-sm">
-                        Varanus salvator
+                        The Fool
                     </p>
 
                     <p class="text-[#C7B39A] mt-4 leading-7">
-                        Biawak besar di sungai Bali. Dalam kosmologi Bali dikaikan dengan alam bawah (buana bawah).
+                        I Belog adalah cerita rakyat Bali yang menceritakan tentang seorang pemuda bernama I Belog yang
+                        sangat bodoh, polos, dan selalu salah paham dalam mengartikan perintah ibunya.
                     </p>
                     <div
                         class="mt-5 flex items-center justify-between
@@ -541,36 +613,44 @@
         <!-- Isi -->
         <div class="p-8 space-y-8">
 
-            <div class="border-l-2 border-green-700 pl-4">
-                <h5 class="uppercase tracking-[4px] text-xs text-green-700">
-                    Habitat
+            <div class="border-l-2 border-[#C58A3C] pl-4">
+                <h5 class="uppercase tracking-[4px] text-xs text-[#C58A3C]">
+                    Ringkasan Cerita
                 </h5>
 
-                <p id="satuaHabitat" class="mt-2 text-[#5F4B3A]"></p>
+                <p id="satuaRingkasan" class="mt-2 text-[#5F4B3A] leading-8"></p>
             </div>
 
-            <div class="border-l-2 border-red-700 pl-4">
-                <h5 class="uppercase tracking-[4px] text-xs text-red-700">
-                    Makna Adat & Budaya
+            <div class="border-l-2 border-[#8B5E3C] pl-4">
+                <h5 class="uppercase tracking-[4px] text-xs text-[#8B5E3C]">
+                    Tokoh Utama
                 </h5>
 
-                <p id="satuaMakna" class="mt-2 text-[#5F4B3A]"></p>
+                <p id="satuaTokoh" class="mt-2 text-[#5F4B3A] leading-8"></p>
             </div>
 
-            <div class="border-l-2 border-yellow-600 pl-4">
-                <h5 class="uppercase tracking-[4px] text-xs text-yellow-700">
-                    Ancaman
+            <div class="border-l-2 border-[#D4A64A] pl-4">
+                <h5 class="uppercase tracking-[4px] text-xs text-[#D4A64A]">
+                    Alur Cerita
                 </h5>
 
-                <p id="satuaAncaman" class="mt-2 text-[#5F4B3A]"></p>
+                <p id="satuaAlur" class="mt-2 text-[#5F4B3A] leading-8"></p>
             </div>
 
-            <div class="border-l-2 border-blue-700 pl-4">
-                <h5 class="uppercase tracking-[4px] text-xs text-blue-700">
-                    Upaya Pelestarian
+            <div class="border-l-2 border-[#2E8B57] pl-4">
+                <h5 class="uppercase tracking-[4px] text-xs text-[#2E8B57]">
+                    Nilai Moral
                 </h5>
 
-                <p id="satuaPelestarian" class="mt-2 text-[#5F4B3A]"></p>
+                <p id="satuaMoral" class="mt-2 text-[#5F4B3A] leading-8"></p>
+            </div>
+
+            <div class="border-l-2 border-[#A63C2F] pl-4">
+                <h5 class="uppercase tracking-[4px] text-xs text-[#A63C2F]">
+                    Pesan Filosofi
+                </h5>
+
+                <p id="satuaFilosofi" class="mt-2 text-[#5F4B3A] leading-8"></p>
             </div>
 
         </div>

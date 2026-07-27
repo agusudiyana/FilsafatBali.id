@@ -70,13 +70,13 @@
 
     @include('home.ajaran')
 
+    @include('home.artikel')
+
     @include('home.cecimpedan')
 
     @include('home.satua')
 
     @include('home.istilah')
-
-    @include('home.artikel')
 
     @include('home.kontributor')
 
