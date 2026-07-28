@@ -3,10 +3,9 @@
     <div class="max-w-7xl mx-auto px-8">
 
         <!-- Judul -->
-        <div class="flex justify-between items-center mb-12">
+        <div class="flex justify-between items-start mb-12">
 
             <div>
-
                 <p class="uppercase tracking-[5px] text-[#C89438] text-xs mb-3">
                     — ENSIKLOPEDIA
                 </p>
@@ -18,20 +17,19 @@
                 <p class="text-[#B9986D] mt-3 text-lg">
                     Klik item untuk membuka informasi lengkap.
                 </p>
-
             </div>
 
-            <!-- Tab -->
-            <div class="flex border border-[#6E4E1E] rounded-lg overflow-hidden">
-
-                <button id="btnSatua" onclick="showSatua()" class="px-8 py-3 bg-[#C58A3C] text-white">
+            <!-- Tab Satua -->
+            <div class="flex border border-[#6E4E1E] rounded-lg overflow-hidden shrink-0 mt-2">
+                <button id="btnSatua" onclick="showSatua()"
+                    class="w-36 md:w-40 py-3 bg-[#C58A3C] text-white uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all">
                     SATUA BALI
                 </button>
 
-                <button id="btnIstilah" onclick="showIstilah()" class="px-8 py-3 bg-transparent text-[#C58A3C]">
+                <button id="btnIstilah" onclick="showIstilah()"
+                    class="w-36 md:w-40 py-3 bg-transparent text-[#C58A3C] uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all">
                     ISTILAH BALI
                 </button>
-
             </div>
 
         </div>
@@ -50,8 +48,9 @@
                 <div class="relative overflow-hidden">
 
                     <img src="{{ asset('images/timunmas.jpg') }}"
-                        class="w-full h-56 object-contain transition-transform duration-700 group-hover:scale-110" <!--
-                        Overlay -->
+                        class="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110">
+
+                    <!-- Overlay -->
                     <div class="absolute inset-0 bg-black/30 transition-all duration-500 group-hover:bg-black/45"></div>
 
                     <!-- Tombol Detail -->
@@ -314,15 +313,10 @@
                             'The Tale of Ni Bawang and Ni Kesuna',
                             'SATUA',
                             '{{ asset('images/ibawang.jpeg') }}',
-
                             'Ni Bawang teken Ni Kesuna merupakan satua Bali yang mengisahkan dua saudara dengan sifat yang sangat berbeda. Ni Bawang dikenal rajin, sabar, dan berhati baik, sedangkan Ni Kesuna pemalas, iri hati, dan sering berbuat curang.',
-
                             'Ni Bawang<br>Ni Kesuna<br>Ibu',
-
                             '1. Ni Bawang hidup sederhana dan rajin.<br>2. Ni Kesuna iri kepada saudaranya.<br>3. Ni Bawang mendapat balasan karena kebaikannya.<br>4. Ni Kesuna mencoba meniru dengan niat buruk.<br>5. Ni Kesuna menerima akibat dari keserakahannya.',
-
                             'Rajin bekerja, bersikap jujur, rendah hati, dan tidak iri terhadap orang lain.',
-
                             'Setiap perbuatan memiliki konsekuensi. Kebaikan akan membawa kebahagiaan, sedangkan keserakahan akan membawa penderitaan.'
                             )"
                         class="absolute inset-0 flex items-center justify-center
@@ -405,15 +399,10 @@
                         'Yellow Eggplant',
                         'SATUA',
                         '{{ asset('images/tuwung.jpg') }}',
-
                         'I Tuwung Kuning adalah satua Bali yang menceritakan penyesalan orang tua, perjuangan hidup seorang anak, serta pertemuan kembali keluarga yang telah lama berpisah.',
-
                         'I Tuwung Kuning<br>Ayah<br>Ibu',
-
                         '1. Terjadi kesalahpahaman dalam keluarga.<br>2. Anak meninggalkan rumah.<br>3. Menjalani kehidupan yang penuh perjuangan.<br>4. Orang tua menyesali perbuatannya.<br>5. Keluarga dipertemukan kembali.',
-
                         'Kasih sayang keluarga, kesabaran, kerja keras, dan pentingnya saling memaafkan.',
-
                         'Hubungan keluarga merupakan ikatan yang sangat berharga. Penyesalan akan selalu datang terlambat apabila tidak saling menghargai.'
                         )"
                         class="absolute inset-0 flex items-center justify-center
@@ -454,6 +443,7 @@
                     <p class="text-[#C7B39A] mt-4 leading-7">
                         I Tuung Kuning adalah cerita rakyat atau satua Bali yang mengisahkan tentang penyesalan orang
                         tua, perjuangan hidup, serta pertemuan kembali keluarga yang terpisah.
+                    </p>
                     <div
                         class="mt-5 flex items-center justify-between
                         opacity-0 max-h-0 overflow-hidden
@@ -497,15 +487,10 @@
                             'The Fool',
                             'SATUA',
                             '{{ asset('images/ibelog.jpg') }}',
-
                             'I Belog adalah satua Bali yang mengisahkan seorang pemuda yang sangat polos dan sering salah memahami setiap nasihat yang diberikan ibunya sehingga menimbulkan berbagai kejadian lucu.',
-
                             'I Belog<br>Ibu',
-
                             '1. Ibu memberi nasihat kepada I Belog.<br>2. I Belog salah memahami setiap perintah.<br>3. Terjadi berbagai kejadian lucu.<br>4. I Belog belajar dari kesalahannya.<br>5. Menjadi pribadi yang lebih bijaksana.',
-
                             'Pentingnya mendengarkan dengan baik, belajar sebelum bertindak, serta menghormati nasihat orang tua.',
-
                             'Kebodohan bukanlah sebuah kesalahan apabila seseorang mau belajar. Pengetahuan dan kebijaksanaan diperoleh melalui pengalaman.'
                             )"
                             class="absolute inset-0 flex items-center justify-center
@@ -572,6 +557,7 @@
     </div>
 
 </section>
+
 <!-- Overlay -->
 <div id="overlaySatua" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-40">
 

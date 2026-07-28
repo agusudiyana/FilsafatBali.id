@@ -191,7 +191,7 @@
             title: "Tri Hita Karana",
             tags: ["FILOSOFI", "HARMONI"],
             subHeader: "📍 UBUD, GIANYAR • DIDIRIKAN TAHUN 1965",
-            image: "/images/ajaran.jpeg",
+            image: "{{ asset('images/ajaran.jpeg') }}",
             penjelasan: "<p>Tri Hita Karana berasal dari bahasa Sanskerta: tri (tiga), hita (kebahagiaan/keselamatan), karana (penyebab). Falsafah ini adalah landasan kehidupan masyarakat Bali yang mengajarkan keharmonisan hubungan manusia dengan Tuhan, sesama manusia, dan alam semesta.</p>",
             prinsip: `
                 <div><h4 class="font-bold text-[#23160E] text-lg" style="font-family:'Cormorant Garamond',serif;">Parhyangan</h4><p class="text-sm text-[#675A4D] mt-1">Hubungan harmonis antara manusia dan Tuhan (Ida Sang Hyang Widhi Wasa).</p></div>
@@ -205,7 +205,7 @@
             title: "Tat Twam Asi",
             tags: ["KEMANUSIAAN", "EMPATI"],
             subHeader: "📍 TABANAN • AJARAN MORAL BALI",
-            image: "/images/tat twam asi.jpeg",
+            image: "{{ asset('images/tat twam asi.jpeg') }}",
             penjelasan: "<p>Tat Twam Asi adalah ajaran moral Hindu-Bali yang berasal dari Chandogya Upanishad, berakar dari kata <i>Tat</i> (itu), <i>Twam</i> (kamu), dan <i>Asi</i> (adalah). Secara harfiah berarti <b>'Aku adalah Kamu, Kamu adalah Aku'</b>.</p><p>Ajaran ini merupakan landasan etika tertinggi yang menuntun manusia untuk merasakan penderitaan dan kebahagiaan orang lain seolah-olah dialami oleh diri sendiri.</p>",
             prinsip: `
                 <div><h4 class="font-bold text-[#23160E] text-lg" style="font-family:'Cormorant Garamond',serif;">Empati Sejati (Saling Mengasihi)</h4><p class="text-sm text-[#675A4D] mt-1">Menyakiti orang lain sama artinya dengan menyakiti diri sendiri. Menolong orang lain sama artinya dengan menolong diri sendiri.</p></div>
@@ -218,7 +218,7 @@
             title: "Desa Kala Patra",
             tags: ["KEARIFAN LOKAL", "ADAPTASI"],
             subHeader: "📍 BADUNG • FLEKSIBILITAS BUDAYA",
-            image: "/images/desa kala patra.jpeg",
+            image: "{{ asset('images/desa kala patra.jpeg') }}",
             penjelasan: "<p>Desa Kala Patra merupakan kearifan lokal Bali tentang fleksibilitas dan kepatuhan hukum adat. Ajaran ini menekankan bahwa penerapan norma, aturan, dan tradisi harus selalu disesuaikan dengan situasi, tempat, waktu, dan keadaan yang dihadapi.</p>",
             prinsip: `
                 <div><h4 class="font-bold text-[#23160E] text-lg" style="font-family:'Cormorant Garamond',serif;">Desa (Tempat)</h4><p class="text-sm text-[#675A4D] mt-1">Menghormati aturan, norma, dan tradisi setempat di mana kita berada.</p></div>
@@ -263,9 +263,10 @@
 
         // Perbarui konten Hero
         if (no == 1) {
-            if (document.getElementById("mainImage")) document.getElementById("mainImage").src = "/images/ajaran.jpeg";
+            if (document.getElementById("mainImage")) document.getElementById("mainImage").src =
+                "{{ asset('images/ajaran.jpeg') }}";
             if (document.getElementById("mainTitle")) document.getElementById("mainTitle").innerHTML =
-            "Tri Hita Karana";
+                "Tri Hita Karana";
             if (document.getElementById("mainDesc")) document.getElementById("mainDesc").innerHTML =
                 "Tri Hita Karana merupakan filosofi kehidupan masyarakat Bali yang mengajarkan keharmonisan hubungan manusia dengan Tuhan, sesama manusia, dan alam.";
             if (document.getElementById("mainAuthor")) document.getElementById("mainAuthor").innerHTML =
@@ -273,7 +274,7 @@
             if (document.getElementById("mainTag")) document.getElementById("mainTag").innerHTML = "FILSAFAT KEHIDUPAN";
         } else if (no == 2) {
             if (document.getElementById("mainImage")) document.getElementById("mainImage").src =
-                "/images/tat twam asi.jpeg";
+                "{{ asset('images/tat twam asi.jpeg') }}";
             if (document.getElementById("mainTitle")) document.getElementById("mainTitle").innerHTML = "Tat Twam Asi";
             if (document.getElementById("mainDesc")) document.getElementById("mainDesc").innerHTML =
                 "Tat Twam Asi berarti 'Aku adalah kamu'. Filosofi ini mengajarkan empati dan menghormati sesama manusia.";
@@ -282,9 +283,9 @@
             if (document.getElementById("mainTag")) document.getElementById("mainTag").innerHTML = "KEMANUSIAAN";
         } else if (no == 3) {
             if (document.getElementById("mainImage")) document.getElementById("mainImage").src =
-                "/images/desa kala patra.jpeg";
+                "{{ asset('images/desa kala patra.jpeg') }}";
             if (document.getElementById("mainTitle")) document.getElementById("mainTitle").innerHTML =
-            "Desa Kala Patra";
+                "Desa Kala Patra";
             if (document.getElementById("mainDesc")) document.getElementById("mainDesc").innerHTML =
                 "Desa Kala Patra mengajarkan bahwa setiap tindakan harus mempertimbangkan tempat, waktu, dan keadaan.";
             if (document.getElementById("mainAuthor")) document.getElementById("mainAuthor").innerHTML =
@@ -368,7 +369,7 @@
     }
 
     // ==========================================
-    // 5. FILTER ARTIKEL & FITUR PENCARIAN
+    // 5. FILTER ARTIKEL & FITUR LIVE SEARCH
     // ==========================================
     function filterArtikel(kategori) {
         // 1. Lepas kelas 'tab-active' dari SELURUH tombol filter
@@ -398,48 +399,268 @@
         });
     }
 
-    const searchInput = document.getElementById("searchInput");
-    const hasilCari = document.getElementById("hasilCari");
-    const keywordBox = document.getElementById("keywordBox");
+    // Database Konten untuk Fitur Live Search Utama
+    const databaseSearch = [{
+            id: 1,
+            judul: "Tri Hita Karana",
+            kategori: "AJARAN",
+            penulis: "I Wayan Sadia"
+        },
+        {
+            id: 2,
+            judul: "Tat Twam Asi",
+            kategori: "AJARAN",
+            penulis: "Ida Bagus Mantra"
+        },
+        {
+            id: 3,
+            judul: "I Siap Selem",
+            kategori: "SATUA BALI",
+            penulis: "Ketut Suardana"
+        },
+        {
+            id: 4,
+            judul: "Sor Singgih Basa Bali",
+            kategori: "ISTILAH BALI",
+            penulis: "Ida Bagus Komang"
+        },
+        {
+            id: 5,
+            judul: "Rwa Bhineda",
+            kategori: "AJARAN",
+            penulis: "Gede Sukarma"
+        },
+        {
+            id: 6,
+            judul: "Cecimpedan Bali",
+            kategori: "CECIMPEDAN",
+            penulis: "Made Sudiarta"
+        },
+        {
+            id: 7,
+            judul: "Ngaben: Upacara Pitra Yadnya",
+            kategori: "ISTILAH BALI",
+            penulis: "I Putu Gede"
+        },
+        {
+            id: 8,
+            judul: "Taksu: Pancaran Karisma Budaya Bali",
+            kategori: "ISTILAH BALI",
+            penulis: "I Nyoman Suartha"
+        },
+        {
+            id: 9,
+            judul: "Subak: Demokrasi Air dalam Peradaban Bali",
+            kategori: "AJARAN TETUA",
+            penulis: "Ni Luh Putu Ariani"
+        }
+    ];
 
-    function cariKeyword(keyword, kategori, deskripsi) {
-        if (searchInput) searchInput.value = keyword;
-        if (keywordBox) keywordBox.classList.add("hidden");
-
-        if (hasilCari) {
-            hasilCari.classList.remove("hidden");
-            hasilCari.innerHTML = `
-                <div class="bg-[#F8F0E4] rounded-b-lg border border-[#E5D6BF] shadow-md overflow-hidden">
-                    <a href="#" class="flex items-center gap-4 px-5 py-4 hover:bg-[#F3E7D3] transition">
-                        <span class="inline-block bg-[#8D2B1D] text-white text-[10px] font-bold uppercase px-2 py-1 rounded whitespace-nowrap">
-                            ${kategori}
-                        </span>
-                        <div class="text-left">
-                            <h4 class="text-[18px] font-semibold text-[#2B1A0E]">${keyword}</h4>
-                            <p class="text-[14px] text-[#6B5A45]">${deskripsi}</p>
-                        </div>
-                    </a>
-                </div>
-            `;
+    // Helper: Pasang Ring Merah tanpa mengubah ukuran container
+    function aktifkanBorderMerah() {
+        const boxContainer = document.getElementById("searchBoxContainer");
+        if (boxContainer) {
+            boxContainer.classList.remove("ring-transparent");
+            boxContainer.classList.add("ring-[#8D2B1D]");
         }
     }
 
-    if (searchInput) {
-        document.addEventListener("click", function(e) {
-            if (searchInput && hasilCari && !searchInput.contains(e.target) && !hasilCari.contains(e.target)) {
-                hasilCari.classList.add("hidden");
-                if (keywordBox) keywordBox.classList.remove("hidden");
-                searchInput.value = "";
-            }
+    // Helper: Lepas Ring Merah
+    function hilangkanBorderMerah() {
+        const boxContainer = document.getElementById("searchBoxContainer");
+        if (boxContainer) {
+            boxContainer.classList.remove("ring-[#8D2B1D]");
+            boxContainer.classList.add("ring-transparent");
+        }
+    }
+
+    // HELPER AUTO-SCROLL KE DAERAH TUJUAN
+    function scrollToTarget(targetId) {
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+            targetElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+    }
+
+    // Fungsi Live Search saat Pengguna Mengetik
+    function liveSearch(keyword) {
+        const hasilCari = document.getElementById("hasilCari");
+        const btnClear = document.getElementById("btnClearSearch");
+
+        const query = keyword.trim().toLowerCase();
+
+        aktifkanBorderMerah();
+
+        if (query === "") {
+            if (hasilCari) hasilCari.classList.add("hidden");
+            if (btnClear) btnClear.classList.add("hidden");
+            return;
+        }
+
+        if (btnClear) btnClear.classList.remove("hidden");
+
+        // Filter fleksibel: Mencari di Judul, Kategori, atau Penulis
+        const results = databaseSearch.filter(item =>
+            item.judul.toLowerCase().includes(query) ||
+            item.kategori.toLowerCase().includes(query) ||
+            item.penulis.toLowerCase().includes(query)
+        );
+
+        // Urutkan hasil agar yang cocok dengan awal JUDUL diprioritaskan di paling atas
+        results.sort((a, b) => {
+            const aTitleMatch = a.judul.toLowerCase().startsWith(query);
+            const bTitleMatch = b.judul.toLowerCase().startsWith(query);
+            if (aTitleMatch && !bTitleMatch) return -1;
+            if (!aTitleMatch && bTitleMatch) return 1;
+            return 0;
         });
 
-        searchInput.addEventListener("input", function() {
-            if (this.value.trim() === "") {
-                if (hasilCari) hasilCari.classList.add("hidden");
-                if (keywordBox) keywordBox.classList.remove("hidden");
+        if (results.length > 0) {
+            if (hasilCari) {
+                hasilCari.classList.remove("hidden");
+                hasilCari.innerHTML = results.map(item => `
+                    <div onclick="pilihHasilSearch(${item.id}, '${item.judul.toLowerCase()}', '${item.kategori.toLowerCase()}')" class="flex items-center gap-4 px-6 py-4 hover:bg-[#F0E6D8] transition duration-200 cursor-pointer text-left">
+                        <span class="bg-[#8D2B1D] text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded shrink-0">
+                            ${item.kategori}
+                        </span>
+                        <div>
+                            <h4 class="text-[17px] font-bold text-[#2B1A0E] leading-tight">
+                                ${item.judul}
+                            </h4>
+                            <p class="text-[13px] text-[#8C7A65] mt-0.5">
+                                ${item.penulis}
+                            </p>
+                        </div>
+                    </div>
+                `).join("");
             }
-        });
+        } else {
+            if (hasilCari) {
+                hasilCari.classList.remove("hidden");
+                hasilCari.innerHTML = `
+                    <div class="px-6 py-5 text-center text-[#8C7A65] text-sm italic">
+                        Tidak ada hasil ditemukan untuk "<span class="font-semibold">${keyword}</span>"
+                    </div>
+                `;
+            }
+        }
     }
+
+    // Fungsi Membersihkan Kolom Pencarian Utama (Tombol X)
+    function clearSearch() {
+        const input = document.getElementById("searchInput");
+        const hasilCari = document.getElementById("hasilCari");
+        const btnClear = document.getElementById("btnClearSearch");
+
+        if (input) {
+            input.value = "";
+            input.blur();
+        }
+
+        if (hasilCari) hasilCari.classList.add("hidden");
+        if (btnClear) btnClear.classList.add("hidden");
+
+        hilangkanBorderMerah();
+    }
+
+    // Fungsi Pilih Hasil dari Dropdown Search Utama
+    function pilihHasilSearch(idArtikel, judul, kategori) {
+        const hasilCari = document.getElementById("hasilCari");
+        if (hasilCari) hasilCari.classList.add("hidden");
+
+        hilangkanBorderMerah();
+
+        // Navigasi yang disesuaikan untuk Istilah Bali (Ngaben, Taksu, dll)
+        if (judul.includes("tri hita karana")) {
+            changeSlide(1);
+            scrollToTarget("ajaran-tetua");
+        } else if (judul.includes("i siap selem") || kategori.includes("satua")) {
+            if (typeof showSatua === 'function') {
+                showSatua();
+            }
+            scrollToTarget("sectionSatua");
+        } else if (judul.includes("ngaben") || judul.includes("taksu") || judul.includes("subak") || kategori.includes(
+                "istilah")) {
+            if (typeof showIstilah === 'function') {
+                showIstilah();
+            }
+            scrollToTarget("sectionIstilah");
+        } else if (kategori.includes("tradisi")) {
+            if (typeof filterArtikel === 'function') {
+                filterArtikel('tradisi');
+            }
+            scrollToTarget("artikel");
+        } else if (kategori.includes("ajaran")) {
+            if (typeof filterArtikel === 'function') {
+                filterArtikel('ajaran');
+            }
+            scrollToTarget("artikel");
+        } else {
+            scrollToTarget("artikel");
+            if (typeof filterArtikel === 'function') {
+                filterArtikel('semua');
+            }
+        }
+    }
+
+    // Fungsi Klik Keyword Cepat di Bawah Input Search
+    function cariKeyword(event, keyword) {
+        if (event) {
+            event.stopPropagation();
+            event.preventDefault();
+        }
+
+        const searchInput = document.getElementById("searchInput");
+        if (searchInput) {
+            searchInput.value = keyword;
+            liveSearch(keyword);
+            searchInput.focus();
+        }
+
+        const keyLower = keyword.toLowerCase();
+
+        if (keyLower.includes("tri hita karana")) {
+            changeSlide(1);
+            scrollToTarget("ajaran-tetua");
+        } else if (keyLower.includes("i siap selem")) {
+            if (typeof showSatua === 'function') {
+                showSatua();
+            }
+            scrollToTarget("sectionSatua");
+        } else if (keyLower.includes("ngaben") || keyLower.includes("taksu") || keyLower.includes("subak")) {
+            if (typeof showIstilah === 'function') {
+                showIstilah();
+            }
+            scrollToTarget("sectionIstilah");
+        } else if (keyLower.includes("rwa bhineda")) {
+            if (typeof filterArtikel === 'function') {
+                filterArtikel('ajaran');
+            }
+            scrollToTarget("artikel");
+        } else {
+            scrollToTarget("artikel");
+        }
+    }
+
+    // Sembunyikan Dropdown Saat Klik di Luar Search Box
+    document.addEventListener("click", function(e) {
+        const searchInput = document.getElementById("searchInput");
+        const hasilCari = document.getElementById("hasilCari");
+        const keywordBox = document.getElementById("keywordBox");
+        const boxContainer = document.getElementById("searchBoxContainer");
+
+        if (
+            boxContainer && !boxContainer.contains(e.target) &&
+            (!hasilCari || !hasilCari.contains(e.target)) &&
+            (!keywordBox || !keywordBox.contains(e.target))
+        ) {
+            if (hasilCari) hasilCari.classList.add("hidden");
+            hilangkanBorderMerah();
+        }
+    });
 
     // ==========================================
     // DATA & MODAL DETAIL BACA ARTIKEL PILIHAN
@@ -449,14 +670,14 @@
             title: "Filosofi Subak: Demokrasi Air dalam Peradaban Bali",
             kategori: "AJARAN TETUA",
             bgKategori: "bg-[#992B20]",
-            image: "/images/subak.jpeg",
+            image: "{{ asset('images/subak.jpeg') }}",
             penulis: "Ni Luh Putu Ariani",
             avatar: "N",
             tgl: "12 JUNI 2025",
             waktu: "8 MENIT",
             isi: `
                 <p>Subak adalah sistem irigasi pertanian yang telah ada di Bali selama lebih dari seribu tahun. Lebih dari sekedar teknik pengairan, Subak adalah lembaga sosial, spiritual, dan demokratis yang mengatur penggunaan air di antara para petani dengan cara yang adil dan berkelanjutan.</p>
-                <p>Setiap Subak dikelola oleh anggota petani yang memilih pemimpin (pekaseh) secara demokratis. Keputusan tentang jadwal tanam, pembagian udara, dan upacara dilakukan bersama. Tidak ada petani yang bisa mengambil lebih banyak dari jatahya — sistem ini mengklaim bukan hanya oleh manusia, tapi juga oleh ritual keagamaan.</p>
+                <p>Setiap Subak dikelola oleh anggota petani yang memilih pemimpin (pekaseh) secara demokratis. Keputusan tentang jadwal tanam, pembagian air, dan upacara dilakukan bersama. Tidak ada petani yang bisa mengambil lebih banyak dari jatahya — sistem ini mengklaim bukan hanya oleh manusia, tapi juga oleh ritual keagamaan.</p>
             `,
             kesimpulan: "Subak adalah bukti bahwa kearifan lokal Bali tidak hanya indah secara filosofis, tetapi juga efektif secara praktis. UNESCO mengakuisisinya sebagai Warisan Budaya Dunia pada tahun 2012."
         },
@@ -464,7 +685,7 @@
             title: "Cecimpedan Bali sebagai Media Pendidikan Karakter Anak",
             kategori: "CECIMPEDAN",
             bgKategori: "bg-[#D9A441]",
-            image: "/images/cecimpedan.jpeg",
+            image: "{{ asset('images/cecimpedan.jpeg') }}",
             penulis: "I Wayan Koster",
             avatar: "W",
             tgl: "10 JUNI 2025",
@@ -476,25 +697,25 @@
             kesimpulan: "Pelestarian cecimpedan penting untuk menjaga kemampuan nalar kritis anak berbasis kebudayaan lokal di tengah gempuran teknologi digital."
         },
         3: {
-            title: "Jalak Bali: Simbol Keanggunan Yang Terancam Punah",
+            title: "I Siap Selem: Simbol Kesetiaan dan Kecerdikan",
             kategori: "SATUA BALI",
             bgKategori: "bg-[#2F7D4B]",
-            image: "/images/jalak bali.jpeg",
+            image: "{{ asset('images/jalak bali.jpeg') }}",
             penulis: "Ketut Suardana",
             avatar: "K",
             tgl: "8 JUNI 2025",
             waktu: "5 MENIT",
             isi: `
-                <p>Leucopsar rothschildi, si Jalak Bali yang murni putih dengan bulu biru di sekitar matanya, merupakan fauna endemik kebanggaan Pulau Dewata.</p>
-                <p>Keberadaannya di alam liar pernah berada di ambang kepunahan akibat perburuan liar dan kerusakan habitat. Berbagai upaya konservasi kini terus digalakkan di Taman Nasional Bali Barat.</p>
+                <p>Satua Bali I Siap Selem mengisahkan seekor induk ayam hitam yang cerdik dalam melindungi anak-anaknya dari ancaman I Kedis Blibis atau I Bikul.</p>
+                <p>Cerita rakyat ini sarat dengan pesan moral tentang pentingnya kerja keras, kewaspadaan, dan kasih sayang orang tua terhadap anak-anaknya.</p>
             `,
-            kesimpulan: "Menjaga Jalak Bali adalah bagian dari menjaga keharmonisan alam (Palemahan) sebagaimana diamanatkan dalam ajaran kearifan Bali."
+            kesimpulan: "Kisah I Siap Selem merupakan warisan sastra lisan yang terus hidup untuk menanamkan nilai moral kepada generasi muda."
         },
         4: {
             title: "Sor Singgih: Hierarki Bahasa sebagai Cermin Tatanan Sosial",
             kategori: "ISTILAH BALI",
             bgKategori: "bg-[#305F9E]",
-            image: "/images/sor singgih.jpeg",
+            image: "{{ asset('images/sor singgih.jpeg') }}",
             penulis: "Ida Bagus Komang",
             avatar: "I",
             tgl: "7 JUNI 2025",
@@ -509,7 +730,7 @@
             title: "Rwa Bhineda, Keseimbangan Kehidupan",
             kategori: "AJARAN TETUA",
             bgKategori: "bg-[#992B20]",
-            image: "/images/rwa_bhineda.jpg",
+            image: "{{ asset('images/rwa_bhineda.jpg') }}",
             penulis: "Gede Sukarma",
             avatar: "G",
             tgl: "5 JUNI 2025",
@@ -523,7 +744,7 @@
             title: "Makna Tersembunyi di Balik Cecimpedan tentang Alam",
             kategori: "CECIMPEDAN",
             bgKategori: "bg-[#D9A441]",
-            image: "/images/cecimpedan.jpeg",
+            image: "{{ asset('images/cecimpedan.jpeg') }}",
             penulis: "Made Sudiarta",
             avatar: "M",
             tgl: "2 JUNI 2025",
@@ -532,6 +753,42 @@
                 <p>Banyak cecimpedan mengambil objek tumbuhan, sungai, dan binatang. Hal ini melatih kepekaan inderawi anak-anak zaman dahulu terhadap kondisi alam sekitar mereka.</p>
             `,
             kesimpulan: "Cecimpedan alam memupuk rasa cinta lingkungan sejak usia dini."
+        },
+        7: {
+            title: "Ngaben: Upacara Pitra Yadnya",
+            kategori: "TRADISI",
+            bgKategori: "bg-[#992B20]",
+            image: "{{ asset('images/ngaben.jpeg') }}",
+            penulis: "I Putu Gede",
+            avatar: "P",
+            tgl: "15 JUNI 2025",
+            waktu: "7 MENIT",
+            isi: `<p>Ngaben merupakan upacara kremasi jenazah umat Hindu di Bali untuk mengembalikan unsur Panca Maha Bhuta...</p>`,
+            kesimpulan: "Ngaben melambangkan keikhlasan melepaskan ikatan duniawi."
+        },
+        8: {
+            title: "Taksu: Pancaran Karisma Budaya Bali",
+            kategori: "ISTILAH BALI",
+            bgKategori: "bg-[#305F9E]",
+            image: "{{ asset('images/taksu.jpeg') }}",
+            penulis: "I Nyoman Suartha",
+            avatar: "N",
+            tgl: "18 JUNI 2025",
+            waktu: "5 MENIT",
+            isi: `<p>Taksu adalah kekuatan spiritual yang memberi jiwa, karisma, dan daya pikat pada seniman maupun karya seni Bali...</p>`,
+            kesimpulan: "Taksu menghubungkan antara keterampilan teknis dengan kedalaman spiritual."
+        },
+        9: {
+            title: "Subak: Demokrasi Air dalam Peradaban Bali",
+            kategori: "AJARAN TETUA",
+            bgKategori: "bg-[#992B20]",
+            image: "{{ asset('images/subak.jpeg') }}",
+            penulis: "Ni Luh Putu Ariani",
+            avatar: "N",
+            tgl: "12 JUNI 2025",
+            waktu: "8 MENIT",
+            isi: `<p>Subak adalah sistem irigasi pertanian tradisional Bali yang berlandaskan Tri Hita Karana...</p>`,
+            kesimpulan: "Subak diakui UNESCO sebagai warisan budaya dunia."
         }
     };
 
@@ -588,13 +845,25 @@
     }
 
     // ==========================================
-    // 6. TOGGLE SATUA & ISTILAH
+    // 6. TOGGLE SATUA & ISTILAH (DENGAN UKURAN TAB TERKUNCI)
     // ==========================================
     function showSatua() {
         const secSatua = document.getElementById("sectionSatua");
         const secIstilah = document.getElementById("sectionIstilah");
         if (secSatua) secSatua.classList.remove("hidden");
         if (secIstilah) secIstilah.classList.add("hidden");
+
+        // Menyamakan ukuran tombol tab agar stabil (w-36 md:w-40)
+        const btnsSatua = document.querySelectorAll("#sectionSatua #btnSatua, #sectionSatua #btnIstilah");
+        btnsSatua.forEach(btn => {
+            if (btn.id === "btnSatua") {
+                btn.className =
+                    "w-36 md:w-40 py-3 bg-[#C58A3C] text-white uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all";
+            } else {
+                btn.className =
+                    "w-36 md:w-40 py-3 bg-transparent text-[#C58A3C] uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all";
+            }
+        });
     }
 
     function showIstilah() {
@@ -602,6 +871,18 @@
         const secIstilah = document.getElementById("sectionIstilah");
         if (secSatua) secSatua.classList.add("hidden");
         if (secIstilah) secIstilah.classList.remove("hidden");
+
+        // Menyamakan ukuran tombol tab agar stabil (w-36 md:w-40)
+        const btnsIstilah = document.querySelectorAll("#sectionIstilah #btnSatua, #sectionIstilah #btnIstilah");
+        btnsIstilah.forEach(btn => {
+            if (btn.id === "btnIstilah") {
+                btn.className =
+                    "w-36 md:w-40 py-3 bg-[#C58A3C] text-white uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all";
+            } else {
+                btn.className =
+                    "w-36 md:w-40 py-3 bg-transparent text-[#C58A3C] uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all";
+            }
+        });
     }
 
     function openIstilah(judul, kategori, deskripsi, sejarah, contoh, padanan, konteks) {
@@ -1098,7 +1379,7 @@
             if (document.getElementById("ringkasanFilsafat")) document.getElementById("ringkasanFilsafat").innerHTML =
                 "Mengkaji nilai baik dan buruk serta bagaimana manusia bertindak secara etis.";
             if (document.getElementById("asalFilsafat")) document.getElementById("asalFilsafat").innerHTML =
-            "Universal";
+                "Universal";
             if (document.getElementById("fokusFilsafat")) document.getElementById("fokusFilsafat").innerHTML = "Etika";
             if (document.getElementById("tokohFilsafat")) {
                 document.getElementById("tokohFilsafat").innerHTML = `
@@ -1189,16 +1470,16 @@
             if (document.getElementById("ringkasanFilsafat")) document.getElementById("ringkasanFilsafat").innerHTML =
                 "Mengkaji hubungan manusia dengan Tuhan, iman, akal, serta makna kehidupan dan keberadaan manusia.";
             if (document.getElementById("asalFilsafat")) document.getElementById("asalFilsafat").innerHTML =
-            "Universal";
+                "Universal";
             if (document.getElementById("fokusFilsafat")) document.getElementById("fokusFilsafat").innerHTML =
                 "Ketuhanan";
             if (document.getElementById("tokohFilsafat")) {
                 document.getElementById("tokohFilsafat").innerHTML = `
-                    <div class="bg-white border border-[#E5D6BF] rounded-lg p-5">
+                    <div class="bg-[#FAF6F0] border border-[#E5D6BF] rounded-lg p-5">
                         <h4 class="font-semibold text-[#6B4A8E]">Thomas Aquinas</h4>
                         <p class="mt-2 text-[#675A4D]">Menggabungkan pemikiran filsafat dengan ajaran agama.</p>
                     </div>
-                    <div class="bg-white border border-[#E5D6BF] rounded-lg p-5">
+                    <div class="bg-[#FAF6F0] border border-[#E5D6BF] rounded-lg p-5">
                         <h4 class="font-semibold text-[#6B4A8E]">Al-Ghazali</h4>
                         <p class="mt-2 text-[#675A4D]">Mengembangkan pemikiran filsafat Islam dan spiritualitas.</p>
                     </div>
@@ -1223,9 +1504,92 @@
         const panel = document.getElementById("panelBarat");
         const overlay = document.getElementById("overlayBarat");
 
-        if (panel) panel.classList.add("translate-x-full");
+        if (panel) {
+            panel.classList.add("translate-x-full");
+        }
+
         setTimeout(function() {
-            if (overlay) overlay.classList.add("hidden");
-        }, 500);
+            if (overlay) {
+                overlay.classList.add("hidden");
+            }
+            // Mengaktifkan kembali scroll pada body website
+            document.body.style.overflow = "auto";
+        }, 300);
+    }
+
+    // ==========================================
+    // 9. LIVE SEARCH SATUA BALI & ISTILAH BALI
+    // ==========================================
+
+    // A. Fungsi Pencarian SATUA BALI
+    function filterSatuaCards(keyword) {
+        const query = keyword.trim().toLowerCase();
+        const btnClear = document.getElementById("btnClearSearchSatua");
+
+        // Tampilkan / Sembunyikan tombol X
+        if (btnClear) {
+            if (query.length > 0) {
+                btnClear.classList.remove("hidden");
+            } else {
+                btnClear.classList.add("hidden");
+            }
+        }
+
+        // Ambil semua card di dalam sectionSatua yang ada di dalam .grid
+        const cards = document.querySelectorAll("#sectionSatua .grid > div");
+        cards.forEach(card => {
+            const textContent = card.innerText.toLowerCase();
+            if (textContent.includes(query)) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    }
+
+    // Fungsi Membersihkan Pencarian SATUA BALI
+    function clearSearchSatua() {
+        const input = document.getElementById("searchSatuaInput");
+        if (input) {
+            input.value = "";
+            filterSatuaCards("");
+            input.focus();
+        }
+    }
+
+    // B. Fungsi Pencarian ISTILAH BALI
+    function filterIstilahList(keyword) {
+        const query = keyword.trim().toLowerCase();
+        const btnClear = document.getElementById("btnClearSearchIstilah");
+
+        // Tampilkan / Sembunyikan tombol X
+        if (btnClear) {
+            if (query.length > 0) {
+                btnClear.classList.remove("hidden");
+            } else {
+                btnClear.classList.add("hidden");
+            }
+        }
+
+        // Ambil semua div dengan class 'item-istilah' di dalam wadahnya
+        const items = document.querySelectorAll("#listIstilahContainer .item-istilah");
+        items.forEach(item => {
+            const textContent = item.innerText.toLowerCase();
+            if (textContent.includes(query)) {
+                item.style.display = "grid";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    }
+
+    // Fungsi Membersihkan Pencarian ISTILAH BALI
+    function clearSearchIstilah() {
+        const input = document.getElementById("searchIstilahInput");
+        if (input) {
+            input.value = "";
+            filterIstilahList("");
+            input.focus();
+        }
     }
 </script>
