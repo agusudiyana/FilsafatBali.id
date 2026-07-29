@@ -24,18 +24,11 @@ class CecimpedanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'judul' => 'required|string|max:255',
-            'isi' => 'required',
-            'jawaban' => 'required|string|max:255',
+            'judul'    => 'required|string|max:255',
+            'isi'      => 'required',
+            'jawaban'  => 'required|string|max:255',
             'kategori' => 'nullable|string|max:255',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
         ]);
-
-        $gambar = null;
-
-        if ($request->hasFile('gambar')) {
-            $gambar = $request->file('gambar')->store('cecimpedan', 'public');
-        }
 
         Cecimpedan::create([
             'judul'    => $request->judul,
@@ -43,7 +36,6 @@ class CecimpedanController extends Controller
             'isi'      => $request->isi,
             'jawaban'  => $request->jawaban,
             'kategori' => $request->kategori,
-            'gambar'   => $gambar,
             'status'   => 'pending',
             'user_id'  => auth()->id(),
         ]);
@@ -51,5 +43,62 @@ class CecimpedanController extends Controller
         return redirect()
             ->route('penulis.cecimpedan.index')
             ->with('success', 'Cecimpedan berhasil dikirim dan menunggu verifikasi admin.');
+    }
+
+    /**
+     * Tampilkan Form Edit Cecimpedan
+     */
+    public function edit($id)
+    {
+        $cecimpedan = Cecimpedan::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        return view('penulis.cecimpedan.edit', compact('cecimpedan'));
+    }
+
+    /**
+     * Proses Update Cecimpedan (Tanpa Gambar)
+     */
+    public function update(Request $request, $id)
+    {
+        $cecimpedan = Cecimpedan::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        $request->validate([
+            'judul'    => 'required|string|max:255',
+            'isi'      => 'required',
+            'jawaban'  => 'required|string|max:255',
+            'kategori' => 'nullable|string|max:255',
+        ]);
+
+        $cecimpedan->update([
+            'judul'    => $request->judul,
+            'isi'      => $request->isi,
+            'jawaban'  => $request->jawaban,
+            'kategori' => $request->kategori,
+            'status'   => 'pending', // Kembalikan ke pending untuk diverifikasi ulang oleh admin
+        ]);
+
+        return redirect()
+            ->route('penulis.cecimpedan.index')
+            ->with('success', 'Cecimpedan berhasil diperbarui dan menunggu verifikasi admin.');
+    }
+
+    /**
+     * Proses Hapus Cecimpedan
+     */
+    public function destroy($id)
+    {
+        $cecimpedan = Cecimpedan::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        $cecimpedan->delete();
+
+        return redirect()
+            ->route('penulis.cecimpedan.index')
+            ->with('success', 'Cecimpedan berhasil dihapus.');
     }
 }

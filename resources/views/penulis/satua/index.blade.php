@@ -1,114 +1,147 @@
 @extends('penulis.layouts.app')
 
 @section('content')
+    <div class="flex justify-between items-center mb-6">
 
-<div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-[#1A110A]">
+                Data Satua
+            </h1>
 
-    <div>
-        <h1 class="text-3xl font-bold text-[#1A110A]">
-            Data Satua
-        </h1>
+            <p class="text-gray-500">
+                Daftar Satua yang telah Anda kirim.
+            </p>
+        </div>
 
-        <p class="text-gray-500">
-            Daftar Satua yang telah Anda kirim.
-        </p>
+        <a href="{{ route('penulis.satua.create') }}"
+            class="bg-[#C48D2D] text-white px-5 py-3 rounded-lg hover:bg-[#b07c20] flex items-center gap-2 transition">
+            <i data-feather="plus-circle" class="w-5 h-5"></i>
+            <span>Tambah Satua</span>
+        </a>
+
     </div>
 
-    <a href="{{ route('penulis.satua.create') }}"
-       class="bg-[#C48D2D] text-white px-5 py-3 rounded-lg hover:bg-[#b07c20]">
+    @if (session('success'))
+        <div class="bg-green-100 text-green-700 p-4 rounded-lg mb-4 flex items-center gap-2">
+            <i data-feather="check-circle" class="w-5 h-5"></i>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif
 
-        + Tambah Satua
+    <div class="bg-white rounded-xl shadow overflow-hidden">
 
-    </a>
+        <table class="w-full">
 
-</div>
+            <thead class="bg-[#F5E9D7]">
 
-@if(session('success'))
+                <tr>
 
-<div class="bg-green-100 text-green-700 p-4 rounded-lg mb-4">
+                    <th class="p-4 text-left">No</th>
+                    <th class="p-4 text-left">Judul</th>
+                    <th class="p-4 text-left">Tokoh</th>
+                    <th class="p-4 text-left">Asal</th>
+                    <th class="p-4 text-left">Status</th>
+                    <th class="p-4 text-center">Aksi</th>
 
-    {{ session('success') }}
+                </tr>
 
-</div>
+            </thead>
 
-@endif
+            <tbody>
 
-<div class="bg-white rounded-xl shadow overflow-hidden">
+                @forelse($satuas as $item)
+                    <tr class="border-t hover:bg-gray-50 transition">
 
-<table class="w-full">
+                        <td class="p-4">{{ $loop->iteration }}</td>
 
-    <thead class="bg-[#F5E9D7]">
+                        <td class="p-4 font-semibold text-[#1A110A]">{{ $item->judul }}</td>
 
-        <tr>
+                        <td class="p-4">{{ $item->tokoh ?? '-' }}</td>
 
-            <th class="p-4 text-left">No</th>
-            <th class="p-4 text-left">Judul</th>
-            <th class="p-4 text-left">Tokoh</th>
-            <th class="p-4 text-left">Asal</th>
-            <th class="p-4 text-left">Status</th>
+                        <td class="p-4">{{ $item->asal ?? '-' }}</td>
 
-        </tr>
+                        <td class="p-4">
 
-    </thead>
+                            @if ($item->status == 'pending')
+                                <span
+                                    class="inline-flex items-center gap-1 bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-semibold">
+                                    <i data-feather="clock" class="w-3.5 h-3.5"></i>
+                                    Pending
+                                </span>
+                            @elseif($item->status == 'disetujui')
+                                <span
+                                    class="inline-flex items-center gap-1 bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
+                                    <i data-feather="check-circle" class="w-3.5 h-3.5"></i>
+                                    Disetujui
+                                </span>
+                            @else
+                                <span
+                                    class="inline-flex items-center gap-1 bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold">
+                                    <i data-feather="x-circle" class="w-3.5 h-3.5"></i>
+                                    Ditolak
+                                </span>
+                            @endif
 
-    <tbody>
+                        </td>
 
-    @forelse($satuas as $item)
+                        <td class="p-4 text-center">
 
-    <tr class="border-t">
+                            @if ($item->status == 'disetujui')
+                                <span class="text-xs text-gray-400 italic font-semibold">Terkunci (Disetujui)</span>
+                            @else
+                                <div class="flex items-center justify-center gap-2">
 
-        <td class="p-4">{{ $loop->iteration }}</td>
+                                    <!-- TOMBOL EDIT -->
+                                    <a href="{{ route('penulis.satua.edit', $item->id) }}" title="Edit Data"
+                                        class="bg-amber-600 hover:bg-amber-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition inline-flex items-center gap-1 shadow-sm">
+                                        <i data-feather="edit-2" class="w-3.5 h-3.5"></i>
+                                    </a>
 
-        <td class="p-4">{{ $item->judul }}</td>
+                                    <!-- TOMBOL HAPUS -->
+                                    <form action="{{ route('penulis.satua.destroy', $item->id) }}" method="POST"
+                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus data satua ini?');"
+                                        class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" title="Hapus Data"
+                                            class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition inline-flex items-center gap-1 shadow-sm">
+                                            <i data-feather="trash-2" class="w-3.5 h-3.5"></i>
+                                        </button>
+                                    </form>
 
-        <td class="p-4">{{ $item->tokoh }}</td>
+                                </div>
+                            @endif
 
-        <td class="p-4">{{ $item->asal }}</td>
+                        </td>
 
-        <td class="p-4">
+                    </tr>
 
-            @if($item->status=='pending')
+                @empty
 
-                <span class="text-yellow-600 font-semibold">
-                    Pending
-                </span>
+                    <tr>
 
-            @elseif($item->status=='disetujui')
+                        <td colspan="6" class="text-center p-8 text-gray-500">
+                            <div class="flex flex-col items-center justify-center gap-2">
+                                <i data-feather="inbox" class="w-8 h-8 text-gray-400"></i>
+                                <span>Belum ada data Satua.</span>
+                            </div>
+                        </td>
 
-                <span class="text-green-600 font-semibold">
-                    Disetujui
-                </span>
+                    </tr>
+                @endforelse
 
-            @else
+            </tbody>
 
-                <span class="text-red-600 font-semibold">
-                    Ditolak
-                </span>
+        </table>
 
-            @endif
+    </div>
 
-        </td>
-
-    </tr>
-
-    @empty
-
-    <tr>
-
-        <td colspan="5" class="text-center p-8">
-
-            Belum ada data Satua.
-
-        </td>
-
-    </tr>
-
-    @endforelse
-
-    </tbody>
-
-</table>
-
-</div>
-
+    <!-- Inisialisasi Feather Icons -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+        });
+    </script>
 @endsection

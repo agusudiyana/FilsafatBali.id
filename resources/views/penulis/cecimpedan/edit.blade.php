@@ -5,7 +5,7 @@
 <div class="max-w-4xl mx-auto bg-white rounded-xl shadow p-8">
 
     <h1 class="text-3xl font-bold text-[#1A110A] mb-6">
-        Tambah Cecimpedan
+        Edit Cecimpedan
     </h1>
 
     @if ($errors->any())
@@ -18,73 +18,73 @@
         </div>
     @endif
 
-    <form action="{{ route('penulis.cecimpedan.store') }}" method="POST">
+    <form action="{{ route('penulis.cecimpedan.update', $cecimpedan->id) }}" method="POST">
         @csrf
+        @method('PUT')
 
         <!-- Tingkat Kesulitan -->
         <div class="mb-5">
             <label class="block font-semibold mb-2 text-gray-700">Tingkat Kesulitan</label>
             <select name="tingkat" class="w-full border border-gray-300 rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>
-                <option value="" disabled selected>Pilih Tingkat Kesulitan</option>
-                <option value="Mudah" {{ old('tingkat') == 'Mudah' ? 'selected' : '' }}>Mudah</option>
-                <option value="Sedang" {{ old('tingkat') == 'Sedang' ? 'selected' : '' }}>Sedang</option>
-                <option value="Sulit" {{ old('tingkat') == 'Sulit' ? 'selected' : '' }}>Sulit</option>
+                <option value="Mudah" {{ old('tingkat', $cecimpedan->tingkat) == 'Mudah' ? 'selected' : '' }}>Mudah</option>
+                <option value="Sedang" {{ old('tingkat', $cecimpedan->tingkat) == 'Sedang' ? 'selected' : '' }}>Sedang</option>
+                <option value="Sulit" {{ old('tingkat', $cecimpedan->tingkat) == 'Sulit' ? 'selected' : '' }}>Sulit</option>
             </select>
         </div>
 
-        <!-- Pertanyaan Cecimpedan (Bahasa Bali) -->
+        <!-- Pertanyaan -->
         <div class="mb-5">
             <label class="block font-semibold mb-2 text-gray-700">Pertanyaan (Bahasa Bali)</label>
-            <textarea name="pertanyaan" rows="3" placeholder='Contoh: "Nongos di tegale, ngelah baju liu pesan..."'
-                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('pertanyaan') }}</textarea>
+            <textarea name="pertanyaan" rows="3"
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('pertanyaan', $cecimpedan->pertanyaan) }}</textarea>
         </div>
 
-        <!-- Terjemahan / Arti -->
+        <!-- Terjemahan -->
         <div class="mb-5">
             <label class="block font-semibold mb-2 text-gray-700">Terjemahan / Arti (Bahasa Indonesia)</label>
-            <textarea name="terjemahan" rows="2" placeholder="Contoh: Tinggal di ladang, punya baju banyak sekali..."
-                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('terjemahan') }}</textarea>
+            <textarea name="terjemahan" rows="2"
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('terjemahan', $cecimpedan->terjemahan) }}</textarea>
         </div>
 
         <!-- Jawaban -->
         <div class="mb-5">
             <label class="block font-semibold mb-2 text-gray-700">Jawaban</label>
-            <input type="text" name="jawaban" value="{{ old('jawaban') }}" placeholder="Contoh: Pohon Pisang"
+            <input type="text" name="jawaban" value="{{ old('jawaban', $cecimpedan->jawaban) }}"
                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>
         </div>
 
-        <!-- Makna / Nilai Filosofis -->
+        <!-- Makna -->
         <div class="mb-5">
             <label class="block font-semibold mb-2 text-gray-700">Makna / Nilai Filosofis</label>
-            <textarea name="makna" rows="4" placeholder="Tuliskan nilai filosofis atau poin-poin penjabarannya..."
-                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('makna') }}</textarea>
+            <textarea name="makna" rows="4"
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('makna', $cecimpedan->makna) }}</textarea>
         </div>
 
         <!-- Variasi Daerah -->
         <div class="mb-5">
             <label class="block font-semibold mb-2 text-gray-700">Variasi Daerah (Opsional)</label>
-            <textarea name="variasi_daerah" rows="2" placeholder="Contoh: Kadang disebut juga melambangkan..."
-                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">{{ old('variasi_daerah') }}</textarea>
+            <textarea name="variasi_daerah" rows="2"
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">{{ old('variasi_daerah', $cecimpedan->variasi_daerah ?? '') }}</textarea>
         </div>
 
         <!-- Asal Daerah -->
         <div class="mb-5">
             <label class="block font-semibold mb-2 text-gray-700">Asal Daerah</label>
-            <input type="text" name="asal_daerah" value="{{ old('asal_daerah') }}" placeholder="Contoh: Tabanan, Bali Barat"
+            <input type="text" name="asal_daerah" value="{{ old('asal_daerah', $cecimpedan->asal_daerah ?? '') }}"
                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">
         </div>
 
         <!-- Rekaman / Sumber -->
         <div class="mb-6">
             <label class="block font-semibold mb-2 text-gray-700">Rekaman / Sumber</label>
-            <input type="text" name="rekaman" value="{{ old('rekaman') }}" placeholder="Contoh: Balai Bahasa Provinsi Bali"
+            <input type="text" name="rekaman" value="{{ old('rekaman', $cecimpedan->rekaman ?? '') }}"
                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">
         </div>
 
         <!-- Tombol Aksi -->
         <div class="flex gap-4">
             <button type="submit" class="bg-[#C48D2D] hover:bg-[#B07C20] text-white px-6 py-3 rounded-lg font-semibold transition">
-                Simpan
+                Simpan Perubahan
             </button>
             <a href="{{ route('penulis.cecimpedan.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold transition">
                 Kembali

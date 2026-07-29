@@ -4,13 +4,9 @@
 
 <div class="max-w-4xl mx-auto bg-white rounded-xl shadow p-8">
 
-   <a href="{{ route('penulis.istilah.index') }}" 
-   class="bg-[#C48D2D] hover:bg-[#B07C20] text-white px-5 py-2.5 rounded-xl font-semibold transition flex items-center gap-2 shadow-sm">
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-    </svg>
-    <span>Tambah Istilah</span>
-</a>
+    <h1 class="text-3xl font-bold text-[#1A110A] mb-6">
+        Edit Istilah
+    </h1>
 
     @if ($errors->any())
         <div class="bg-red-100 border border-red-300 text-red-700 p-4 rounded-lg mb-6">
@@ -22,13 +18,14 @@
         </div>
     @endif
 
-    <form action="{{ route('penulis.istilah.store') }}" method="POST">
+    <form action="{{ route('penulis.istilah.update', $istilah->id) }}" method="POST">
         @csrf
+        @method('PUT')
 
         <!-- Istilah -->
         <div class="mb-5">
             <label class="block font-semibold mb-2 text-gray-700">Istilah</label>
-            <input type="text" name="istilah" value="{{ old('istilah') }}" placeholder="Contoh: Ngaben"
+            <input type="text" name="istilah" value="{{ old('istilah', $istilah->istilah) }}"
                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>
         </div>
 
@@ -36,45 +33,44 @@
         <div class="mb-5">
             <label class="block font-semibold mb-2 text-gray-700">Kategori</label>
             <select name="kategori" class="w-full border border-gray-300 rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>
-                <option value="" disabled selected>Pilih Kategori</option>
-                <option value="Umum" {{ old('kategori') == 'Umum' ? 'selected' : '' }}>Umum</option>
-                <option value="Agama" {{ old('kategori') == 'Agama' ? 'selected' : '' }}>Agama</option>
-                <option value="Adat" {{ old('kategori') == 'Adat' ? 'selected' : '' }}>Adat</option>
+                <option value="Umum" {{ old('kategori', $istilah->kategori) == 'Umum' ? 'selected' : '' }}>Umum</option>
+                <option value="Agama" {{ old('kategori', $istilah->kategori) == 'Agama' ? 'selected' : '' }}>Agama</option>
+                <option value="Adat" {{ old('kategori', $istilah->kategori) == 'Adat' ? 'selected' : '' }}>Adat</option>
             </select>
         </div>
 
-        <!-- Arti / Definisi Singkat -->
+        <!-- Arti -->
         <div class="mb-5">
             <label class="block font-semibold mb-2 text-gray-700">Arti / Definisi</label>
-            <textarea name="arti" rows="3" placeholder="Tuliskan definisi atau arti singkat..."
-                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('arti') }}</textarea>
+            <textarea name="arti" rows="3"
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('arti', $istilah->arti) }}</textarea>
         </div>
 
-        <!-- Sejarah / Penjelasan Lengkap -->
+        <!-- Sejarah -->
         <div class="mb-5">
             <label class="block font-semibold mb-2 text-gray-700">Sejarah / Penjelasan</label>
-            <textarea name="sejarah" rows="5" placeholder="Tuliskan sejarah atau penjelasan mendalam..."
-                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">{{ old('sejarah') }}</textarea>
+            <textarea name="sejarah" rows="5"
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">{{ old('sejarah', $istilah->sejarah ?? '') }}</textarea>
         </div>
 
         <!-- Contoh Penggunaan -->
         <div class="mb-5">
             <label class="block font-semibold mb-2 text-gray-700">Contoh Penggunaan</label>
-            <textarea name="contoh_penggunaan" rows="2" placeholder="Contoh: Kremasi (Indonesia)"
-                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">{{ old('contoh_penggunaan') }}</textarea>
+            <textarea name="contoh_penggunaan" rows="2"
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">{{ old('contoh_penggunaan', $istilah->contoh_penggunaan ?? '') }}</textarea>
         </div>
 
         <!-- Padanan Kata -->
         <div class="mb-6">
             <label class="block font-semibold mb-2 text-gray-700">Padanan Kata / Keterangan Terkait</label>
-            <input type="text" name="padanan_kata" value="{{ old('padanan_kata') }}" placeholder="Contoh: Digunakan dalam upacara Pitra Yadnya"
+            <input type="text" name="padanan_kata" value="{{ old('padanan_kata', $istilah->padanan_kata ?? '') }}"
                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">
         </div>
 
         <!-- Tombol Aksi -->
         <div class="flex gap-4">
             <button type="submit" class="bg-[#C48D2D] hover:bg-[#B07C20] text-white px-6 py-3 rounded-lg font-semibold transition">
-                Simpan
+                Simpan Perubahan
             </button>
             <a href="{{ route('penulis.istilah.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold transition">
                 Kembali

@@ -24,10 +24,10 @@
             Verifikasi Konten
         </p>
 
-        <!-- Ajaran -->
-        <a href="{{ route('admin.verifikasi.ajaran') }}"
+        <!-- Verifikasi Artikel (Diubah dari Verifikasi Ajaran) -->
+        <a href="{{ route('admin.verifikasi.artikel') }}"
             class="block px-6 py-3 hover:bg-[#C48D2D]">
-            Verifikasi Ajaran
+            Verifikasi Artikel
         </a>
 
         <!-- Cecimpedan -->

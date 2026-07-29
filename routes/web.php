@@ -54,11 +54,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [AdminController::class,'index'])
             ->name('admin.dashboard');
 
-        // AJARAN
-        Route::get('/verifikasi/ajaran', [AdminController::class,'verifikasiAjaran'])->name('admin.verifikasi.ajaran');
-        Route::get('/verifikasi/ajaran/{id}', [AdminController::class,'detailAjaran'])->name('admin.verifikasi.ajaran.detail');
-        Route::put('/verifikasi/ajaran/{id}/setujui', [AdminController::class,'setujuiAjaran'])->name('admin.verifikasi.ajaran.setujui');
-        Route::put('/verifikasi/ajaran/{id}/tolak', [AdminController::class,'tolakAjaran'])->name('admin.verifikasi.ajaran.tolak');
+        // ARTIKEL (Diubah dari ajaran ke artikel)
+        Route::get('/verifikasi/artikel', [AdminController::class,'verifikasiAjaran'])->name('admin.verifikasi.artikel');
+        Route::get('/verifikasi/artikel/{id}', [AdminController::class,'detailAjaran'])->name('admin.verifikasi.artikel.detail');
+        Route::put('/verifikasi/artikel/{id}/setujui', [AdminController::class,'setujuiAjaran'])->name('admin.verifikasi.artikel.setujui');
+        Route::put('/verifikasi/artikel/{id}/tolak', [AdminController::class,'tolakAjaran'])->name('admin.verifikasi.artikel.tolak');
 
         // CECIMPEDAN
         Route::get('/verifikasi/cecimpedan', [AdminController::class,'verifikasiCecimpedan'])->name('admin.verifikasi.cecimpedan');
@@ -91,25 +91,37 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [PenulisController::class,'index'])
             ->name('penulis.dashboard');
 
-        // AJARAN
-        Route::get('/ajaran', [PenulisController::class,'ajaranIndex'])->name('penulis.ajaran.index');
-        Route::get('/ajaran/create', [PenulisController::class,'createAjaran'])->name('penulis.ajaran.create');
-        Route::post('/ajaran/store', [PenulisController::class,'storeAjaran'])->name('penulis.ajaran.store');
+        // ARTIKEL
+        Route::get('/artikel', [PenulisController::class,'artikelIndex'])->name('penulis.artikel.index');
+        Route::get('/artikel/create', [PenulisController::class,'create'])->name('penulis.artikel.create');
+        Route::post('/artikel/store', [PenulisController::class,'store'])->name('penulis.artikel.store');
+        Route::get('/artikel/{id}/edit', [PenulisController::class,'edit'])->name('penulis.artikel.edit');
+        Route::put('/artikel/{id}', [PenulisController::class,'update'])->name('penulis.artikel.update');
+        Route::delete('/artikel/{id}', [PenulisController::class,'destroy'])->name('penulis.artikel.destroy');
 
         // CECIMPEDAN
         Route::get('/cecimpedan', [CecimpedanController::class,'index'])->name('penulis.cecimpedan.index');
         Route::get('/cecimpedan/create', [CecimpedanController::class,'create'])->name('penulis.cecimpedan.create');
         Route::post('/cecimpedan/store', [CecimpedanController::class,'store'])->name('penulis.cecimpedan.store');
+        Route::get('/cecimpedan/{id}/edit', [CecimpedanController::class,'edit'])->name('penulis.cecimpedan.edit');
+        Route::put('/cecimpedan/{id}', [CecimpedanController::class,'update'])->name('penulis.cecimpedan.update');
+        Route::delete('/cecimpedan/{id}', [CecimpedanController::class,'destroy'])->name('penulis.cecimpedan.destroy');
 
         // SATUA
         Route::get('/satua', [SatuaController::class,'index'])->name('penulis.satua.index');
         Route::get('/satua/create', [SatuaController::class,'create'])->name('penulis.satua.create');
         Route::post('/satua/store', [SatuaController::class,'store'])->name('penulis.satua.store');
+        Route::get('/satua/{id}/edit', [SatuaController::class,'edit'])->name('penulis.satua.edit');
+        Route::put('/satua/{id}', [SatuaController::class,'update'])->name('penulis.satua.update');
+        Route::delete('/satua/{id}', [SatuaController::class,'destroy'])->name('penulis.satua.destroy');
 
         // ISTILAH
         Route::get('/istilah', [IstilahController::class,'index'])->name('penulis.istilah.index');
         Route::get('/istilah/create', [IstilahController::class,'create'])->name('penulis.istilah.create');
         Route::post('/istilah/store', [IstilahController::class,'store'])->name('penulis.istilah.store');
+        Route::get('/istilah/{id}/edit', [IstilahController::class,'edit'])->name('penulis.istilah.edit');
+        Route::put('/istilah/{id}', [IstilahController::class,'update'])->name('penulis.istilah.update');
+        Route::delete('/istilah/{id}', [IstilahController::class,'destroy'])->name('penulis.istilah.destroy');
 
         // RIWAYAT
         Route::get('/riwayat', [PenulisController::class,'riwayat'])->name('penulis.riwayat');
@@ -124,27 +136,29 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('pengguna')->middleware('role:pengguna')->group(function () {
 
-        // 1. Arsip
+        Route::get('/dashboard', function () {
+            return redirect()->route('home');
+        })->name('pengguna.dashboard');
+
         Route::get('/arsip', [PenggunaController::class, 'arsipIndex'])
             ->name('pengguna.arsip.index');
+        Route::post('/arsip', [PenggunaController::class, 'storeArsip'])
+            ->name('pengguna.arsip.store');
+        Route::delete('/arsip/{id}', [PenggunaController::class, 'destroyArsip'])
+            ->name('pengguna.arsip.destroy');
 
-        // 2. Favorit
         Route::get('/favorit', [PenggunaController::class, 'favoritIndex'])
             ->name('pengguna.favorit.index');
         Route::post('/favorit/toggle/{id}', [PenggunaController::class, 'toggleFavorit'])
             ->name('pengguna.favorit.toggle');
 
-        // 3. Komunitas
         Route::get('/komunitas', [PenggunaController::class, 'komunitasIndex'])
             ->name('pengguna.komunitas.index');
         Route::post('/komunitas/kirim', [PenggunaController::class, 'storeDiskusi'])
             ->name('pengguna.komunitas.store');
 
-        // 4. Unduhan
         Route::get('/unduhan', [PenggunaController::class, 'unduhanIndex'])
             ->name('pengguna.unduhan.index');
-        Route::get('/unduhan/download/{id}', [PenggunaController::class, 'downloadFile'])
-            ->name('pengguna.unduhan.download');
 
     });
 

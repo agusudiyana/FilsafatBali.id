@@ -7,6 +7,7 @@ use App\Models\Cecimpedan;
 use App\Models\Satua;
 use App\Models\Istilah;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PenulisController extends Controller
 {
@@ -52,58 +53,137 @@ class PenulisController extends Controller
     }
 
     /**
-     * Daftar Ajaran
+     * Daftar Artikel dengan Filter Kategori
      */
-    public function ajaranIndex()
+    public function artikelIndex(Request $request)
     {
-        $ajarans = Ajaran::where('user_id', auth()->id())
-            ->latest()
-            ->get();
+        $kategori = $request->query('kategori');
 
-        return view('penulis.ajaran.index', compact('ajarans'));
+        $query = Ajaran::where('user_id', auth()->id());
+
+        // Jika kategori dipilih dan bukan 'Semua', lakukan filter
+        if ($kategori && $kategori != 'Semua') {
+            $query->where('kategori', $kategori);
+        }
+
+        $artikels = $query->latest()->get();
+
+        return view('penulis.artikel.index', compact('artikels', 'kategori'));
     }
 
     /**
-     * Form Tambah Ajaran
+     * Form Tambah Artikel
      */
-    public function createAjaran()
+    public function create()
     {
-        return view('penulis.ajaran.create');
+        return view('penulis.artikel.create');
     }
 
     /**
-     * Simpan Ajaran
+     * Simpan Artikel
      */
-    public function storeAjaran(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'judul' => 'required|string|max:255',
+            'kategori' => 'required|string',
             'isi' => 'required',
-            'contoh' => 'nullable',
-            'referensi' => 'nullable',
+            'kesimpulan' => 'nullable',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $gambar = null;
 
         if ($request->hasFile('gambar')) {
-            $gambar = $request->file('gambar')->store('ajaran', 'public');
+            $gambar = $request->file('gambar')->store('artikel', 'public');
         }
 
         Ajaran::create([
             'judul' => $request->judul,
+            'kategori' => $request->kategori,
             'penulis' => auth()->user()->name,
             'isi' => $request->isi,
-            'contoh' => $request->contoh,
-            'referensi' => $request->referensi,
+            'kesimpulan' => $request->kesimpulan,
             'gambar' => $gambar,
             'status' => 'pending',
             'user_id' => auth()->id(),
         ]);
 
         return redirect()
-            ->route('penulis.ajaran.index')
-            ->with('success', 'Kiriman berhasil dikirim dan menunggu verifikasi admin.');
+            ->route('penulis.artikel.index')
+            ->with('success', 'Artikel berhasil dikirim dan menunggu verifikasi admin.');
+    }
+
+    /**
+     * Form Edit Artikel (Diubah dari editAjaran menjadi edit)
+     */
+    public function edit($id)
+    {
+        $ajaran = Ajaran::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        return view('penulis.artikel.edit', compact('ajaran'));
+    }
+
+    /**
+     * Update Artikel
+     */
+    public function updateAjaran(Request $request, $id)
+    {
+        $ajaran = Ajaran::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'kategori' => 'required|string',
+            'isi' => 'required',
+            'kesimpulan' => 'nullable',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        $gambar = $ajaran->gambar;
+
+        if ($request->hasFile('gambar')) {
+            if ($ajaran->gambar && Storage::disk('public')->exists($ajaran->gambar)) {
+                Storage::disk('public')->delete($ajaran->gambar);
+            }
+            $gambar = $request->file('gambar')->store('artikel', 'public');
+        }
+
+        $ajaran->update([
+            'judul' => $request->judul,
+            'kategori' => $request->kategori,
+            'isi' => $request->isi,
+            'kesimpulan' => $request->kesimpulan,
+            'gambar' => $gambar,
+            'status' => 'pending', 
+        ]);
+
+        return redirect()
+            ->route('penulis.artikel.index')
+            ->with('success', 'Data artikel berhasil diperbarui dan menunggu verifikasi admin.');
+    }
+
+    /**
+     * Hapus Artikel
+     */
+    public function destroy($id)
+    {
+        $ajaran = Ajaran::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        if ($ajaran->gambar && Storage::disk('public')->exists($ajaran->gambar)) {
+            Storage::disk('public')->delete($ajaran->gambar);
+        }
+
+        $ajaran->delete();
+
+        return redirect()
+            ->route('penulis.artikel.index')
+            ->with('success', 'Data artikel berhasil dihapus.');
     }
 
     /**
@@ -112,11 +192,8 @@ class PenulisController extends Controller
     public function riwayat()
     {
         $ajaran = Ajaran::where('user_id', auth()->id())->latest()->get();
-
         $cecimpedan = Cecimpedan::where('user_id', auth()->id())->latest()->get();
-
         $satua = Satua::where('user_id', auth()->id())->latest()->get();
-
         $istilah = Istilah::where('user_id', auth()->id())->latest()->get();
 
         return view('penulis.riwayat.index', compact(

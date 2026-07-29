@@ -21,10 +21,10 @@
 
         </a>
 
-        <a href="{{ route('penulis.ajaran.index') }}"
+        <a href="{{ route('penulis.artikel.index') }}"
            class="block px-6 py-3 hover:bg-[#C48D2D]">
 
-            Tambah Ajaran
+            Tambah Artikel
 
         </a>
 

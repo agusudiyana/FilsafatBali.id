@@ -44,7 +44,7 @@ class AdminController extends Controller
             ->latest()
             ->get();
 
-        return view('admin.verifikasi.ajaran', compact('ajarans'));
+        return view('admin.verifikasi.artikel', compact('ajarans'));
     }
 
     public function detailAjaran($id)
