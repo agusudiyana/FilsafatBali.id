@@ -32,13 +32,14 @@ class AjaranController extends Controller
 
         Ajaran::create([
             'judul' => $request->judul,
+            'kategori' => $request->kategori ?? 'Ajaran Tertua',
             'penulis' => $request->penulis,
             'desa' => $request->desa,
             'tahun' => $request->tahun,
             'isi' => $request->isi,
             'contoh' => $request->contoh,
             'referensi' => $request->referensi,
-            'status' => 'pending',
+            'status' => 'disetujui', // Jika dibuat langsung oleh Admin, otomatis disetujui
             'user_id' => auth()->id(),
         ]);
 
@@ -63,12 +64,14 @@ class AjaranController extends Controller
 
         $ajaran->update([
             'judul' => $request->judul,
+            'kategori' => $request->kategori ?? $ajaran->kategori,
             'penulis' => $request->penulis,
             'desa' => $request->desa,
             'tahun' => $request->tahun,
             'isi' => $request->isi,
             'contoh' => $request->contoh,
             'referensi' => $request->referensi,
+            'status' => $request->status ?? $ajaran->status,
         ]);
 
         return redirect()->route('ajaran.index')
@@ -82,5 +85,24 @@ class AjaranController extends Controller
 
         return redirect()->route('ajaran.index')
             ->with('success', 'Data berhasil dihapus.');
+    }
+
+    /**
+     * Memperbarui status verifikasi artikel (Disetujui / Ditolak / Pending) oleh Admin
+     */
+    public function updateStatus($id, $status)
+    {
+        $ajaran = Ajaran::findOrFail($id);
+
+        if (in_array($status, ['disetujui', 'ditolak', 'pending'])) {
+            $ajaran->status = $status;
+            $ajaran->save();
+
+            return redirect()->back()
+                ->with('success', 'Status artikel berhasil diperbarui menjadi ' . ucfirst($status));
+        }
+
+        return redirect()->back()
+            ->with('error', 'Status tidak valid.');
     }
 }

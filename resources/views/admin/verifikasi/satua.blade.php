@@ -3,41 +3,30 @@
 @section('content')
 
 <div class="flex justify-between items-center mb-8">
-
     <div>
         <h1 class="text-3xl font-bold text-[#1A110A]">
             Verifikasi Satua Bali
         </h1>
-
         <p class="text-gray-500">
             Daftar kiriman Satua yang menunggu verifikasi.
         </p>
     </div>
-
 </div>
 
 <div class="bg-white rounded-xl shadow overflow-hidden">
-
     <table class="w-full">
-
         <thead class="bg-[#F5E6CC]">
-
             <tr>
                 <th class="p-4">No</th>
                 <th class="p-4 text-left">Judul</th>
                 <th class="p-4 text-left">Asal</th>
                 <th class="p-4">Status</th>
-                <th class="p-4">Aksi</th>
+                <th class="p-4">AKSI VERIFIKASI</th>
             </tr>
-
         </thead>
-
         <tbody>
-
             @forelse($satuas as $satua)
-
             <tr class="border-b">
-
                 <td class="p-4 text-center">
                     {{ $loop->iteration }}
                 </td>
@@ -51,44 +40,73 @@
                 </td>
 
                 <td class="p-4 text-center">
-
-                    <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
-                        Pending
-                    </span>
-
+                    @if($satua->status == 'pending')
+                        <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-medium">
+                            Pending
+                        </span>
+                    @elseif($satua->status == 'disetujui')
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                            Disetujui
+                        </span>
+                    @else
+                        <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium">
+                            Ditolak
+                        </span>
+                    @endif
                 </td>
 
+                <!-- Bagian Tombol Aksi Verifikasi Ikon -->
                 <td class="p-4 text-center">
+                    <div class="flex items-center justify-center gap-3">
+                        
+                        <!-- 1. Tombol Detail (Mata Biru) -->
+                        <a href="{{ route('admin.verifikasi.satua.detail', $satua->id) }}" 
+                           title="Detail / Lihat" 
+                           class="text-sky-500 hover:text-sky-700 transition transform hover:scale-110">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </a>
 
-                    <a href="{{ route('admin.verifikasi.satua.detail',$satua->id) }}"
-                        class="bg-[#992B20] hover:bg-[#7E1F17] text-white px-4 py-2 rounded-lg">
+                        <!-- 2. Tombol Setujui (Centang Hijau) -->
+                        <form action="{{ route('admin.verifikasi.satua.setujui', $satua->id) }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" 
+                                    title="Setujui" 
+                                    onclick="return confirm('Apakah Anda yakin ingin menyetujui kiriman Satua ini?')"
+                                    class="text-emerald-500 hover:text-emerald-700 transition transform hover:scale-110 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </button>
+                        </form>
 
-                        Detail
+                        <!-- 3. Tombol Tolak (Silang Merah) -->
+                        <form action="{{ route('admin.verifikasi.satua.tolak', $satua->id) }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" 
+                                    title="Tolak" 
+                                    onclick="return confirm('Apakah Anda yakin ingin menolak kiriman Satua ini?')"
+                                    class="text-rose-500 hover:text-rose-700 transition transform hover:scale-110 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </button>
+                        </form>
 
-                    </a>
-
+                    </div>
                 </td>
-
             </tr>
-
             @empty
-
             <tr>
-
                 <td colspan="5" class="p-8 text-center text-gray-500">
-
                     Belum ada kiriman Satua.
-
                 </td>
-
             </tr>
-
             @endforelse
-
         </tbody>
-
     </table>
-
 </div>
 
 @endsection

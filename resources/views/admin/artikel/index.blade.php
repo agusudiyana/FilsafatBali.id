@@ -1,4 +1,4 @@
-@extends('penulis.layouts.app')
+@extends('admin.layouts.app')
 
 @section('content')
     <div class="max-w-7xl mx-auto px-4 py-8">
@@ -6,24 +6,24 @@
         <!-- Header Halaman -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 border-b border-[#E6D5B8] pb-6">
             <div>
-                <span class="text-xs font-semibold tracking-widest text-[#C48D2D] uppercase">Manajemen Konten</span>
+                <span class="text-xs font-semibold tracking-widest text-[#C48D2D] uppercase">Manajemen Konten Admin</span>
                 <h1 class="text-3xl font-bold font-serif text-[#2C221E] mt-1">
                     Daftar Artikel & Kiriman
                 </h1>
                 <p class="text-[#6B635B] text-sm mt-1">
-                    Kelola, pantau status verifikasi, dan tambahkan kearifan lokal Bali Anda di sini.
+                    Kelola, pantau status verifikasi, dan sesuaikan seluruh kontribusi artikel di sini.
                 </p>
             </div>
 
-            <a href="{{ route('penulis.artikel.create') }}"
+            <a href="{{ route('ajaran.create') }}"
                 class="bg-[#C48D2D] hover:bg-[#A9781F] text-white px-5 py-3 rounded-xl flex items-center gap-2 shadow-md transition-all transform hover:-translate-y-0.5">
                 <i data-feather="plus-circle" class="w-5 h-5"></i>
                 <span class="font-medium">Tambah Artikel Baru</span>
             </a>
         </div>
 
-        <!-- Filter Kategori (Tab Navigasi Mini) -->
-        <div class="flex flex-wrap gap-2 mb-6 border-b border-gray-200 pb-3" id="category-tabs">
+        <!-- Filter Kategori (Tab Navigasi) -->
+        <div class="flex flex-wrap gap-2 mb-6 border-b border-gray-200 pb-3">
             <button onclick="filterCategory('semua', this)" 
                 class="tab-btn px-4 py-2 text-sm font-semibold text-white bg-[#2C221E] rounded-lg shadow-sm transition">
                 Semua
@@ -53,42 +53,51 @@
             </div>
         @endif
 
-        <!-- Tabel Data Bersih & Elegan -->
+        <!-- Tabel Data -->
         <div class="bg-white rounded-2xl shadow-sm border border-[#E6D5B8]/60 overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
+                <!-- Tambahkan table-fixed agar ukuran kolom terkunci dan tidak bergeser -->
+                <table class="w-full text-left border-collapse table-fixed">
                     <thead class="bg-[#FBF9F5] text-[#2C221E] uppercase text-xs tracking-wider border-b border-[#E6D5B8]">
                         <tr>
-                            <th class="p-4 font-semibold">No</th>
-                            <th class="p-4 font-semibold">Judul Artikel</th>
-                            <th class="p-4 font-semibold">Kategori</th>
-                            <th class="p-4 font-semibold">Status</th>
-                            <th class="p-4 text-center font-semibold">Aksi</th>
+                            <!-- Lebar setiap kolom ditentukan di sini (Total 100%) -->
+                            <th class="p-4 font-semibold w-[8%]">NO</th>
+                            <th class="p-4 font-semibold w-[37%]">JUDUL ARTIKEL</th>
+                            <th class="p-4 font-semibold w-[20%]">KATEGORI</th>
+                            <th class="p-4 font-semibold w-[18%]">STATUS</th>
+                            <th class="p-4 text-center font-semibold w-[17%]">AKSI VERIFIKASI</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-100 text-sm">
-                        @forelse($artikels as $a)
+                    <tbody class="divide-y divide-[#E6D5B8]/40 text-sm">
+                        @forelse($ajarans as $a)
                             @php
                                 $kategoriNama = $a->kategori ?? 'Ajaran Tertua';
                             @endphp
-                            <tr class="article-row hover:bg-[#FBF9F5]/60 transition" data-category="{{ $kategoriNama }}">
+                            <tr class="article-row hover:bg-[#FBF9F5]/60 transition border-b border-[#E6D5B8]/30" data-category="{{ $kategoriNama }}">
+                                <!-- NO -->
                                 <td class="p-4 font-medium text-gray-500">
                                     {{ $loop->iteration }}
                                 </td>
-                                <td class="p-4 font-semibold text-[#2C221E]">
+                                
+                                <!-- Judul Artikel -->
+                                <td class="p-4 font-semibold text-[#2C221E] truncate">
                                     {{ $a->judul }}
                                 </td>
+                                
+                                <!-- Kategori Artikel (Pill Badge) -->
                                 <td class="p-4">
-                                    <span class="bg-[#F3E7D0] text-[#2C221E] px-3 py-1 rounded-full text-xs font-medium">
+                                    <span class="bg-[#F3E7D0] text-[#2C221E] px-3.5 py-1.5 rounded-full text-xs font-medium inline-block">
                                         {{ $kategoriNama }}
                                     </span>
                                 </td>
+                                
+                                <!-- Status Artikel -->
                                 <td class="p-4">
                                     @if ($a->status == 'pending')
                                         <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
                                             <i data-feather="clock" class="w-3.5 h-3.5"></i> Pending
                                         </span>
-                                    @elseif($a->status == 'disetujui')
+                                    @elseif($a->status == 'disetujui' || $a->status == 'publish')
                                         <span class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-semibold">
                                             <i data-feather="check-circle" class="w-3.5 h-3.5"></i> Disetujui
                                         </span>
@@ -98,20 +107,22 @@
                                         </span>
                                     @endif
                                 </td>
+                                
+                                <!-- Tombol Aksi Edit & Hapus -->
                                 <td class="p-4 text-center">
                                     <div class="flex items-center justify-center gap-2">
-                                        <a href="{{ route('penulis.artikel.edit', $a->id) }}" title="Edit Artikel"
-                                            class="bg-amber-500 hover:bg-amber-600 text-white p-2 rounded-lg transition shadow-sm">
+                                        <a href="{{ route('ajaran.edit', $a->id) }}" title="Edit Artikel"
+                                            class="bg-amber-500 hover:bg-amber-600 text-white p-2 rounded-xl transition shadow-sm">
                                             <i data-feather="edit-2" class="w-4 h-4"></i>
                                         </a>
 
-                                        <form action="{{ route('penulis.artikel.destroy', $a->id) }}" method="POST"
+                                        <form action="{{ route('ajaran.destroy', $a->id) }}" method="POST"
                                             onsubmit="return confirm('Apakah Anda yakin ingin menghapus artikel ini?');"
                                             class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" title="Hapus Artikel"
-                                                class="bg-rose-500 hover:bg-rose-600 text-white p-2 rounded-lg transition shadow-sm">
+                                                class="bg-rose-500 hover:bg-rose-600 text-white p-2 rounded-xl transition shadow-sm">
                                                 <i data-feather="trash-2" class="w-4 h-4"></i>
                                             </button>
                                         </form>
@@ -123,14 +134,13 @@
                                 <td colspan="5" class="text-center py-12 text-gray-400">
                                     <div class="flex flex-col items-center justify-center gap-2">
                                         <i data-feather="inbox" class="w-10 h-10 stroke-1 text-gray-300"></i>
-                                        <span class="text-base font-medium text-gray-500">Belum ada data artikel yang dikirimkan.</span>
-                                        <p class="text-xs text-gray-400">Mulai buat kontribusi budaya pertama Anda sekarang.</p>
+                                        <span class="text-base font-medium text-gray-500">Belum ada data artikel.</span>
                                     </div>
                                 </td>
                             </tr>
                         @endforelse
 
-                        <!-- Row khusus ketika filter tidak menemukan data -->
+                        <!-- Baris Tambahan saat Filter Tidak Menemukan Data -->
                         <tr id="no-filtered-data" class="hidden">
                             <td colspan="5" class="text-center py-12 text-gray-400">
                                 <div class="flex flex-col items-center justify-center gap-2">
@@ -146,7 +156,7 @@
 
     </div>
 
-    <!-- Script Interaktivitas Filter Tab -->
+    <!-- Script Interaktif Filter Tab -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             if (typeof feather !== 'undefined') {
@@ -155,16 +165,16 @@
         });
 
         function filterCategory(category, selectedBtn) {
-            // 1. Reset tampilan kelas tombol aktif
+            // Reset style semua tombol
             const buttons = document.querySelectorAll('.tab-btn');
             buttons.forEach(btn => {
                 btn.className = "tab-btn px-4 py-2 text-sm font-medium text-[#6B635B] hover:text-[#2C221E] hover:bg-gray-100 rounded-lg transition";
             });
 
-            // 2. Beri styling aktif pada tombol yang baru disorot
+            // Beri style aktif untuk tombol terpilih
             selectedBtn.className = "tab-btn px-4 py-2 text-sm font-semibold text-white bg-[#2C221E] rounded-lg shadow-sm transition";
 
-            // 3. Filter baris tabel
+            // Filter baris berdasarkan kategori
             const rows = document.querySelectorAll('.article-row');
             let visibleCount = 0;
 
@@ -179,7 +189,7 @@
                 }
             });
 
-            // 4. Tampilkan pesan kosong jika tidak ada data pada kategori yang dipilih
+            // Tampilkan pesan kosong jika tidak ada data pada kategori tersebut
             const noDataRow = document.getElementById('no-filtered-data');
             if (noDataRow) {
                 if (visibleCount === 0 && rows.length > 0) {

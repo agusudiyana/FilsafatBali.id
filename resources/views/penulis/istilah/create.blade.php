@@ -4,13 +4,9 @@
 
 <div class="max-w-4xl mx-auto bg-white rounded-xl shadow p-8">
 
-   <a href="{{ route('penulis.istilah.index') }}" 
-   class="bg-[#C48D2D] hover:bg-[#B07C20] text-white px-5 py-2.5 rounded-xl font-semibold transition flex items-center gap-2 shadow-sm">
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-    </svg>
-    <span>Tambah Istilah</span>
-</a>
+    <h1 class="text-3xl font-bold text-[#1A110A] mb-6">
+        Tambah Istilah
+    </h1>
 
     @if ($errors->any())
         <div class="bg-red-100 border border-red-300 text-red-700 p-4 rounded-lg mb-6">

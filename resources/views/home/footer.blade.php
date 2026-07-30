@@ -135,12 +135,7 @@
 
                     </a>
 
-                    <a href="#"
-                        class="text-[#7F6B56] text-[12px] uppercase tracking-[2px] hover:text-[#D9B35D]">
-
-                        English
-
-                    </a>
+                    
 
                 </div>
 

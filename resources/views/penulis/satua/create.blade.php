@@ -49,6 +49,13 @@
                       class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('ringkasan') }}</textarea>
         </div>
 
+        <!-- Isi Satua / Cerita Lengkap (FIELD YANG DITAMBAHKAN) -->
+        <div class="mb-5">
+            <label class="block font-semibold mb-2 text-gray-700">Isi Satua / Cerita Lengkap</label>
+            <textarea name="isi" rows="6" placeholder="Tuliskan isi cerita satua secara lengkap di sini..."
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('isi') }}</textarea>
+        </div>
+
         <!-- Tokoh Utama -->
         <div class="mb-5">
             <label class="block font-semibold mb-2 text-gray-700">Tokoh Utama</label>

@@ -53,17 +53,18 @@ class PenulisController extends Controller
     }
 
     /**
-     * Daftar Artikel dengan Filter Kategori
+     * Daftar Artikel dengan Filter Kategori yang Fleksibel & Akurat
      */
     public function artikelIndex(Request $request)
     {
-        $kategori = $request->query('kategori');
+        $kategori = $request->query('kategori', 'semua');
+        $userId = auth()->id();
 
-        $query = Ajaran::where('user_id', auth()->id());
+        $query = Ajaran::where('user_id', $userId);
 
-        // Jika kategori dipilih dan bukan 'Semua', lakukan filter
-        if ($kategori && $kategori != 'Semua') {
-            $query->where('kategori', $kategori);
+        // Jika kategori dipilih dan bukan 'semua', lakukan filter tanpa sensitif huruf besar/kecil
+        if ($kategori && strtolower($kategori) !== 'semua') {
+            $query->whereRaw('LOWER(kategori) = ?', [strtolower($kategori)]);
         }
 
         $artikels = $query->latest()->get();
@@ -115,7 +116,7 @@ class PenulisController extends Controller
     }
 
     /**
-     * Form Edit Artikel (Diubah dari editAjaran menjadi edit)
+     * Form Edit Artikel
      */
     public function edit($id)
     {
@@ -129,7 +130,7 @@ class PenulisController extends Controller
     /**
      * Update Artikel
      */
-    public function updateAjaran(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $ajaran = Ajaran::where('id', $id)
             ->where('user_id', auth()->id())

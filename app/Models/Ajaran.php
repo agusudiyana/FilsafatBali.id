@@ -9,8 +9,12 @@ class Ajaran extends Model
 {
     use HasFactory;
 
+    // Nama tabel di database
+    protected $table = 'ajarans';
+
     protected $fillable = [
         'judul',
+        'kategori',
         'penulis',
         'desa',
         'tahun',

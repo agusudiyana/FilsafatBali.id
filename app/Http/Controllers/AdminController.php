@@ -8,6 +8,8 @@ use App\Models\Satua;
 use App\Models\Istilah;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class AdminController extends Controller
 {
@@ -17,7 +19,7 @@ class AdminController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function index()
+    public function index(): View
     {
         $totalAjaran = Ajaran::count();
         $pending = Ajaran::where('status', 'pending')->count();
@@ -34,44 +36,41 @@ class AdminController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | VERIFIKASI AJARAN
+    | VERIFIKASI AJARAN / ARTIKEL (GABUNGAN TAB KATEGORI)
     |--------------------------------------------------------------------------
     */
 
-    public function verifikasiAjaran()
+    public function verifikasiAjaran(): View
     {
-        $ajarans = Ajaran::where('status', 'pending')
-            ->latest()
-            ->get();
+        $ajaran = Ajaran::where('status', 'pending')->latest()->get();
+        $cecimpedan = Cecimpedan::where('status', 'pending')->latest()->get();
+        $satua = Satua::where('status', 'pending')->latest()->get();
+        $istilah = Istilah::where('status', 'pending')->latest()->get();
 
-        return view('admin.verifikasi.artikel', compact('ajarans'));
+        return view('admin.verifikasi.artikel', compact('ajaran', 'cecimpedan', 'satua', 'istilah'));
     }
 
-    public function detailAjaran($id)
+    public function detailAjaran(int $id): View
     {
         $ajaran = Ajaran::findOrFail($id);
 
         return view('admin.verifikasi.detail-ajaran', compact('ajaran'));
     }
 
-    public function setujuiAjaran($id)
+    public function setujuiAjaran(int $id): RedirectResponse
     {
         $ajaran = Ajaran::findOrFail($id);
-        $ajaran->status = 'disetujui';
-        $ajaran->save();
+        $ajaran->update(['status' => 'disetujui']);
 
-        return redirect()->route('admin.verifikasi.ajaran')
-            ->with('success', 'Ajaran berhasil disetujui.');
+        return redirect()->back()->with('success', 'Ajaran berhasil disetujui.');
     }
 
-    public function tolakAjaran($id)
+    public function tolakAjaran(int $id): RedirectResponse
     {
         $ajaran = Ajaran::findOrFail($id);
-        $ajaran->status = 'ditolak';
-        $ajaran->save();
+        $ajaran->update(['status' => 'ditolak']);
 
-        return redirect()->route('admin.verifikasi.ajaran')
-            ->with('success', 'Ajaran berhasil ditolak.');
+        return redirect()->back()->with('success', 'Ajaran berhasil ditolak.');
     }
 
     /*
@@ -80,40 +79,36 @@ class AdminController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function verifikasiCecimpedan()
+    public function verifikasiCecimpedan(): View
     {
         $cecimpedans = Cecimpedan::where('status', 'pending')
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('admin.verifikasi.cecimpedan', compact('cecimpedans'));
     }
 
-    public function detailCecimpedan($id)
+    public function detailCecimpedan(int $id): View
     {
         $cecimpedan = Cecimpedan::findOrFail($id);
 
         return view('admin.verifikasi.detail-cecimpedan', compact('cecimpedan'));
     }
 
-    public function setujuiCecimpedan($id)
+    public function setujuiCecimpedan(int $id): RedirectResponse
     {
         $cecimpedan = Cecimpedan::findOrFail($id);
-        $cecimpedan->status = 'disetujui';
-        $cecimpedan->save();
+        $cecimpedan->update(['status' => 'disetujui']);
 
-        return redirect()->route('admin.verifikasi.cecimpedan')
-            ->with('success', 'Cecimpedan berhasil disetujui.');
+        return redirect()->back()->with('success', 'Cecimpedan berhasil disetujui.');
     }
 
-    public function tolakCecimpedan($id)
+    public function tolakCecimpedan(int $id): RedirectResponse
     {
         $cecimpedan = Cecimpedan::findOrFail($id);
-        $cecimpedan->status = 'ditolak';
-        $cecimpedan->save();
+        $cecimpedan->update(['status' => 'ditolak']);
 
-        return redirect()->route('admin.verifikasi.cecimpedan')
-            ->with('success', 'Cecimpedan berhasil ditolak.');
+        return redirect()->back()->with('success', 'Cecimpedan berhasil ditolak.');
     }
 
     /*
@@ -122,40 +117,36 @@ class AdminController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function verifikasiSatua()
+    public function verifikasiSatua(): View
     {
         $satuas = Satua::where('status', 'pending')
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('admin.verifikasi.satua', compact('satuas'));
     }
 
-    public function detailSatua($id)
+    public function detailSatua(int $id): View
     {
         $satua = Satua::findOrFail($id);
 
         return view('admin.verifikasi.detail-satua', compact('satua'));
     }
 
-    public function setujuiSatua($id)
+    public function setujuiSatua(int $id): RedirectResponse
     {
         $satua = Satua::findOrFail($id);
-        $satua->status = 'disetujui';
-        $satua->save();
+        $satua->update(['status' => 'disetujui']);
 
-        return redirect()->route('admin.verifikasi.satua')
-            ->with('success', 'Satua berhasil disetujui.');
+        return redirect()->back()->with('success', 'Satua berhasil disetujui.');
     }
 
-    public function tolakSatua($id)
+    public function tolakSatua(int $id): RedirectResponse
     {
         $satua = Satua::findOrFail($id);
-        $satua->status = 'ditolak';
-        $satua->save();
+        $satua->update(['status' => 'ditolak']);
 
-        return redirect()->route('admin.verifikasi.satua')
-            ->with('success', 'Satua berhasil ditolak.');
+        return redirect()->back()->with('success', 'Satua berhasil ditolak.');
     }
 
     /*
@@ -164,39 +155,55 @@ class AdminController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function verifikasiIstilah()
+    public function verifikasiIstilah(): View
     {
         $istilahs = Istilah::where('status', 'pending')
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('admin.verifikasi.istilah', compact('istilahs'));
     }
 
-    public function detailIstilah($id)
+    public function detailIstilah(int $id): View
     {
         $istilah = Istilah::findOrFail($id);
 
         return view('admin.verifikasi.detail-istilah', compact('istilah'));
     }
 
-    public function setujuiIstilah($id)
+    public function setujuiIstilah(int $id): RedirectResponse
     {
         $istilah = Istilah::findOrFail($id);
-        $istilah->status = 'disetujui';
-        $istilah->save();
+        $istilah->update(['status' => 'disetujui']);
 
-        return redirect()->route('admin.verifikasi.istilah')
-            ->with('success', 'Istilah berhasil disetujui.');
+        return redirect()->back()->with('success', 'Istilah berhasil disetujui.');
     }
 
-    public function tolakIstilah($id)
+    public function tolakIstilah(int $id): RedirectResponse
     {
         $istilah = Istilah::findOrFail($id);
-        $istilah->status = 'ditolak';
-        $istilah->save();
+        $istilah->update(['status' => 'ditolak']);
 
-        return redirect()->route('admin.verifikasi.istilah')
-            ->with('success', 'Istilah berhasil ditolak.');
+        return redirect()->back()->with('success', 'Istilah berhasil ditolak.');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | MANAJEMEN USER (PENULIS & PENGGUNA)
+    |--------------------------------------------------------------------------
+    */
+
+    public function kelolaPenulis(): View
+    {
+        $penulis = User::where('role', 'penulis')->latest()->paginate(10);
+
+        return view('admin.manajemen.penulis', compact('penulis'));
+    }
+
+    public function kelolaPengguna(): View
+    {
+        $pengguna = User::where('role', 'pengguna')->latest()->paginate(10);
+
+        return view('admin.manajemen.pengguna', compact('pengguna'));
     }
 }

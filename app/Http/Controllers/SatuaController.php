@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Storage;
 
 class SatuaController extends Controller
 {
+    /**
+     * Menampilkan daftar satua milik penulis yang sedang login.
+     */
     public function index()
     {
         $satuas = Satua::where('user_id', auth()->id())
@@ -17,33 +20,38 @@ class SatuaController extends Controller
         return view('penulis.satua.index', compact('satuas'));
     }
 
+    /**
+     * Form tambah satua baru.
+     */
     public function create()
     {
         return view('penulis.satua.create');
     }
 
+    /**
+     * Menyimpan satua baru ke database.
+     */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'judul'  => 'required|string|max:255',
-            'isi'    => 'required',
+            'isi'    => 'required|string',
             'tokoh'  => 'nullable|string|max:255',
             'asal'   => 'nullable|string|max:255',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
         ]);
 
-        $gambar = null;
         if ($request->hasFile('gambar')) {
-            $gambar = $request->file('gambar')->store('satua', 'public');
+            $validated['gambar'] = $request->file('gambar')->store('satua', 'public');
         }
 
         Satua::create([
-            'judul'   => $request->judul,
+            'judul'   => $validated['judul'],
             'penulis' => auth()->user()->name,
-            'isi'     => $request->isi,
-            'tokoh'   => $request->tokoh,
-            'asal'    => $request->asal,
-            'gambar'  => $gambar,
+            'isi'     => $validated['isi'],
+            'tokoh'   => $validated['tokoh'] ?? null,
+            'asal'    => $validated['asal'] ?? null,
+            'gambar'  => $validated['gambar'] ?? null,
             'status'  => 'pending',
             'user_id' => auth()->id(),
         ]);
@@ -54,16 +62,16 @@ class SatuaController extends Controller
     }
 
     /**
-     * Form Edit Satua
+     * Form edit satua.
      */
-    public function edit($id)
+    public function edit(Satua $satua)
     {
-        $satua = Satua::where('id', $id)
-            ->where('user_id', auth()->id())
-            ->firstOrFail();
+        // Pastikan hanya pemilik yang bisa mengakses
+        $this->authorizeOwner($satua);
 
         if ($satua->status === 'disetujui') {
-            return redirect()->route('penulis.satua.index')
+            return redirect()
+                ->route('penulis.satua.index')
                 ->with('error', 'Data satua yang sudah disetujui tidak dapat diedit.');
         }
 
@@ -71,41 +79,41 @@ class SatuaController extends Controller
     }
 
     /**
-     * Proses Update Satua
+     * Memperbarui data satua.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Satua $satua)
     {
-        $satua = Satua::where('id', $id)
-            ->where('user_id', auth()->id())
-            ->firstOrFail();
+        // Pastikan hanya pemilik yang bisa memperbarui
+        $this->authorizeOwner($satua);
 
         if ($satua->status === 'disetujui') {
-            return redirect()->route('penulis.satua.index')
+            return redirect()
+                ->route('penulis.satua.index')
                 ->with('error', 'Data satua yang sudah disetujui tidak dapat diubah.');
         }
 
-        $request->validate([
+        $validated = $request->validate([
             'judul'  => 'required|string|max:255',
-            'isi'    => 'required',
+            'isi'    => 'required|string',
             'tokoh'  => 'nullable|string|max:255',
             'asal'   => 'nullable|string|max:255',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
         ]);
 
-        $gambar = $satua->gambar;
         if ($request->hasFile('gambar')) {
+            // Hapus gambar lama jika ada
             if ($satua->gambar && Storage::disk('public')->exists($satua->gambar)) {
                 Storage::disk('public')->delete($satua->gambar);
             }
-            $gambar = $request->file('gambar')->store('satua', 'public');
+            $validated['gambar'] = $request->file('gambar')->store('satua', 'public');
         }
 
         $satua->update([
-            'judul'  => $request->judul,
-            'isi'    => $request->isi,
-            'tokoh'  => $request->tokoh,
-            'asal'   => $request->asal,
-            'gambar' => $gambar,
+            'judul'  => $validated['judul'],
+            'isi'    => $validated['isi'],
+            'tokoh'  => $validated['tokoh'] ?? null,
+            'asal'   => $validated['asal'] ?? null,
+            'gambar' => $validated['gambar'] ?? $satua->gambar,
             'status' => 'pending', // Reset status ke pending agar diverifikasi ulang
         ]);
 
@@ -115,16 +123,16 @@ class SatuaController extends Controller
     }
 
     /**
-     * Proses Hapus Satua
+     * Menghapus data satua.
      */
-    public function destroy($id)
+    public function destroy(Satua $satua)
     {
-        $satua = Satua::where('id', $id)
-            ->where('user_id', auth()->id())
-            ->firstOrFail();
+        // Pastikan hanya pemilik yang bisa menghapus
+        $this->authorizeOwner($satua);
 
         if ($satua->status === 'disetujui') {
-            return redirect()->route('penulis.satua.index')
+            return redirect()
+                ->route('penulis.satua.index')
                 ->with('error', 'Data satua yang sudah disetujui tidak dapat dihapus.');
         }
 
@@ -137,5 +145,15 @@ class SatuaController extends Controller
         return redirect()
             ->route('penulis.satua.index')
             ->with('success', 'Data Satua berhasil dihapus.');
+    }
+
+    /**
+     * Helper internal untuk pengecekan hak milik data.
+     */
+    private function authorizeOwner(Satua $satua): void
+    {
+        if ($satua->user_id !== auth()->id()) {
+            abort(403, 'Anda tidak memiliki akses ke data ini.');
+        }
     }
 }

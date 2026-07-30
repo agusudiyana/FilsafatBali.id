@@ -23,21 +23,26 @@ class CecimpedanController extends Controller
 
     public function store(Request $request)
     {
+        // Validasi disesuaikan dengan field yang ada di form view
         $request->validate([
-            'judul'    => 'required|string|max:255',
-            'isi'      => 'required',
-            'jawaban'  => 'required|string|max:255',
-            'kategori' => 'nullable|string|max:255',
+            'pertanyaan'        => 'required|string',
+            'jawaban'           => 'required|string|max:255',
+            'tingkat_kesulitan' => 'nullable|string|max:255',
+            'terjemahan'        => 'nullable|string',
         ]);
 
+        // Simpan data ke database
         Cecimpedan::create([
-            'judul'    => $request->judul,
-            'penulis'  => auth()->user()->name,
-            'isi'      => $request->isi,
-            'jawaban'  => $request->jawaban,
-            'kategori' => $request->kategori,
-            'status'   => 'pending',
-            'user_id'  => auth()->id(),
+            'judul'             => $request->pertanyaan, // Fallback jika DB memakai kolom 'judul'
+            'pertanyaan'        => $request->pertanyaan,
+            'isi'               => $request->pertanyaan, // Fallback jika DB memakai kolom 'isi'
+            'penulis'           => auth()->user()->name,
+            'jawaban'           => $request->jawaban,
+            'terjemahan'        => $request->terjemahan,
+            'tingkat_kesulitan' => $request->tingkat_kesulitan ?? $request->kategori,
+            'kategori'          => 'Cecimpedan',
+            'status'            => 'pending',
+            'user_id'           => auth()->id(),
         ]);
 
         return redirect()
@@ -58,7 +63,7 @@ class CecimpedanController extends Controller
     }
 
     /**
-     * Proses Update Cecimpedan (Tanpa Gambar)
+     * Proses Update Cecimpedan
      */
     public function update(Request $request, $id)
     {
@@ -67,18 +72,20 @@ class CecimpedanController extends Controller
             ->firstOrFail();
 
         $request->validate([
-            'judul'    => 'required|string|max:255',
-            'isi'      => 'required',
-            'jawaban'  => 'required|string|max:255',
-            'kategori' => 'nullable|string|max:255',
+            'pertanyaan'        => 'required|string',
+            'jawaban'           => 'required|string|max:255',
+            'tingkat_kesulitan' => 'nullable|string|max:255',
+            'terjemahan'        => 'nullable|string',
         ]);
 
         $cecimpedan->update([
-            'judul'    => $request->judul,
-            'isi'      => $request->isi,
-            'jawaban'  => $request->jawaban,
-            'kategori' => $request->kategori,
-            'status'   => 'pending', // Kembalikan ke pending untuk diverifikasi ulang oleh admin
+            'judul'             => $request->pertanyaan,
+            'pertanyaan'        => $request->pertanyaan,
+            'isi'               => $request->pertanyaan,
+            'jawaban'           => $request->jawaban,
+            'terjemahan'        => $request->terjemahan,
+            'tingkat_kesulitan' => $request->tingkat_kesulitan ?? $request->kategori,
+            'status'            => 'pending', // Reset ke status pending saat diubah
         ]);
 
         return redirect()
