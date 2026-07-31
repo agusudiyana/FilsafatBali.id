@@ -11,12 +11,12 @@
                     Verifikasi Artikel
                 </h1>
                 <p class="text-[#6B635B] text-sm mt-1">
-                    Daftar kiriman konten dari penulis yang menunggu verifikasi.
+                    Daftar kiriman artikel dari penulis yang menunggu verifikasi.
                 </p>
             </div>
         </div>
 
-        <!-- Filter Kategori (Tab Navigasi) -->
+        <!-- Filter Kategori (Tab Navigasi berdasarkan Kategori Artikel) -->
         <div class="flex flex-wrap gap-2 mb-6 border-b border-gray-200 pb-3" id="category-tabs">
             <button onclick="filterCategory('semua', this)" 
                 class="tab-btn px-4 py-2 text-sm font-semibold text-white bg-[#2C221E] rounded-lg shadow-sm transition">
@@ -47,7 +47,7 @@
             </div>
         @endif
 
-        <!-- Tabel Data Verifikasi -->
+        <!-- Tabel Data Verifikasi Artikel -->
         <div class="bg-white rounded-2xl shadow-sm border border-[#E6D5B8]/60 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
@@ -63,13 +63,15 @@
                     <tbody class="divide-y divide-gray-100 text-sm">
                         @php $no = 1; @endphp
 
-                        {{-- Loop Data Ajaran --}}
+                        {{-- Loop Khusus Data Artikel (Ajaran/Artikel) --}}
                         @foreach($ajaran as $item)
-                            <tr class="article-row hover:bg-[#FBF9F5]/60 transition" data-category="Ajaran Tertua">
+                            <tr class="article-row hover:bg-[#FBF9F5]/60 transition" data-category="{{ $item->kategori ?? 'Ajaran Tertua' }}">
                                 <td class="p-4 font-medium text-gray-500">{{ $no++ }}</td>
                                 <td class="p-4 font-semibold text-[#2C221E]">{{ $item->judul }}</td>
                                 <td class="p-4">
-                                    <span class="bg-[#F3E7D0] text-[#2C221E] px-3.5 py-1.5 rounded-full text-xs font-medium">Ajaran Tertua</span>
+                                    <span class="bg-[#F3E7D0] text-[#2C221E] px-3.5 py-1.5 rounded-full text-xs font-medium">
+                                        {{ $item->kategori ?? 'Ajaran Tertua' }}
+                                    </span>
                                 </td>
                                 <td class="p-4">
                                     <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
@@ -78,20 +80,24 @@
                                 </td>
                                 <td class="p-4 text-center">
                                     <div class="flex items-center justify-center gap-1.5">
-                                        <!-- Tombol Detail -->
+                                        <!-- Tombol Detail Artikel -->
                                         <a href="{{ route('admin.verifikasi.artikel.detail', $item->id) }}" title="Lihat Detail" class="text-sky-600 hover:text-sky-800 p-2 hover:bg-sky-50 rounded-lg transition">
                                             <i data-feather="eye" class="w-5 h-5"></i>
                                         </a>
+
                                         <!-- Tombol Setujui -->
-                                        <form action="{{ route('admin.verifikasi.ajaran.setujui', $item->id) }}" method="POST" class="inline">
+                                        <form action="{{ route('admin.verifikasi.artikel.setujui', $item->id) }}" method="POST" class="inline">
                                             @csrf
+                                            @method('PUT')
                                             <button type="submit" title="Setujui" class="text-emerald-600 hover:text-emerald-800 p-2 hover:bg-emerald-50 rounded-lg transition">
                                                 <i data-feather="check-circle" class="w-5 h-5"></i>
                                             </button>
                                         </form>
+
                                         <!-- Tombol Tolak -->
-                                        <form action="{{ route('admin.verifikasi.ajaran.tolak', $item->id) }}" method="POST" class="inline">
+                                        <form action="{{ route('admin.verifikasi.artikel.tolak', $item->id) }}" method="POST" class="inline">
                                             @csrf
+                                            @method('PUT')
                                             <button type="submit" title="Tolak" class="text-rose-600 hover:text-rose-800 p-2 hover:bg-rose-50 rounded-lg transition">
                                                 <i data-feather="x-circle" class="w-5 h-5"></i>
                                             </button>
@@ -101,122 +107,8 @@
                             </tr>
                         @endforeach
 
-                        {{-- Loop Data Cecimpedan --}}
-                        @foreach($cecimpedan as $item)
-                            <tr class="article-row hover:bg-[#FBF9F5]/60 transition" data-category="Cecimpedan">
-                                <td class="p-4 font-medium text-gray-500">{{ $no++ }}</td>
-                                <td class="p-4 font-semibold text-[#2C221E]">{{ $item->judul }}</td>
-                                <td class="p-4">
-                                    <span class="bg-[#F3E7D0] text-[#2C221E] px-3.5 py-1.5 rounded-full text-xs font-medium">Cecimpedan</span>
-                                </td>
-                                <td class="p-4">
-                                    <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
-                                        <i data-feather="clock" class="w-3.5 h-3.5"></i> Pending
-                                    </span>
-                                </td>
-                                <td class="p-4 text-center">
-                                    <div class="flex items-center justify-center gap-1.5">
-                                        <!-- Tombol Detail -->
-                                        <a href="{{ route('admin.verifikasi.cecimpedan.detail', $item->id) }}" title="Lihat Detail" class="text-sky-600 hover:text-sky-800 p-2 hover:bg-sky-50 rounded-lg transition">
-                                            <i data-feather="eye" class="w-5 h-5"></i>
-                                        </a>
-                                        <!-- Tombol Setujui -->
-                                        <form action="{{ route('admin.verifikasi.cecimpedan.setujui', $item->id) }}" method="POST" class="inline">
-                                            @csrf
-                                            <button type="submit" title="Setujui" class="text-emerald-600 hover:text-emerald-800 p-2 hover:bg-emerald-50 rounded-lg transition">
-                                                <i data-feather="check-circle" class="w-5 h-5"></i>
-                                            </button>
-                                        </form>
-                                        <!-- Tombol Tolak -->
-                                        <form action="{{ route('admin.verifikasi.cecimpedan.tolak', $item->id) }}" method="POST" class="inline">
-                                            @csrf
-                                            <button type="submit" title="Tolak" class="text-rose-600 hover:text-rose-800 p-2 hover:bg-rose-50 rounded-lg transition">
-                                                <i data-feather="x-circle" class="w-5 h-5"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-
-                        {{-- Loop Data Satua --}}
-                        @foreach($satua as $item)
-                            <tr class="article-row hover:bg-[#FBF9F5]/60 transition" data-category="Satua Bali">
-                                <td class="p-4 font-medium text-gray-500">{{ $no++ }}</td>
-                                <td class="p-4 font-semibold text-[#2C221E]">{{ $item->judul }}</td>
-                                <td class="p-4">
-                                    <span class="bg-[#F3E7D0] text-[#2C221E] px-3.5 py-1.5 rounded-full text-xs font-medium">Satua Bali</span>
-                                </td>
-                                <td class="p-4">
-                                    <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
-                                        <i data-feather="clock" class="w-3.5 h-3.5"></i> Pending
-                                    </span>
-                                </td>
-                                <td class="p-4 text-center">
-                                    <div class="flex items-center justify-center gap-1.5">
-                                        <!-- Tombol Detail -->
-                                        <a href="{{ route('admin.verifikasi.satua.detail', $item->id) }}" title="Lihat Detail" class="text-sky-600 hover:text-sky-800 p-2 hover:bg-sky-50 rounded-lg transition">
-                                            <i data-feather="eye" class="w-5 h-5"></i>
-                                        </a>
-                                        <!-- Tombol Setujui -->
-                                        <form action="{{ route('admin.verifikasi.satua.setujui', $item->id) }}" method="POST" class="inline">
-                                            @csrf
-                                            <button type="submit" title="Setujui" class="text-emerald-600 hover:text-emerald-800 p-2 hover:bg-emerald-50 rounded-lg transition">
-                                                <i data-feather="check-circle" class="w-5 h-5"></i>
-                                            </button>
-                                        </form>
-                                        <!-- Tombol Tolak -->
-                                        <form action="{{ route('admin.verifikasi.satua.tolak', $item->id) }}" method="POST" class="inline">
-                                            @csrf
-                                            <button type="submit" title="Tolak" class="text-rose-600 hover:text-rose-800 p-2 hover:bg-rose-50 rounded-lg transition">
-                                                <i data-feather="x-circle" class="w-5 h-5"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-
-                        {{-- Loop Data Istilah --}}
-                        @foreach($istilah as $item)
-                            <tr class="article-row hover:bg-[#FBF9F5]/60 transition" data-category="Istilah Bali">
-                                <td class="p-4 font-medium text-gray-500">{{ $no++ }}</td>
-                                <td class="p-4 font-semibold text-[#2C221E]">{{ $item->istilah }}</td>
-                                <td class="p-4">
-                                    <span class="bg-[#F3E7D0] text-[#2C221E] px-3.5 py-1.5 rounded-full text-xs font-medium">Istilah Bali</span>
-                                </td>
-                                <td class="p-4">
-                                    <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
-                                        <i data-feather="clock" class="w-3.5 h-3.5"></i> Pending
-                                    </span>
-                                </td>
-                                <td class="p-4 text-center">
-                                    <div class="flex items-center justify-center gap-1.5">
-                                        <!-- Tombol Detail -->
-                                        <a href="{{ route('admin.verifikasi.istilah.detail', $item->id) }}" title="Lihat Detail" class="text-sky-600 hover:text-sky-800 p-2 hover:bg-sky-50 rounded-lg transition">
-                                            <i data-feather="eye" class="w-5 h-5"></i>
-                                        </a>
-                                        <!-- Tombol Setujui -->
-                                        <form action="{{ route('admin.verifikasi.istilah.setujui', $item->id) }}" method="POST" class="inline">
-                                            @csrf
-                                            <button type="submit" title="Setujui" class="text-emerald-600 hover:text-emerald-800 p-2 hover:bg-emerald-50 rounded-lg transition">
-                                                <i data-feather="check-circle" class="w-5 h-5"></i>
-                                            </button>
-                                        </form>
-                                        <!-- Tombol Tolak -->
-                                        <form action="{{ route('admin.verifikasi.istilah.tolak', $item->id) }}" method="POST" class="inline">
-                                            @csrf
-                                            <button type="submit" title="Tolak" class="text-rose-600 hover:text-rose-800 p-2 hover:bg-rose-50 rounded-lg transition">
-                                                <i data-feather="x-circle" class="w-5 h-5"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-
-                        {{-- Jika Semua Kosong --}}
-                        @if($ajaran->isEmpty() && $cecimpedan->isEmpty() && $satua->isEmpty() && $istilah->isEmpty())
+                        {{-- Jika Tidak Ada Data Artikel --}}
+                        @if($ajaran->isEmpty())
                             <tr>
                                 <td colspan="5" class="text-center py-12 text-gray-400">
                                     <div class="flex flex-col items-center justify-center gap-2">

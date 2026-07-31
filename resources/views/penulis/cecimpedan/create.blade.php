@@ -53,11 +53,18 @@
                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>
         </div>
 
-        <!-- Makna / Nilai Filosofis -->
+        <!-- 1. Makna -->
         <div class="mb-5">
-            <label class="block font-semibold mb-2 text-gray-700">Makna / Nilai Filosofis</label>
-            <textarea name="makna" rows="4" placeholder="Tuliskan nilai filosofis atau poin-poin penjabarannya..."
-                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('makna') }}</textarea>
+            <label class="block font-semibold mb-2 text-gray-700">Makna</label>
+            <textarea name="makna" rows="3" placeholder="Tuliskan makna atau penjelasan singkat teka-teki..."
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">{{ old('makna') }}</textarea>
+        </div>
+
+        <!-- 2. Nilai Filosofis -->
+        <div class="mb-5">
+            <label class="block font-semibold mb-2 text-gray-700">Nilai Filosofis / Pesan Moral</label>
+            <textarea name="filosofi" rows="3" placeholder="Tuliskan nilai filosofis atau pesan moral mendalam yang terkandung..."
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">{{ old('filosofi') }}</textarea>
         </div>
 
         <!-- Variasi Daerah -->

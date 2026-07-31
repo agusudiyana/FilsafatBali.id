@@ -25,10 +25,13 @@ class IstilahController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'istilah'    => 'required|string|max:255',
-            'arti'       => 'required|string',
-            'kategori'   => 'nullable|string|max:255',
-            'gambar'     => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
+            'istilah'           => 'required|string|max:255',
+            'arti'              => 'required|string',
+            'kategori'          => 'nullable|string|max:255',
+            'sejarah'           => 'nullable|string',
+            'contoh_penggunaan' => 'nullable|string',
+            'padanan_kata'      => 'nullable|string',
+            'gambar'            => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
         ]);
 
         $gambar = null;
@@ -37,13 +40,16 @@ class IstilahController extends Controller
         }
 
         Istilah::create([
-            'istilah'    => $request->istilah,
-            'penulis'    => auth()->user()->name,
-            'arti'       => $request->arti,
-            'kategori'   => $request->kategori,
-            'gambar'     => $gambar,
-            'status'     => 'pending',
-            'user_id'    => auth()->id(),
+            'istilah'           => $request->istilah,
+            'penulis'           => auth()->user()->name,
+            'arti'              => $request->arti,
+            'kategori'          => $request->kategori,
+            'sejarah'           => $request->sejarah ?? $request->penjelasan,
+            'contoh_penggunaan' => $request->contoh_penggunaan ?? $request->contoh,
+            'padanan_kata'      => $request->padanan_kata ?? $request->keterangan,
+            'gambar'            => $gambar,
+            'status'            => 'pending',
+            'user_id'           => auth()->id(),
         ]);
 
         return redirect()
@@ -77,10 +83,13 @@ class IstilahController extends Controller
         }
 
         $request->validate([
-            'istilah'    => 'required|string|max:255',
-            'arti'       => 'required|string',
-            'kategori'   => 'nullable|string|max:255',
-            'gambar'     => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
+            'istilah'           => 'required|string|max:255',
+            'arti'              => 'required|string',
+            'kategori'          => 'nullable|string|max:255',
+            'sejarah'           => 'nullable|string',
+            'contoh_penggunaan' => 'nullable|string',
+            'padanan_kata'      => 'nullable|string',
+            'gambar'            => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
         ]);
 
         $gambar = $istilah->gambar;
@@ -92,11 +101,14 @@ class IstilahController extends Controller
         }
 
         $istilah->update([
-            'istilah'    => $request->istilah,
-            'arti'       => $request->arti,
-            'kategori'   => $request->kategori,
-            'gambar'     => $gambar,
-            'status'     => 'pending',
+            'istilah'           => $request->istilah,
+            'arti'              => $request->arti,
+            'kategori'          => $request->kategori,
+            'sejarah'           => $request->sejarah ?? $request->penjelasan,
+            'contoh_penggunaan' => $request->contoh_penggunaan ?? $request->contoh,
+            'padanan_kata'      => $request->padanan_kata ?? $request->keterangan,
+            'gambar'            => $gambar,
+            'status'            => 'pending',
         ]);
 
         return redirect()

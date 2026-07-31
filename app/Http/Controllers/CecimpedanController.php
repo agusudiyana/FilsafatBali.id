@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cecimpedan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CecimpedanController extends Controller
 {
@@ -23,26 +24,40 @@ class CecimpedanController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi disesuaikan dengan field yang ada di form view
         $request->validate([
-            'pertanyaan'        => 'required|string',
-            'jawaban'           => 'required|string|max:255',
-            'tingkat_kesulitan' => 'nullable|string|max:255',
-            'terjemahan'        => 'nullable|string',
+            'tingkat'        => 'required|string',
+            'pertanyaan'     => 'required|string',
+            'terjemahan'     => 'required|string',
+            'jawaban'        => 'required|string|max:255',
+            'makna'          => 'nullable|string',
+            'filosofi'       => 'nullable|string',
+            'variasi_daerah' => 'nullable|string',
+            'asal_daerah'    => 'nullable|string|max:255',
+            'rekaman'        => 'nullable|string|max:255',
+            'gambar'         => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
         ]);
 
-        // Simpan data ke database
+        $gambar = null;
+        if ($request->hasFile('gambar')) {
+            $gambar = $request->file('gambar')->store('cecimpedan', 'public');
+        }
+
         Cecimpedan::create([
-            'judul'             => $request->pertanyaan, // Fallback jika DB memakai kolom 'judul'
-            'pertanyaan'        => $request->pertanyaan,
-            'isi'               => $request->pertanyaan, // Fallback jika DB memakai kolom 'isi'
-            'penulis'           => auth()->user()->name,
-            'jawaban'           => $request->jawaban,
-            'terjemahan'        => $request->terjemahan,
-            'tingkat_kesulitan' => $request->tingkat_kesulitan ?? $request->kategori,
-            'kategori'          => 'Cecimpedan',
-            'status'            => 'pending',
-            'user_id'           => auth()->id(),
+            'user_id'        => auth()->id(),
+            'penulis'        => auth()->user()->name,
+            'judul'          => $request->pertanyaan,
+            'isi'            => $request->pertanyaan,
+            'tingkat'        => $request->tingkat,
+            'pertanyaan'     => $request->pertanyaan,
+            'terjemahan'     => $request->terjemahan,
+            'jawaban'        => $request->jawaban,
+            'makna'          => $request->makna,
+            'filosofi'       => $request->filosofi,
+            'variasi_daerah' => $request->variasi_daerah,
+            'asal_daerah'    => $request->asal_daerah,
+            'rekaman'        => $request->rekaman,
+            'gambar'         => $gambar,
+            'status'         => 'pending',
         ]);
 
         return redirect()
@@ -50,9 +65,6 @@ class CecimpedanController extends Controller
             ->with('success', 'Cecimpedan berhasil dikirim dan menunggu verifikasi admin.');
     }
 
-    /**
-     * Tampilkan Form Edit Cecimpedan
-     */
     public function edit($id)
     {
         $cecimpedan = Cecimpedan::where('id', $id)
@@ -62,9 +74,6 @@ class CecimpedanController extends Controller
         return view('penulis.cecimpedan.edit', compact('cecimpedan'));
     }
 
-    /**
-     * Proses Update Cecimpedan
-     */
     public function update(Request $request, $id)
     {
         $cecimpedan = Cecimpedan::where('id', $id)
@@ -72,20 +81,40 @@ class CecimpedanController extends Controller
             ->firstOrFail();
 
         $request->validate([
-            'pertanyaan'        => 'required|string',
-            'jawaban'           => 'required|string|max:255',
-            'tingkat_kesulitan' => 'nullable|string|max:255',
-            'terjemahan'        => 'nullable|string',
+            'tingkat'        => 'required|string',
+            'pertanyaan'     => 'required|string',
+            'terjemahan'     => 'required|string',
+            'jawaban'        => 'required|string|max:255',
+            'makna'          => 'nullable|string',
+            'filosofi'       => 'nullable|string',
+            'variasi_daerah' => 'nullable|string',
+            'asal_daerah'    => 'nullable|string|max:255',
+            'rekaman'        => 'nullable|string|max:255',
+            'gambar'         => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
         ]);
 
+        $gambar = $cecimpedan->gambar;
+        if ($request->hasFile('gambar')) {
+            if ($cecimpedan->gambar && Storage::disk('public')->exists($cecimpedan->gambar)) {
+                Storage::disk('public')->delete($cecimpedan->gambar);
+            }
+            $gambar = $request->file('gambar')->store('cecimpedan', 'public');
+        }
+
         $cecimpedan->update([
-            'judul'             => $request->pertanyaan,
-            'pertanyaan'        => $request->pertanyaan,
-            'isi'               => $request->pertanyaan,
-            'jawaban'           => $request->jawaban,
-            'terjemahan'        => $request->terjemahan,
-            'tingkat_kesulitan' => $request->tingkat_kesulitan ?? $request->kategori,
-            'status'            => 'pending', // Reset ke status pending saat diubah
+            'judul'          => $request->pertanyaan,
+            'pertanyaan'     => $request->pertanyaan,
+            'isi'            => $request->pertanyaan,
+            'tingkat'        => $request->tingkat,
+            'terjemahan'     => $request->terjemahan,
+            'jawaban'        => $request->jawaban,
+            'makna'          => $request->makna,
+            'filosofi'       => $request->filosofi,
+            'variasi_daerah' => $request->variasi_daerah,
+            'asal_daerah'    => $request->asal_daerah,
+            'rekaman'        => $request->rekaman,
+            'gambar'         => $gambar,
+            'status'         => 'pending',
         ]);
 
         return redirect()
@@ -93,14 +122,15 @@ class CecimpedanController extends Controller
             ->with('success', 'Cecimpedan berhasil diperbarui dan menunggu verifikasi admin.');
     }
 
-    /**
-     * Proses Hapus Cecimpedan
-     */
     public function destroy($id)
     {
         $cecimpedan = Cecimpedan::where('id', $id)
             ->where('user_id', auth()->id())
             ->firstOrFail();
+
+        if ($cecimpedan->gambar && Storage::disk('public')->exists($cecimpedan->gambar)) {
+            Storage::disk('public')->delete($cecimpedan->gambar);
+        }
 
         $cecimpedan->delete();
 

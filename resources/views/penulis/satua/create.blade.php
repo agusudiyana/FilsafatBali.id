@@ -31,7 +31,7 @@
         <!-- Subtitle / Judul Inggris -->
         <div class="mb-5">
             <label class="block font-semibold mb-2 text-gray-700">Sub Judul / Terjemahan Inggris (Opsional)</label>
-            <input type="text" name="subtitle" value="{{ old('subtitle') }}" placeholder="Contoh: Golden Cucumber Girl"
+            <input type="text" name="sub_judul" value="{{ old('sub_judul', old('subtitle')) }}" placeholder="Contoh: Golden Cucumber Girl"
                    class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">
         </div>
 
@@ -49,7 +49,7 @@
                       class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('ringkasan') }}</textarea>
         </div>
 
-        <!-- Isi Satua / Cerita Lengkap (FIELD YANG DITAMBAHKAN) -->
+        <!-- Isi Satua / Cerita Lengkap -->
         <div class="mb-5">
             <label class="block font-semibold mb-2 text-gray-700">Isi Satua / Cerita Lengkap</label>
             <textarea name="isi" rows="6" placeholder="Tuliskan isi cerita satua secara lengkap di sini..."
@@ -59,29 +59,29 @@
         <!-- Tokoh Utama -->
         <div class="mb-5">
             <label class="block font-semibold mb-2 text-gray-700">Tokoh Utama</label>
-            <textarea name="tokoh_utama" rows="3" placeholder="Sebutkan dan jelaskan tokoh utama..."
-                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('tokoh_utama') }}</textarea>
+            <textarea name="tokoh" rows="3" placeholder="Sebutkan dan jelaskan tokoh utama..."
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('tokoh', old('tokoh_utama')) }}</textarea>
         </div>
 
         <!-- Alur Cerita -->
         <div class="mb-5">
             <label class="block font-semibold mb-2 text-gray-700">Alur Cerita</label>
-            <textarea name="alur_cerita" rows="4" placeholder="Jelaskan alur atau jalan cerita..."
-                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('alur_cerita') }}</textarea>
+            <textarea name="alur" rows="4" placeholder="Jelaskan alur atau jalan cerita..."
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('alur', old('alur_cerita')) }}</textarea>
         </div>
 
         <!-- Nilai Moral -->
         <div class="mb-5">
             <label class="block font-semibold mb-2 text-gray-700">Nilai Moral</label>
-            <textarea name="nilai_moral" rows="3" placeholder="Tuliskan nilai moral yang terkandung..."
-                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('nilai_moral') }}</textarea>
+            <textarea name="moral" rows="3" placeholder="Tuliskan nilai moral yang terkandung..."
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('moral', old('nilai_moral')) }}</textarea>
         </div>
 
         <!-- Pesan Filosofi -->
         <div class="mb-6">
             <label class="block font-semibold mb-2 text-gray-700">Pesan Filosofi</label>
-            <textarea name="pesan_filosofi" rows="3" placeholder="Tuliskan pesan filosofi cerita..."
-                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">{{ old('pesan_filosofi') }}</textarea>
+            <textarea name="filosofi" rows="3" placeholder="Tuliskan pesan filosofi cerita..."
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">{{ old('filosofi', old('pesan_filosofi')) }}</textarea>
         </div>
 
         <!-- Tombol Aksi -->

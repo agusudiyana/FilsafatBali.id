@@ -9,7 +9,6 @@ use App\Http\Controllers\PenulisController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CecimpedanController;
-use App\Http\Controllers\SatuaController;
 use App\Http\Controllers\IstilahController;
 
 /*
@@ -64,7 +63,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/verifikasi/artikel', [AdminController::class, 'verifikasiAjaran'])->name('admin.verifikasi.artikel');
         Route::get('/verifikasi/artikel/{id}', [AdminController::class, 'detailAjaran'])->name('admin.verifikasi.artikel.detail');
         
-        // Aksi Setujui & Tolak Artikel (Mendukung alias nama ajaran & artikel)
+        // Aksi Setujui & Tolak Artikel
         Route::match(['post', 'put'], '/verifikasi/ajaran/{id}/setujui', [AdminController::class, 'setujuiAjaran'])->name('admin.verifikasi.ajaran.setujui');
         Route::match(['post', 'put'], '/verifikasi/ajaran/{id}/tolak', [AdminController::class, 'tolakAjaran'])->name('admin.verifikasi.ajaran.tolak');
         Route::match(['post', 'put'], '/verifikasi/artikel/{id}/setujui', [AdminController::class, 'setujuiAjaran'])->name('admin.verifikasi.artikel.setujui');
@@ -117,13 +116,13 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/cecimpedan/{id}', [CecimpedanController::class, 'update'])->name('penulis.cecimpedan.update');
         Route::delete('/cecimpedan/{id}', [CecimpedanController::class, 'destroy'])->name('penulis.cecimpedan.destroy');
 
-        // SATUA
-        Route::get('/satua', [SatuaController::class, 'index'])->name('penulis.satua.index');
-        Route::get('/satua/create', [SatuaController::class, 'create'])->name('penulis.satua.create');
-        Route::post('/satua/store', [SatuaController::class, 'store'])->name('penulis.satua.store');
-        Route::get('/satua/{id}/edit', [SatuaController::class, 'edit'])->name('penulis.satua.edit');
-        Route::put('/satua/{id}', [SatuaController::class, 'update'])->name('penulis.satua.update');
-        Route::delete('/satua/{id}', [SatuaController::class, 'destroy'])->name('penulis.satua.destroy');
+        // SATUA (PENGATURAN RUTE PENULIS SATUA)
+        Route::get('/satua', [PenulisController::class, 'satuaIndex'])->name('penulis.satua.index');
+        Route::get('/satua/create', [PenulisController::class, 'satuaCreate'])->name('penulis.satua.create');
+        Route::post('/satua/store', [PenulisController::class, 'satuaStore'])->name('penulis.satua.store');
+        Route::get('/satua/{id}/edit', [PenulisController::class, 'satuaEdit'])->name('penulis.satua.edit');
+        Route::put('/satua/{id}', [PenulisController::class, 'satuaUpdate'])->name('penulis.satua.update');
+        Route::delete('/satua/{id}', [PenulisController::class, 'satuaDestroy'])->name('penulis.satua.destroy');
 
         // ISTILAH
         Route::get('/istilah', [IstilahController::class, 'index'])->name('penulis.istilah.index');

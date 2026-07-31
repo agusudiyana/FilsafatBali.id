@@ -10,15 +10,18 @@ class Cecimpedan extends Model
     use HasFactory;
 
     protected $fillable = [
-        'judul',
-        'penulis',
-        'isi',
-        'jawaban',
-        'kategori',
-        'gambar',
-        'status',
-        'user_id',
-    ];
+    'user_id',
+    'tingkat',
+    'pertanyaan',
+    'terjemahan',
+    'jawaban',
+    'makna',
+    'filosofi',
+    'variasi_daerah',
+    'asal_daerah',
+    'rekaman',
+    'status',
+];
 
     public function user()
     {

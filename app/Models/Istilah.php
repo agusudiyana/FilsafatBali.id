@@ -10,19 +10,19 @@ class Istilah extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'istilah',
         'arti',
         'kategori',
         'gambar',
+        'sejarah',
+        'contoh_penggunaan',
+        'padanan_kata',
         'status',
-        'user_id',
     ];
 
-    /**
-     * Relasi ke User
-     */
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -21,38 +21,38 @@ class AdminController extends Controller
 
     public function index(): View
     {
-        $totalAjaran = Ajaran::count();
-        $pending = Ajaran::where('status', 'pending')->count();
-        $disetujui = Ajaran::where('status', 'disetujui')->count();
+        $totalAjaran   = Ajaran::count();
+        $pending       = Ajaran::where('status', 'pending')->count();
+        $disetujui     = Ajaran::where('status', 'disetujui')->count();
+        $totalPenulis  = User::where('role', 'penulis')->count();
         $totalPengguna = User::count();
 
         return view('admin.dashboard', compact(
             'totalAjaran',
             'pending',
             'disetujui',
+            'totalPenulis',
             'totalPengguna'
         ));
     }
 
     /*
     |--------------------------------------------------------------------------
-    | VERIFIKASI AJARAN / ARTIKEL (GABUNGAN TAB KATEGORI)
+    | VERIFIKASI ARTIKEL
     |--------------------------------------------------------------------------
     */
 
     public function verifikasiAjaran(): View
     {
+        // Murni hanya mengambil data Artikel biasa (Ajaran) yang pending
         $ajaran = Ajaran::where('status', 'pending')->latest()->get();
-        $cecimpedan = Cecimpedan::where('status', 'pending')->latest()->get();
-        $satua = Satua::where('status', 'pending')->latest()->get();
-        $istilah = Istilah::where('status', 'pending')->latest()->get();
 
-        return view('admin.verifikasi.artikel', compact('ajaran', 'cecimpedan', 'satua', 'istilah'));
+        return view('admin.verifikasi.artikel', compact('ajaran'));
     }
 
     public function detailAjaran(int $id): View
     {
-        $ajaran = Ajaran::findOrFail($id);
+        $ajaran = Ajaran::with('user')->findOrFail($id);
 
         return view('admin.verifikasi.detail-ajaran', compact('ajaran'));
     }
@@ -62,7 +62,7 @@ class AdminController extends Controller
         $ajaran = Ajaran::findOrFail($id);
         $ajaran->update(['status' => 'disetujui']);
 
-        return redirect()->back()->with('success', 'Ajaran berhasil disetujui.');
+        return redirect()->back()->with('success', 'Artikel berhasil disetujui.');
     }
 
     public function tolakAjaran(int $id): RedirectResponse
@@ -70,12 +70,12 @@ class AdminController extends Controller
         $ajaran = Ajaran::findOrFail($id);
         $ajaran->update(['status' => 'ditolak']);
 
-        return redirect()->back()->with('success', 'Ajaran berhasil ditolak.');
+        return redirect()->back()->with('success', 'Artikel berhasil ditolak.');
     }
 
     /*
     |--------------------------------------------------------------------------
-    | VERIFIKASI CECIMPEDAN
+    | VERIFIKASI CECIMPEDAN (KHUSUS FITUR MANDIRI)
     |--------------------------------------------------------------------------
     */
 
@@ -90,7 +90,7 @@ class AdminController extends Controller
 
     public function detailCecimpedan(int $id): View
     {
-        $cecimpedan = Cecimpedan::findOrFail($id);
+        $cecimpedan = Cecimpedan::with('user')->findOrFail($id);
 
         return view('admin.verifikasi.detail-cecimpedan', compact('cecimpedan'));
     }
@@ -113,7 +113,7 @@ class AdminController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | VERIFIKASI SATUA
+    | VERIFIKASI SATUA BALI (KHUSUS FITUR MANDIRI)
     |--------------------------------------------------------------------------
     */
 
@@ -128,7 +128,7 @@ class AdminController extends Controller
 
     public function detailSatua(int $id): View
     {
-        $satua = Satua::findOrFail($id);
+        $satua = Satua::with('user')->findOrFail($id);
 
         return view('admin.verifikasi.detail-satua', compact('satua'));
     }
@@ -138,7 +138,7 @@ class AdminController extends Controller
         $satua = Satua::findOrFail($id);
         $satua->update(['status' => 'disetujui']);
 
-        return redirect()->back()->with('success', 'Satua berhasil disetujui.');
+        return redirect()->back()->with('success', 'Satua Bali berhasil disetujui.');
     }
 
     public function tolakSatua(int $id): RedirectResponse
@@ -146,12 +146,12 @@ class AdminController extends Controller
         $satua = Satua::findOrFail($id);
         $satua->update(['status' => 'ditolak']);
 
-        return redirect()->back()->with('success', 'Satua berhasil ditolak.');
+        return redirect()->back()->with('success', 'Satua Bali berhasil ditolak.');
     }
 
     /*
     |--------------------------------------------------------------------------
-    | VERIFIKASI ISTILAH
+    | VERIFIKASI ISTILAH BALI (KHUSUS FITUR MANDIRI)
     |--------------------------------------------------------------------------
     */
 
@@ -166,7 +166,7 @@ class AdminController extends Controller
 
     public function detailIstilah(int $id): View
     {
-        $istilah = Istilah::findOrFail($id);
+        $istilah = Istilah::with('user')->findOrFail($id);
 
         return view('admin.verifikasi.detail-istilah', compact('istilah'));
     }
@@ -176,7 +176,7 @@ class AdminController extends Controller
         $istilah = Istilah::findOrFail($id);
         $istilah->update(['status' => 'disetujui']);
 
-        return redirect()->back()->with('success', 'Istilah berhasil disetujui.');
+        return redirect()->back()->with('success', 'Istilah Bali berhasil disetujui.');
     }
 
     public function tolakIstilah(int $id): RedirectResponse
@@ -184,7 +184,7 @@ class AdminController extends Controller
         $istilah = Istilah::findOrFail($id);
         $istilah->update(['status' => 'ditolak']);
 
-        return redirect()->back()->with('success', 'Istilah berhasil ditolak.');
+        return redirect()->back()->with('success', 'Istilah Bali berhasil ditolak.');
     }
 
     /*

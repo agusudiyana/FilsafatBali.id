@@ -75,11 +75,7 @@
                             </a>
                         </li>
 
-                        <li><a href="#" class="hover:text-[#D9B35D] transition">Forum Diskusi</a></li>
-
-                        <li><a href="#" class="hover:text-[#D9B35D] transition">Papan Peringkat</a></li>
-
-                        <li><a href="#" class="hover:text-[#D9B35D] transition">Acara & Webinar</a></li>
+                        <li><a href="#" class="hover:text-[#D9B35D] transition">Forum Diskusi</a></l
 
                     </ul>
 
@@ -95,8 +91,6 @@
                     <ul class="space-y-5">
 
                         <li><a href="#" class="hover:text-[#D9B35D] transition">Tentang Kami</a></li>
-
-                        <li><a href="#" class="hover:text-[#D9B35D] transition">Tim Redaksi</a></li>
 
                         <li><a href="#" class="hover:text-[#D9B35D] transition">Kebijakan Privasi</a></li>
 

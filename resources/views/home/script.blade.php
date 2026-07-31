@@ -74,12 +74,99 @@
     .card-appear-anim {
         animation: cardAppear 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
+
+    /* Isolasi Klik Icon Bookmark */
+    .btn-bookmark-custom {
+        cursor: pointer !important;
+    }
+
+    .btn-bookmark-custom * {
+        pointer-events: none !important;
+    }
 </style>
 
 <!-- ========================================== -->
 <!-- SCRIPT LOGIC UTAMA GABUNGAN                -->
 <!-- ========================================== -->
 <script>
+    // Ambil status login user untuk fitur Bookmark
+    const USER_LOGGED_IN = @json(auth()->check());
+
+    // ==========================================
+    // 0. FITUR ARSIP / BOOKMARK
+    // ==========================================
+    function handleBookmarkAction(evt, element, title, type) {
+        // Stop event bubbling agar modal detail tidak ikut terbuka
+        if (evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
+            if (evt.stopImmediatePropagation) {
+                evt.stopImmediatePropagation();
+            }
+        }
+
+        // Jika user BELUM LOGIN -> Alert & Arahkan Langsung ke Halaman Login
+        if (!USER_LOGGED_IN) {
+            alert("Silakan login terlebih dahulu untuk menyimpan satua ini ke arsip!");
+            window.location.href = "{{ route('login') }}";
+            return false;
+        }
+
+        // Jika SUDAH LOGIN -> Toggle status Simpan / Batal Simpan
+        const isSaved = element.getAttribute('data-saved') === 'true';
+        const icon = element.querySelector('svg') || element.querySelector('i');
+
+        if (isSaved) {
+            element.setAttribute('data-saved', 'false');
+            element.setAttribute('title', 'Simpan ke Arsip');
+            if (icon) {
+                icon.style.fill = 'none';
+                icon.style.color = '#8F7A61';
+            }
+        } else {
+            element.setAttribute('data-saved', 'true');
+            element.setAttribute('title', 'Batal Simpan');
+            if (icon) {
+                icon.style.fill = '#C58A3C';
+                icon.style.color = '#C58A3C';
+            }
+        }
+
+        const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+        const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '';
+
+        fetch("{{ route('pengguna.arsip.store') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    item_title: title,
+                    item_type: type,
+                    item_url: window.location.href.split('#')[0] + '#sectionSatua'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (isSaved && window.location.pathname.includes('/arsip')) {
+                    const cardElement = element.closest('.group');
+                    if (cardElement) {
+                        cardElement.style.transition = 'all 0.4s ease';
+                        cardElement.style.opacity = '0';
+                        cardElement.style.transform = 'scale(0.9)';
+                        setTimeout(() => cardElement.remove(), 400);
+                    }
+                }
+            })
+            .catch(err => {
+                console.error('Terjadi kesalahan saat memperbarui arsip:', err);
+            });
+
+        return false;
+    }
+
     // ==========================================
     // 1. INITIALIZATION & GLOBAL EVENT LISTENERS
     // ==========================================

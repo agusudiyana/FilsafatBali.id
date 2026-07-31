@@ -2,111 +2,114 @@
 
 @section('content')
 
-<div class="max-w-5xl mx-auto">
+<div class="max-w-4xl mx-auto bg-white rounded-xl shadow p-8">
 
     <h1 class="text-3xl font-bold text-[#1A110A] mb-6">
-
         Tambah Cecimpedan
-
     </h1>
 
-    <form action="{{ route('cecimpedan.store') }}"
-        method="POST"
-        enctype="multipart/form-data"
-        class="bg-white rounded-xl shadow p-8">
+    @if ($errors->any())
+        <div class="bg-red-100 border border-red-300 text-red-700 p-4 rounded-lg mb-6">
+            <ul class="list-disc pl-5">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
+    <form action="{{ route('admin.cecimpedan.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
+        <!-- Tingkat Kesulitan -->
         <div class="mb-5">
-
-            <label class="font-semibold">
-
-                Judul
-
-            </label>
-
-            <input type="text"
-                name="judul"
-                class="w-full border rounded-lg p-3 mt-2">
-
+            <label class="block font-semibold mb-2 text-gray-700">Tingkat Kesulitan</label>
+            <select name="tingkat" class="w-full border border-gray-300 rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>
+                <option value="" disabled selected>Pilih Tingkat Kesulitan</option>
+                <option value="Mudah" {{ old('tingkat') == 'Mudah' ? 'selected' : '' }}>Mudah</option>
+                <option value="Sedang" {{ old('tingkat') == 'Sedang' ? 'selected' : '' }}>Sedang</option>
+                <option value="Sulit" {{ old('tingkat') == 'Sulit' ? 'selected' : '' }}>Sulit</option>
+            </select>
         </div>
 
+        <!-- Pertanyaan Cecimpedan (Bahasa Bali) -->
         <div class="mb-5">
-
-            <label class="font-semibold">
-
-                Isi Cecimpedan
-
-            </label>
-
-            <textarea
-                name="isi"
-                rows="4"
-                class="w-full border rounded-lg p-3 mt-2"></textarea>
-
+            <label class="block font-semibold mb-2 text-gray-700">Pertanyaan / Isi (Bahasa Bali)</label>
+            <textarea name="pertanyaan" rows="3" placeholder='Contoh: "Nongos di tegale, ngelah baju liu pesan..."'
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('pertanyaan') }}</textarea>
         </div>
 
+        <!-- Terjemahan / Arti -->
         <div class="mb-5">
-
-            <label class="font-semibold">
-
-                Jawaban
-
-            </label>
-
-            <textarea
-                name="jawaban"
-                rows="4"
-                class="w-full border rounded-lg p-3 mt-2"></textarea>
-
+            <label class="block font-semibold mb-2 text-gray-700">Terjemahan / Arti (Bahasa Indonesia)</label>
+            <textarea name="terjemahan" rows="2" placeholder="Contoh: Tinggal di ladang, punya baju banyak sekali..."
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('terjemahan') }}</textarea>
         </div>
 
+        <!-- Jawaban -->
         <div class="mb-5">
-
-            <label class="font-semibold">
-
-                Kategori
-
-            </label>
-
-            <input
-                type="text"
-                name="kategori"
-                class="w-full border rounded-lg p-3 mt-2">
-
+            <label class="block font-semibold mb-2 text-gray-700">Jawaban</label>
+            <input type="text" name="jawaban" value="{{ old('jawaban') }}" placeholder="Contoh: Pohon Pisang"
+                   class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>
         </div>
 
+        <!-- Makna -->
         <div class="mb-5">
-
-            <label class="font-semibold">
-
-                Gambar
-
-            </label>
-
-            <input
-                type="file"
-                name="gambar"
-                class="w-full border rounded-lg p-3 mt-2">
-
+            <label class="block font-semibold mb-2 text-gray-700">Makna</label>
+            <textarea name="makna" rows="3" placeholder="Tuliskan makna atau penjelasan singkat teka-teki..."
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">{{ old('makna') }}</textarea>
         </div>
 
+        <!-- Nilai Filosofis / Pesan Moral -->
+        <div class="mb-5">
+            <label class="block font-semibold mb-2 text-gray-700">Nilai Filosofis / Pesan Moral</label>
+            <textarea name="filosofi" rows="3" placeholder="Tuliskan nilai filosofis atau pesan moral mendalam yang terkandung..."
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">{{ old('filosofi') }}</textarea>
+        </div>
+
+        <!-- Variasi Daerah -->
+        <div class="mb-5">
+            <label class="block font-semibold mb-2 text-gray-700">Variasi Daerah (Opsional)</label>
+            <textarea name="variasi_daerah" rows="2" placeholder="Contoh: Kadang disebut juga melambangkan..."
+                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">{{ old('variasi_daerah') }}</textarea>
+        </div>
+
+        <!-- Asal Daerah -->
+        <div class="mb-5">
+            <label class="block font-semibold mb-2 text-gray-700">Asal Daerah</label>
+            <input type="text" name="asal_daerah" value="{{ old('asal_daerah') }}" placeholder="Contoh: Tabanan, Bali Barat"
+                   class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">
+        </div>
+
+        <!-- Rekaman / Sumber -->
+        <div class="mb-5">
+            <label class="block font-semibold mb-2 text-gray-700">Rekaman / Sumber</label>
+            <input type="text" name="rekaman" value="{{ old('rekaman') }}" placeholder="Contoh: Balai Bahasa Provinsi Bali"
+                   class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">
+        </div>
+
+        <!-- Kategori -->
+        <div class="mb-5">
+            <label class="block font-semibold mb-2 text-gray-700">Kategori</label>
+            <input type="text" name="kategori" value="{{ old('kategori') }}" placeholder="Contoh: Tradisional"
+                   class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">
+        </div>
+
+        <!-- Gambar -->
+        <div class="mb-6">
+            <label class="block font-semibold mb-2 text-gray-700">Gambar (Opsional)</label>
+            <input type="file" name="gambar"
+                   class="w-full border border-gray-300 rounded-lg p-3 bg-white focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">
+        </div>
+
+        <!-- Tombol Aksi -->
         <div class="flex gap-4">
-
-            <button
-                class="bg-[#992B20] text-white px-6 py-3 rounded-lg">
-
+            <button type="submit" class="bg-[#992B20] hover:bg-[#7D2219] text-white px-6 py-3 rounded-lg font-semibold transition">
                 Simpan
-
             </button>
-
-            <a href="{{ route('cecimpedan.index') }}"
-                class="bg-gray-300 px-6 py-3 rounded-lg">
-
+            <a href="{{ route('admin.cecimpedan.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-3 rounded-lg font-semibold transition">
                 Batal
-
             </a>
-
         </div>
 
     </form>
