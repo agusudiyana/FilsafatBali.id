@@ -4,6 +4,23 @@
 
 <div class="max-w-5xl mx-auto">
 
+    <!-- Header Atas: Judul di Kiri & Tombol Kembali di Kanan -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-[#1A110A]">
+                Detail Verifikasi Istilah Bali
+            </h1>
+            <p class="text-sm text-gray-600 mt-1">
+                Periksa entri istilah sebelum memberikan keputusan verifikasi.
+            </p>
+        </div>
+        <!-- Tombol Kembali Sesuai Gambar yang Diminta -->
+        <a href="{{ route('admin.verifikasi.istilah') }}"
+           class="px-6 py-2.5 bg-white hover:bg-gray-50 border border-gray-300 rounded-xl text-gray-700 font-medium text-sm transition shadow-sm">
+            Kembali
+        </a>
+    </div>
+
     <div class="bg-white rounded-xl shadow-lg p-8">
 
         <!-- Header Detail Istilah -->
@@ -122,15 +139,6 @@
                     </button>
                 </form>
             @endif
-
-            <!-- 3. Tombol Kembali (Abu-abu Muda) -->
-            <a href="{{ route('admin.verifikasi.istilah') }}"
-               class="bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#1E293B] px-5 py-2.5 rounded-2xl font-semibold flex items-center gap-2 shadow-sm transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                Kembali
-            </a>
 
         </div>
 

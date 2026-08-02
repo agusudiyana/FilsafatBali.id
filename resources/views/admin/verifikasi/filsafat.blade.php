@@ -4,7 +4,7 @@
     <div class="flex justify-between items-center mb-8">
         <div>
             <h1 class="text-3xl font-bold text-[#1A110A]">
-                Verifikasi Cecimpedan
+                Verifikasi Filsafat
             </h1>
             <p class="text-gray-500">
                 Daftar kiriman penulis yang menunggu verifikasi.
@@ -17,32 +17,32 @@
             <thead class="bg-[#F5E6CC]">
                 <tr>
                     <th class="p-4 w-12 text-center">No</th>
-                    <th class="p-4 text-left">Judul / Pertanyaan</th>
+                    <th class="p-4 text-left">Judul</th>
                     <th class="p-4 text-left">Penulis</th>
                     <th class="p-4 text-center">Status</th>
                     <th class="p-4 text-center">AKSI VERIFIKASI</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
-                @forelse($cecimpedans as $c)
+                @forelse($filsafats as $f)
                     <tr class="hover:bg-gray-50 transition">
                         <td class="p-4 text-center font-medium text-gray-500">
                             {{ $loop->iteration }}
                         </td>
 
-                        <!-- Menampilkan Judul / Pertanyaan Cecimpedan -->
+                        <!-- Judul Filsafat -->
                         <td class="p-4 font-semibold text-[#1A110A]">
-                            {{ $c->pertanyaan ?? ($c->judul ?? ($c->teks ?? ($c->cecimpedan ?? '-'))) }}
+                            {{ $f->judul ?? ($f->nama_filsafat ?? '-') }}
                         </td>
 
-                        <!-- Menampilkan Penulis (Mendukung Relasi User atau Kolom Penulis) -->
+                        <!-- Penulis -->
                         <td class="p-4 text-gray-700">
-                            {{ $c->user->name ?? ($c->penulis ?? ($c->nama_penulis ?? 'Penulis')) }}
+                            {{ $f->user->name ?? ($f->penulis ?? 'Penulis') }}
                         </td>
 
-                        <!-- Badge Status -->
+                        <!-- Status -->
                         <td class="p-4 text-center">
-                            @if ($c->status == 'pending')
+                            @if ($f->status == 'pending')
                                 <span style="background-color: #FEF9C3; color: #A16207;"
                                     class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full">
                                     <svg class="w-3.5 h-3.5" style="color: #A16207;" fill="none" stroke="currentColor"
@@ -52,7 +52,7 @@
                                     </svg>
                                     Pending
                                 </span>
-                            @elseif($c->status == 'disetujui')
+                            @elseif($f->status == 'disetujui')
                                 <span
                                     class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold inline-block">
                                     Disetujui
@@ -64,12 +64,12 @@
                             @endif
                         </td>
 
-                        <!-- Tombol Aksi Verifikasi -->
+                        <!-- Aksi -->
                         <td class="p-4 text-center">
                             <div class="flex items-center justify-center gap-3">
 
                                 <!-- 1. Tombol Detail -->
-                                <a href="{{ route('admin.verifikasi.cecimpedan.detail', $c->id) }}" title="Detail / Lihat"
+                                <a href="{{ route('admin.verifikasi.filsafat.detail', $f->id) }}" title="Detail / Lihat"
                                     class="text-sky-500 hover:text-sky-700 transition transform hover:scale-110">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -81,7 +81,7 @@
                                 </a>
 
                                 <!-- 2. Tombol Setujui -->
-                                <form action="{{ route('admin.verifikasi.cecimpedan.setujui', $c->id) }}" method="POST"
+                                <form action="{{ route('admin.verifikasi.filsafat.setujui', $f->id) }}" method="POST"
                                     class="inline">
                                     @csrf
                                     <button type="submit" title="Setujui"
@@ -96,7 +96,7 @@
                                 </form>
 
                                 <!-- 3. Tombol Tolak -->
-                                <form action="{{ route('admin.verifikasi.cecimpedan.tolak', $c->id) }}" method="POST"
+                                <form action="{{ route('admin.verifikasi.filsafat.tolak', $f->id) }}" method="POST"
                                     class="inline">
                                     @csrf
                                     <button type="submit" title="Tolak"
@@ -116,7 +116,7 @@
                 @empty
                     <tr>
                         <td colspan="5" class="p-8 text-center text-gray-500">
-                            Belum ada kiriman Cecimpedan.
+                            Belum ada kiriman Filsafat.
                         </td>
                     </tr>
                 @endforelse

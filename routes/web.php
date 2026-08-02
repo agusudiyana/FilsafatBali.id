@@ -10,6 +10,8 @@ use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CecimpedanController;
 use App\Http\Controllers\IstilahController;
+use App\Http\Controllers\FilsafatController;
+use App\Http\Controllers\AjaranTertuaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,7 +61,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/manajemen/penulis', [AdminController::class, 'kelolaPenulis'])->name('admin.kelola.penulis');
         Route::get('/manajemen/pengguna', [AdminController::class, 'kelolaPengguna'])->name('admin.kelola.pengguna');
 
-        // VERIFIKASI ARTIKEL / AJARAN
+        // VERIFIKASI ARTIKEL
         Route::get('/verifikasi/artikel', [AdminController::class, 'verifikasiAjaran'])->name('admin.verifikasi.artikel');
         Route::get('/verifikasi/artikel/{id}', [AdminController::class, 'detailAjaran'])->name('admin.verifikasi.artikel.detail');
         
@@ -69,24 +71,32 @@ Route::middleware(['auth'])->group(function () {
         Route::match(['post', 'put'], '/verifikasi/artikel/{id}/setujui', [AdminController::class, 'setujuiAjaran'])->name('admin.verifikasi.artikel.setujui');
         Route::match(['post', 'put'], '/verifikasi/artikel/{id}/tolak', [AdminController::class, 'tolakAjaran'])->name('admin.verifikasi.artikel.tolak');
 
+        // VERIFIKASI AJARAN TERTUA (ADMIN)
+        Route::get('/verifikasi/ajaran-tertua', [AdminController::class, 'verifikasiAjaranTertua'])->name('admin.verifikasi.ajaran-tertua');
+        Route::get('/verifikasi/detail-ajaran-tertua/{id}', [AdminController::class, 'detailAjaranTertua'])->name('admin.verifikasi.detail-ajaran-tertua');
+        Route::match(['post', 'put', 'patch'], '/verifikasi/detail-ajaran-tertua/{id}/status', [AdminController::class, 'updateStatusAjaranTertua'])->name('admin.verifikasi.update-status-ajaran-tertua');
+
+        // VERIFIKASI FILSAFAT
+        Route::get('/verifikasi/filsafat', [AdminController::class, 'verifikasiFilsafat'])->name('admin.verifikasi.filsafat');
+        Route::get('/verifikasi/filsafat/{id}', [AdminController::class, 'detailFilsafat'])->name('admin.verifikasi.filsafat.detail');
+        Route::match(['post', 'put'], '/verifikasi/filsafat/{id}/setujui', [AdminController::class, 'setujuiFilsafat'])->name('admin.verifikasi.filsafat.setujui');
+        Route::match(['post', 'put'], '/verifikasi/filsafat/{id}/tolak', [AdminController::class, 'tolakFilsafat'])->name('admin.verifikasi.filsafat.tolak');
+
         // VERIFIKASI CECIMPEDAN
         Route::get('/verifikasi/cecimpedan', [AdminController::class, 'verifikasiCecimpedan'])->name('admin.verifikasi.cecimpedan');
         Route::get('/verifikasi/cecimpedan/{id}', [AdminController::class, 'detailCecimpedan'])->name('admin.verifikasi.cecimpedan.detail');
-        
         Route::match(['post', 'put'], '/verifikasi/cecimpedan/{id}/setujui', [AdminController::class, 'setujuiCecimpedan'])->name('admin.verifikasi.cecimpedan.setujui');
         Route::match(['post', 'put'], '/verifikasi/cecimpedan/{id}/tolak', [AdminController::class, 'tolakCecimpedan'])->name('admin.verifikasi.cecimpedan.tolak');
 
         // VERIFIKASI SATUA
         Route::get('/verifikasi/satua', [AdminController::class, 'verifikasiSatua'])->name('admin.verifikasi.satua');
         Route::get('/verifikasi/satua/{id}', [AdminController::class, 'detailSatua'])->name('admin.verifikasi.satua.detail');
-        
         Route::match(['post', 'put'], '/verifikasi/satua/{id}/setujui', [AdminController::class, 'setujuiSatua'])->name('admin.verifikasi.satua.setujui');
         Route::match(['post', 'put'], '/verifikasi/satua/{id}/tolak', [AdminController::class, 'tolakSatua'])->name('admin.verifikasi.satua.tolak');
 
         // VERIFIKASI ISTILAH
         Route::get('/verifikasi/istilah', [AdminController::class, 'verifikasiIstilah'])->name('admin.verifikasi.istilah');
         Route::get('/verifikasi/istilah/{id}', [AdminController::class, 'detailIstilah'])->name('admin.verifikasi.istilah.detail');
-        
         Route::match(['post', 'put'], '/verifikasi/istilah/{id}/setujui', [AdminController::class, 'setujuiIstilah'])->name('admin.verifikasi.istilah.setujui');
         Route::match(['post', 'put'], '/verifikasi/istilah/{id}/tolak', [AdminController::class, 'tolakIstilah'])->name('admin.verifikasi.istilah.tolak');
     });
@@ -108,6 +118,22 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/artikel/{id}', [PenulisController::class, 'update'])->name('penulis.artikel.update');
         Route::delete('/artikel/{id}', [PenulisController::class, 'destroy'])->name('penulis.artikel.destroy');
 
+        // FILSAFAT
+        Route::get('/filsafat', [FilsafatController::class, 'index'])->name('penulis.filsafat.index');
+        Route::get('/filsafat/create', [FilsafatController::class, 'create'])->name('penulis.filsafat.create');
+        Route::post('/filsafat/store', [FilsafatController::class, 'store'])->name('penulis.filsafat.store');
+        Route::get('/filsafat/{id}/edit', [FilsafatController::class, 'edit'])->name('penulis.filsafat.edit');
+        Route::put('/filsafat/{id}', [FilsafatController::class, 'update'])->name('penulis.filsafat.update');
+        Route::delete('/filsafat/{id}', [FilsafatController::class, 'destroy'])->name('penulis.filsafat.destroy');
+
+        // AJARAN TERTUA
+        Route::get('/ajaran-tertua', [AjaranTertuaController::class, 'index'])->name('penulis.ajaran-tertua.index');
+        Route::get('/ajaran-tertua/create', [AjaranTertuaController::class, 'create'])->name('penulis.ajaran-tertua.create');
+        Route::post('/ajaran-tertua/store', [AjaranTertuaController::class, 'store'])->name('penulis.ajaran-tertua.store');
+        Route::get('/ajaran-tertua/{id}/edit', [AjaranTertuaController::class, 'edit'])->name('penulis.ajaran-tertua.edit');
+        Route::put('/ajaran-tertua/{id}', [AjaranTertuaController::class, 'update'])->name('penulis.ajaran-tertua.update');
+        Route::delete('/ajaran-tertua/{id}', [AjaranTertuaController::class, 'destroy'])->name('penulis.ajaran-tertua.destroy');
+
         // CECIMPEDAN
         Route::get('/cecimpedan', [CecimpedanController::class, 'index'])->name('penulis.cecimpedan.index');
         Route::get('/cecimpedan/create', [CecimpedanController::class, 'create'])->name('penulis.cecimpedan.create');
@@ -116,7 +142,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/cecimpedan/{id}', [CecimpedanController::class, 'update'])->name('penulis.cecimpedan.update');
         Route::delete('/cecimpedan/{id}', [CecimpedanController::class, 'destroy'])->name('penulis.cecimpedan.destroy');
 
-        // SATUA (PENGATURAN RUTE PENULIS SATUA)
+        // SATUA
         Route::get('/satua', [PenulisController::class, 'satuaIndex'])->name('penulis.satua.index');
         Route::get('/satua/create', [PenulisController::class, 'satuaCreate'])->name('penulis.satua.create');
         Route::post('/satua/store', [PenulisController::class, 'satuaStore'])->name('penulis.satua.store');

@@ -19,8 +19,8 @@
                     <tr>
                         <th class="p-4 text-center w-12">No</th>
                         <th class="p-4">Judul Satua</th>
-                        <th class="p-4">Penulis / Pengaju</th>
-                        <th class="p-4">Sub Judul / Asal</th>
+                        <th class="p-4">Penulis </th>
+                        <th class="p-4">Sub Judul </th>
                         <th class="p-4 text-center">Status</th>
                         <th class="p-4 text-center">Aksi Verifikasi</th>
                     </tr>
@@ -46,9 +46,14 @@
 
                             <td class="p-4 text-center">
                                 @if (($satua->status ?? 'pending') == 'pending')
-                                    <span
-                                        class="inline-flex items-center gap-1 bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Pending
+                                    <span style="background-color: #FEF9C3; color: #A16207;"
+                                        class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full">
+                                        <svg class="w-3.5 h-3.5" style="color: #A16207;" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Pending
                                     </span>
                                 @elseif(($satua->status ?? '') == 'disetujui' || ($satua->status ?? '') == 'published')
                                     <span

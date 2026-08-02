@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ajaran;
+use App\Models\Artikel;
+use App\Models\Filsafat;
 use App\Models\Cecimpedan;
 use App\Models\Satua;
 use App\Models\Istilah;
@@ -19,40 +20,51 @@ class PenulisController extends Controller
         $userId = auth()->id();
 
         // 1. Hitung total per kategori khusus milik penulis yang sedang login
-        $totalArtikel    = Ajaran::where('user_id', $userId)->count();
+        $totalArtikel    = Artikel::where('user_id', $userId)->count();
+        $totalFilsafat   = Filsafat::where('user_id', $userId)->count();
         $totalCecimpedan = Cecimpedan::where('user_id', $userId)->count();
         $totalSatua      = Satua::where('user_id', $userId)->count();
         $totalIstilah    = Istilah::where('user_id', $userId)->count();
 
         // Total seluruh kiriman
-        $total = $totalArtikel + $totalCecimpedan + $totalSatua + $totalIstilah;
+        $total = $totalArtikel + $totalFilsafat + $totalCecimpedan + $totalSatua + $totalIstilah;
 
         // Total pending
         $pending =
-            Ajaran::where('user_id', $userId)->where('status', 'pending')->count() +
+            Artikel::where('user_id', $userId)->where('status', 'pending')->count() +
+            Filsafat::where('user_id', $userId)->where('status', 'pending')->count() +
             Cecimpedan::where('user_id', $userId)->where('status', 'pending')->count() +
             Satua::where('user_id', $userId)->where('status', 'pending')->count() +
             Istilah::where('user_id', $userId)->where('status', 'pending')->count();
 
         // Total disetujui / published
         $disetujui =
-            Ajaran::where('user_id', $userId)->whereIn('status', ['disetujui', 'published'])->count() +
+            Artikel::where('user_id', $userId)->whereIn('status', ['disetujui', 'published'])->count() +
+            Filsafat::where('user_id', $userId)->whereIn('status', ['disetujui', 'published'])->count() +
             Cecimpedan::where('user_id', $userId)->whereIn('status', ['disetujui', 'published'])->count() +
             Satua::where('user_id', $userId)->whereIn('status', ['disetujui', 'published'])->count() +
             Istilah::where('user_id', $userId)->whereIn('status', ['disetujui', 'published'])->count();
 
         // Total ditolak / revisi
         $ditolak =
-            Ajaran::where('user_id', $userId)->whereIn('status', ['ditolak', 'revisi'])->count() +
+            Artikel::where('user_id', $userId)->whereIn('status', ['ditolak', 'revisi'])->count() +
+            Filsafat::where('user_id', $userId)->whereIn('status', ['ditolak', 'revisi'])->count() +
             Cecimpedan::where('user_id', $userId)->whereIn('status', ['ditolak', 'revisi'])->count() +
             Satua::where('user_id', $userId)->whereIn('status', ['ditolak', 'revisi'])->count() +
             Istilah::where('user_id', $userId)->whereIn('status', ['ditolak', 'revisi'])->count();
 
         // 2. Ambil karya dari setiap model, petakan atribut agar konsisten, lalu gabungkan
-        $artikels = Ajaran::where('user_id', $userId)->get()->map(function ($item) {
+        $artikels = Artikel::where('user_id', $userId)->get()->map(function ($item) {
             $item->tipe = 'Artikel';
             $item->judul = $item->judul ?? $item->title ?? '-';
             $item->kategori = $item->kategori ?? 'Ajaran Tetua';
+            return $item;
+        });
+
+        $filsafats = Filsafat::where('user_id', $userId)->get()->map(function ($item) {
+            $item->tipe = 'Filsafat';
+            $item->judul = $item->judul ?? '-';
+            $item->kategori = $item->kategori ?? 'Filsafat Bali';
             return $item;
         });
 
@@ -78,7 +90,8 @@ class PenulisController extends Controller
         });
 
         // Combine all collections, order by created_at descending, and take the top 5
-        $recentItems = $artikels->concat($cecimpedans)
+        $recentItems = $artikels->concat($filsafats)
+            ->concat($cecimpedans)
             ->concat($satuas)
             ->concat($istilahs)
             ->sortByDesc('created_at')
@@ -90,6 +103,7 @@ class PenulisController extends Controller
             'disetujui',
             'ditolak',
             'totalArtikel',
+            'totalFilsafat',
             'totalCecimpedan',
             'totalSatua',
             'totalIstilah',
@@ -108,7 +122,7 @@ class PenulisController extends Controller
         $kategori = $request->query('kategori', 'semua');
         $userId = auth()->id();
 
-        $query = Ajaran::where('user_id', $userId);
+        $query = Artikel::where('user_id', $userId);
 
         if ($kategori && strtolower($kategori) !== 'semua') {
             $query->whereRaw('LOWER(kategori) = ?', [strtolower($kategori)]);
@@ -140,7 +154,7 @@ class PenulisController extends Controller
             $gambar = $request->file('gambar')->store('artikel', 'public');
         }
 
-        Ajaran::create([
+        Artikel::create([
             'judul' => $request->judul,
             'kategori' => $request->kategori,
             'penulis' => auth()->user()->name,
@@ -158,16 +172,16 @@ class PenulisController extends Controller
 
     public function edit($id)
     {
-        $ajaran = Ajaran::where('id', $id)
+        $artikel = Artikel::where('id', $id)
             ->where('user_id', auth()->id())
             ->firstOrFail();
 
-        return view('penulis.artikel.edit', compact('ajaran'));
+        return view('penulis.artikel.edit', compact('artikel'));
     }
 
     public function update(Request $request, $id)
     {
-        $ajaran = Ajaran::where('id', $id)
+        $artikel = Artikel::where('id', $id)
             ->where('user_id', auth()->id())
             ->firstOrFail();
 
@@ -179,16 +193,16 @@ class PenulisController extends Controller
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $gambar = $ajaran->gambar;
+        $gambar = $artikel->gambar;
 
         if ($request->hasFile('gambar')) {
-            if ($ajaran->gambar && Storage::disk('public')->exists($ajaran->gambar)) {
-                Storage::disk('public')->delete($ajaran->gambar);
+            if ($artikel->gambar && Storage::disk('public')->exists($artikel->gambar)) {
+                Storage::disk('public')->delete($artikel->gambar);
             }
             $gambar = $request->file('gambar')->store('artikel', 'public');
         }
 
-        $ajaran->update([
+        $artikel->update([
             'judul' => $request->judul,
             'kategori' => $request->kategori,
             'isi' => $request->isi,
@@ -204,15 +218,15 @@ class PenulisController extends Controller
 
     public function destroy($id)
     {
-        $ajaran = Ajaran::where('id', $id)
+        $artikel = Artikel::where('id', $id)
             ->where('user_id', auth()->id())
             ->firstOrFail();
 
-        if ($ajaran->gambar && Storage::disk('public')->exists($ajaran->gambar)) {
-            Storage::disk('public')->delete($ajaran->gambar);
+        if ($artikel->gambar && Storage::disk('public')->exists($artikel->gambar)) {
+            Storage::disk('public')->delete($artikel->gambar);
         }
 
-        $ajaran->delete();
+        $artikel->delete();
 
         return redirect()
             ->route('penulis.artikel.index')
@@ -344,13 +358,15 @@ class PenulisController extends Controller
 
     public function riwayat()
     {
-        $ajaran     = Ajaran::where('user_id', auth()->id())->latest()->get();
+        $artikel    = Artikel::where('user_id', auth()->id())->latest()->get();
+        $filsafat   = Filsafat::where('user_id', auth()->id())->latest()->get();
         $cecimpedan = Cecimpedan::where('user_id', auth()->id())->latest()->get();
         $satua      = Satua::where('user_id', auth()->id())->latest()->get();
         $istilah    = Istilah::where('user_id', auth()->id())->latest()->get();
 
         return view('penulis.riwayat.index', compact(
-            'ajaran',
+            'artikel',
+            'filsafat',
             'cecimpedan',
             'satua',
             'istilah'

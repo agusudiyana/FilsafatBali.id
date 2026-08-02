@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ajaran;
+use App\Models\Artikel;
 use Illuminate\Http\Request;
 
 class AjaranController extends Controller

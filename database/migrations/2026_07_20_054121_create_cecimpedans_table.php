@@ -12,28 +12,34 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cecimpedans', function (Blueprint $table) {
-
             $table->id();
 
-            $table->string('judul');
+            // Relasi ke User
+            $table->foreignId('user_id')
+                  ->constrained()
+                  ->cascadeOnDelete();
 
-            $table->text('isi');
+            // Field Utama Cecimpedan
+            $table->string('judul')->nullable();
+            $table->text('isi')->nullable();
+            $table->string('tingkat')->nullable();            // Kolom tingkat (Mudah/Sedang/Sukar)
+            $table->text('pertanyaan');                       // Pertanyaan teka-teki
+            $table->text('terjemahan')->nullable();           // Terjemahan pertanyaan
+            $table->string('jawaban');                        // Jawaban teka-teki
+            $table->text('makna')->nullable();                // Makna jawaban
+            $table->text('filosofi')->nullable();             // Nilai filosofi
+            $table->string('variasi_daerah')->nullable();     // Variasi dialek/daerah
+            $table->string('asal_daerah')->nullable();        // Asal daerah di Bali
+            $table->string('rekaman')->nullable();            // File audio/rekaman jika ada
+            $table->string('gambar')->nullable();             // Gambar pendukung
+            $table->string('kategori')->nullable();           // Kategori tambahan
 
-            $table->string('jawaban');
-
-            $table->string('kategori')->nullable();
-
-            $table->string('gambar')->nullable();
-
+            // Status Moderasi
             $table->enum('status', [
                 'pending',
                 'disetujui',
                 'ditolak'
             ])->default('pending');
-
-            $table->foreignId('user_id')
-                  ->constrained()
-                  ->cascadeOnDelete();
 
             $table->timestamps();
         });

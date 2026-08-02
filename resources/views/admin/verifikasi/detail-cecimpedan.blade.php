@@ -1,7 +1,25 @@
 @extends('admin.layouts.app')
 
 @section('content')
+
 <div class="max-w-5xl mx-auto">
+
+    <!-- Header Atas: Judul di Kiri & Tombol Kembali di Kanan -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-[#1A110A]">
+                Detail Verifikasi Cecimpedan
+            </h1>
+            <p class="text-sm text-gray-600 mt-1">
+                Periksa konten cecimpedan sebelum memberikan keputusan verifikasi.
+            </p>
+        </div>
+        <!-- Tombol Kembali Sesuai Desain Request -->
+        <a href="{{ route('admin.verifikasi.cecimpedan') }}"
+           class="px-6 py-2.5 bg-white hover:bg-gray-50 border border-gray-300 rounded-xl text-gray-700 font-medium text-sm transition shadow-sm">
+            Kembali
+        </a>
+    </div>
 
     <div class="bg-white rounded-xl shadow-lg p-8">
 
@@ -113,11 +131,6 @@
                     </button>
                 </form>
             @endif
-
-            <a href="{{ route('admin.verifikasi.cecimpedan') }}"
-               class="bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#1E293B] px-5 py-2.5 rounded-2xl font-semibold transition">
-                Kembali
-            </a>
         </div>
 
     </div>

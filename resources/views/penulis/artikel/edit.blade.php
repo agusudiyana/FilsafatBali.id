@@ -1,84 +1,84 @@
 @extends('penulis.layouts.app')
 
 @section('content')
+<div class="max-w-4xl mx-auto p-6 bg-[#F6F0E6] text-[#1A110A]">
+    
+    <!-- Header Section -->
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-[#1A110A]">Edit Artikel</h1>
+        <p class="text-sm text-[#7A6B5D] mt-1">Perbarui data artikel Anda di bawah ini.</p>
+    </div>
 
-<div class="max-w-4xl mx-auto bg-white rounded-xl shadow p-8">
+    <!-- Container Form Card -->
+    <div class="bg-white p-6 rounded-2xl shadow-sm border border-[#E2D5C3]">
+        
+        <!-- PENTING: enctype="multipart/form-data" DAN @method('PUT') WAJIB ADA -->
+        <form action="{{ route('penulis.artikel.update', $artikel->id) }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+            @csrf
+            @method('PUT')
 
-    <h1 class="text-3xl font-bold text-[#1A110A] mb-6">
-        Edit Artikel
-    </h1>
+            <!-- 1. JUDUL -->
+            <div>
+                <label class="block text-sm font-bold text-[#1A110A] mb-1">Judul Artikel</label>
+                <input type="text" name="judul" value="{{ old('judul', $artikel->judul) }}" required
+                       class="w-full px-4 py-2.5 rounded-xl border border-[#E2D5C3] focus:ring-2 focus:ring-[#C38E2A] focus:outline-none">
+            </div>
 
-    @if ($errors->any())
-        <div class="bg-red-100 border border-red-300 text-red-700 p-4 rounded-lg mb-6">
-            <ul class="list-disc pl-5">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+            <!-- 2. KATEGORI -->
+            <div>
+                <label class="block text-sm font-bold text-[#1A110A] mb-1">Kategori</label>
+                <select name="kategori" required
+                        class="w-full px-4 py-2.5 rounded-xl border border-[#E2D5C3] focus:ring-2 focus:ring-[#C38E2A] focus:outline-none bg-white">
+                    <option value="Istilah Bali" {{ old('kategori', $artikel->kategori) == 'Istilah Bali' ? 'selected' : '' }}>Istilah Bali</option>
+                    <option value="Cecimpedan" {{ old('kategori', $artikel->kategori) == 'Cecimpedan' ? 'selected' : '' }}>Cecimpedan</option>
+                    <option value="Ajaran Tertua" {{ old('kategori', $artikel->kategori) == 'Ajaran Tertua' ? 'selected' : '' }}>Ajaran Tertua</option>
+                    <option value="Filsafat" {{ old('kategori', $artikel->kategori) == 'Filsafat' ? 'selected' : '' }}>Filsafat</option>
+                </select>
+            </div>
 
-    <form action="{{ route('penulis.artikel.update', $ajaran->id) }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        @method('PUT')
+            <!-- 3. ISI ARTIKEL -->
+            <div>
+                <label class="block text-sm font-bold text-[#1A110A] mb-1">Isi Artikel</label>
+                <textarea name="isi" rows="6" required
+                          class="w-full px-4 py-2.5 rounded-xl border border-[#E2D5C3] focus:ring-2 focus:ring-[#C38E2A] focus:outline-none">{{ old('isi', $artikel->isi) }}</textarea>
+            </div>
 
-        <!-- Judul -->
-        <div class="mb-5">
-            <label class="block font-semibold mb-2 text-gray-700">Judul Artikel</label>
-            <input type="text" name="judul" value="{{ old('judul', $ajaran->judul) }}"
-                   class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>
-        </div>
+            <!-- 4. KESIMPULAN -->
+            <div>
+                <label class="block text-sm font-bold text-[#1A110A] mb-1">Kesimpulan</label>
+                <textarea name="kesimpulan" rows="3"
+                          class="w-full px-4 py-2.5 rounded-xl border border-[#E2D5C3] focus:ring-2 focus:ring-[#C38E2A] focus:outline-none">{{ old('kesimpulan', $artikel->kesimpulan) }}</textarea>
+            </div>
 
-        <!-- Kategori -->
-        <div class="mb-5">
-            <label class="block font-semibold mb-2 text-gray-700">Kategori</label>
-            <select name="kategori" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>
-                <option value="">-- Pilih Kategori --</option>
-                <option value="Ajaran Tertua" {{ old('kategori', $ajaran->kategori ?? '') == 'Ajaran Tertua' ? 'selected' : '' }}>Ajaran Tertua</option>
-                <option value="Cecimpedan" {{ old('kategori', $ajaran->kategori ?? '') == 'Cecimpedan' ? 'selected' : '' }}>Cecimpedan</option>
-                <option value="Satua Bali" {{ old('kategori', $ajaran->kategori ?? '') == 'Satua Bali' ? 'selected' : '' }}>Satua Bali</option>
-                <option value="Istilah Bali" {{ old('kategori', $ajaran->kategori ?? '') == 'Istilah Bali' ? 'selected' : '' }}>Istilah Bali</option>
-            </select>
-        </div>
+            <!-- 5. GAMBAR -->
+            <div>
+                <label class="block text-sm font-bold text-[#1A110A] mb-1">Ganti Gambar (Biarkan kosong jika tidak diganti)</label>
+                
+                @if($artikel->gambar)
+                    <div class="mb-2">
+                        <img src="{{ asset('storage/' . $artikel->gambar) }}" class="w-32 h-20 object-cover rounded-lg border">
+                    </div>
+                @endif
 
-        <!-- Gambar -->
-        <div class="mb-5">
-            <label class="block font-semibold mb-2 text-gray-700">Gambar (Opsional)</label>
-            @if(!empty($ajaran->gambar))
-                <div class="mb-2">
-                    <img src="{{ asset('storage/' . $ajaran->gambar) }}" alt="Preview" class="w-32 h-20 object-cover rounded-lg border">
-                </div>
-            @endif
-            <input type="file" name="gambar"
-                   class="w-full border border-gray-300 rounded-lg p-3 text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">
-        </div>
+                <input type="file" name="gambar" accept="image/*"
+                       class="w-full px-4 py-2 rounded-xl border border-[#E2D5C3] focus:outline-none bg-[#FAF6F0]">
+            </div>
 
-        <!-- Isi -->
-        <div class="mb-5">
-            <label class="block font-semibold mb-2 text-gray-700">Isi Artikel</label>
-            <textarea name="isi" rows="6"
-                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]" required>{{ old('isi', $ajaran->isi) }}</textarea>
-        </div>
+            <!-- TOMBOL SIMPAN -->
+            <div class="flex justify-end gap-3 pt-4">
+                <a href="{{ route('penulis.artikel.index') }}" 
+                   class="px-5 py-2.5 text-sm font-semibold rounded-xl border border-[#E2D5C3] text-[#7A6B5D]">
+                    Batal
+                </a>
+                <button type="submit" 
+                        style="background-color: #C38E2A; color: #ffffff;"
+                        class="px-5 py-2.5 text-sm font-semibold rounded-xl shadow-sm hover:opacity-90">
+                    Update Artikel
+                </button>
+            </div>
 
-        <!-- Kesimpulan -->
-        <div class="mb-6">
-            <label class="block font-semibold mb-2 text-gray-700">Kesimpulan</label>
-            <textarea name="kesimpulan" rows="4"
-                      class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-[#C48D2D]">{{ old('kesimpulan', $ajaran->kesimpulan ?? '') }}</textarea>
-        </div>
-
-        <!-- Tombol Aksi -->
-        <div class="flex gap-4">
-            <button type="submit" class="bg-[#C48D2D] hover:bg-[#B07C20] text-white px-6 py-3 rounded-lg font-semibold transition">
-                Simpan Perubahan
-            </button>
-            <a href="{{ route('penulis.artikel.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-semibold transition">
-                Kembali
-            </a>
-        </div>
-
-    </form>
+        </form>
+    </div>
 
 </div>
-
 @endsection

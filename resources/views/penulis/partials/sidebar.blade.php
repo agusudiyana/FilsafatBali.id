@@ -28,6 +28,21 @@
 
         </a>
 
+        <a href="{{ route('penulis.filsafat.index') }}"
+           class="block px-6 py-3 hover:bg-[#C48D2D]">
+
+            Tambah Filsafat
+
+        </a>
+
+        <!-- TAMBAHAN: Sorotan Ajaran Tertua -->
+        <a href="{{ url('/penulis/ajaran-tertua') }}"
+           class="block px-6 py-3 hover:bg-[#C48D2D]">
+
+            Sorotan Ajaran Tertua
+
+        </a>
+
         <a href="{{ route('penulis.cecimpedan.index') }}"
            class="block px-6 py-3 hover:bg-[#C48D2D]">
 

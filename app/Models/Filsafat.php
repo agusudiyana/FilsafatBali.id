@@ -5,25 +5,22 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Ajaran extends Model
+class Filsafat extends Model
 {
     use HasFactory;
 
-    // Nama tabel di database
-    protected $table = 'ajarans';
+    protected $table = 'filsafat';
 
     protected $fillable = [
-        'judul',
-        'kategori',
-        'penulis',
-        'desa',
-        'tahun',
-        'isi',
-        'contoh',
-        'referensi',
-        'gambar',
-        'status',
         'user_id',
+        'judul',
+        'deskripsi',
+        'asal',
+        'fokus',
+        'tokoh_terkenal',
+        'karakteristik',
+        'implikasi',
+        'status',
     ];
 
     public function user()

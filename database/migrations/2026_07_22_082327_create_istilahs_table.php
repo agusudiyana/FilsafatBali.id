@@ -12,29 +12,31 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('istilahs', function (Blueprint $table) {
-
             $table->id();
 
+            // Relasi ke User
+            $table->foreignId('user_id')
+                  ->constrained()
+                  ->cascadeOnDelete();
+
+            // Field Utama Istilah
             $table->string('istilah');
-
+            $table->string('penulis')->nullable();
             $table->text('arti');
-
             $table->string('kategori')->nullable();
-
+            $table->text('sejarah')->nullable();
+            $table->text('contoh_penggunaan')->nullable();
+            $table->string('padanan_kata')->nullable();
             $table->string('gambar')->nullable();
 
+            // Status Moderasi
             $table->enum('status', [
                 'pending',
                 'disetujui',
                 'ditolak'
             ])->default('pending');
 
-            $table->foreignId('user_id')
-                  ->constrained()
-                  ->cascadeOnDelete();
-
             $table->timestamps();
-
         });
     }
 

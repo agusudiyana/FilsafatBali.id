@@ -3,6 +3,24 @@
 @section('content')
 <div class="max-w-5xl mx-auto">
 
+    <!-- Header Atas: Judul di Kiri & Tombol Kembali di Kanan -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-[#1A110A]">
+                Detail Verifikasi Artikel
+            </h1>
+            <p class="text-sm text-gray-600 mt-1">
+                Periksa konten artikel sebelum memberikan keputusan verifikasi.
+            </p>
+        </div>
+        <!-- Tombol Kembali di Atas Kanan -->
+        <a href="{{ route('admin.verifikasi.artikel') }}"
+           class="px-6 py-2.5 bg-white hover:bg-gray-50 border border-gray-300 rounded-xl text-gray-700 font-medium text-sm transition shadow-sm">
+            Kembali
+        </a>
+    </div>
+
+    <!-- Container Card Utama -->
     <div class="bg-white rounded-xl shadow-lg p-8">
 
         <!-- Header Judul & Status -->
@@ -25,7 +43,7 @@
             </span>
         </div>
 
-        <!-- 1. Kategori (Teks Diubah Menjadi Hitam) -->
+        <!-- 1. Kategori -->
         <div class="mb-6">
             <div class="p-4 bg-white border border-gray-200 rounded-2xl shadow-sm">
                 <h2 class="font-bold text-base text-[#1A110A] mb-1">Kategori</h2>
@@ -65,10 +83,10 @@
             </div>
         </div>
 
-        <!-- Tombol Aksi Verifikasi -->
-        <div class="flex items-center gap-3 mt-10 pt-6 border-t border-gray-100">
-            @if (($ajaran->status ?? 'pending') == 'pending')
-                <form action="{{ route('admin.verifikasi.ajaran.setujui', $ajaran->id) }}" method="POST" class="inline">
+        <!-- Tombol Aksi Verifikasi (Setujui / Tolak) -->
+        @if (($ajaran->status ?? 'pending') == 'pending')
+            <div class="flex items-center gap-3 mt-10 pt-6 border-t border-gray-100">
+                <form action="{{ route('admin.verifikasi.artikel.setujui', $ajaran->id) }}" method="POST" class="inline">
                     @csrf
                     @method('PUT')
                     <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menyetujui artikel ini?')"
@@ -78,7 +96,7 @@
                     </button>
                 </form>
 
-                <form action="{{ route('admin.verifikasi.ajaran.tolak', $ajaran->id) }}" method="POST" class="inline">
+                <form action="{{ route('admin.verifikasi.artikel.tolak', $ajaran->id) }}" method="POST" class="inline">
                     @csrf
                     @method('PUT')
                     <button type="submit" onclick="return confirm('Apakah Anda yakin ingin menolak artikel ini?')"
@@ -87,14 +105,8 @@
                         <span>Tolak</span>
                     </button>
                 </form>
-            @endif
-
-            <a href="{{ route('admin.verifikasi.artikel') }}"
-               class="bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#1E293B] px-5 py-2.5 rounded-2xl font-semibold flex items-center gap-2 transition">
-                <i data-feather="arrow-left" class="w-5 h-5"></i>
-                <span>Kembali</span>
-            </a>
-        </div>
+            </div>
+        @endif
 
     </div>
 

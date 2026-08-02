@@ -4,7 +4,7 @@
     <div class="flex justify-between items-center mb-8">
         <div>
             <h1 class="text-3xl font-bold text-[#1A110A]">
-                Verifikasi Cecimpedan
+                Verifikasi Ajaran Tertua
             </h1>
             <p class="text-gray-500">
                 Daftar kiriman penulis yang menunggu verifikasi.
@@ -12,37 +12,43 @@
         </div>
     </div>
 
+    @if (session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl mb-6 text-sm">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <div class="bg-white rounded-xl shadow overflow-hidden">
         <table class="w-full border-collapse">
             <thead class="bg-[#F5E6CC]">
                 <tr>
                     <th class="p-4 w-12 text-center">No</th>
-                    <th class="p-4 text-left">Judul / Pertanyaan</th>
+                    <th class="p-4 text-left">Judul Ajaran</th>
                     <th class="p-4 text-left">Penulis</th>
                     <th class="p-4 text-center">Status</th>
                     <th class="p-4 text-center">AKSI VERIFIKASI</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
-                @forelse($cecimpedans as $c)
+                @forelse($ajaranTertua as $item)
                     <tr class="hover:bg-gray-50 transition">
                         <td class="p-4 text-center font-medium text-gray-500">
                             {{ $loop->iteration }}
                         </td>
 
-                        <!-- Menampilkan Judul / Pertanyaan Cecimpedan -->
+                        <!-- Menampilkan Judul Ajaran -->
                         <td class="p-4 font-semibold text-[#1A110A]">
-                            {{ $c->pertanyaan ?? ($c->judul ?? ($c->teks ?? ($c->cecimpedan ?? '-'))) }}
+                            {{ $item->judul ?? '-' }}
                         </td>
 
-                        <!-- Menampilkan Penulis (Mendukung Relasi User atau Kolom Penulis) -->
+                        <!-- Menampilkan Penulis -->
                         <td class="p-4 text-gray-700">
-                            {{ $c->user->name ?? ($c->penulis ?? ($c->nama_penulis ?? 'Penulis')) }}
+                            {{ $item->user->name ?? ($item->penulis ?? 'Penulis') }}
                         </td>
 
                         <!-- Badge Status -->
                         <td class="p-4 text-center">
-                            @if ($c->status == 'pending')
+                            @if (($item->status ?? 'pending') == 'pending')
                                 <span style="background-color: #FEF9C3; color: #A16207;"
                                     class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full">
                                     <svg class="w-3.5 h-3.5" style="color: #A16207;" fill="none" stroke="currentColor"
@@ -52,9 +58,8 @@
                                     </svg>
                                     Pending
                                 </span>
-                            @elseif($c->status == 'disetujui')
-                                <span
-                                    class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold inline-block">
+                            @elseif(($item->status ?? '') == 'disetujui')
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold inline-block">
                                     Disetujui
                                 </span>
                             @else
@@ -69,7 +74,7 @@
                             <div class="flex items-center justify-center gap-3">
 
                                 <!-- 1. Tombol Detail -->
-                                <a href="{{ route('admin.verifikasi.cecimpedan.detail', $c->id) }}" title="Detail / Lihat"
+                                <a href="{{ route('admin.verifikasi.detail-ajaran-tertua', $item->id) }}" title="Detail / Lihat"
                                     class="text-sky-500 hover:text-sky-700 transition transform hover:scale-110">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -81,9 +86,11 @@
                                 </a>
 
                                 <!-- 2. Tombol Setujui -->
-                                <form action="{{ route('admin.verifikasi.cecimpedan.setujui', $c->id) }}" method="POST"
+                                <form action="{{ route('admin.verifikasi.update-status-ajaran-tertua', $item->id) }}" method="POST"
                                     class="inline">
                                     @csrf
+                                    @method('PATCH')
+                                    <input type="hidden" name="status" value="disetujui">
                                     <button type="submit" title="Setujui"
                                         onclick="return confirm('Apakah Anda yakin ingin menyetujui kiriman ini?')"
                                         class="text-emerald-500 hover:text-emerald-700 transition transform hover:scale-110 flex items-center justify-center">
@@ -96,9 +103,11 @@
                                 </form>
 
                                 <!-- 3. Tombol Tolak -->
-                                <form action="{{ route('admin.verifikasi.cecimpedan.tolak', $c->id) }}" method="POST"
+                                <form action="{{ route('admin.verifikasi.update-status-ajaran-tertua', $item->id) }}" method="POST"
                                     class="inline">
                                     @csrf
+                                    @method('PATCH')
+                                    <input type="hidden" name="status" value="ditolak">
                                     <button type="submit" title="Tolak"
                                         onclick="return confirm('Apakah Anda yakin ingin menolak kiriman ini?')"
                                         class="text-rose-500 hover:text-rose-700 transition transform hover:scale-110 flex items-center justify-center">
@@ -116,7 +125,7 @@
                 @empty
                     <tr>
                         <td colspan="5" class="p-8 text-center text-gray-500">
-                            Belum ada kiriman Cecimpedan.
+                            Belum ada kiriman Ajaran Tertua.
                         </td>
                     </tr>
                 @endforelse

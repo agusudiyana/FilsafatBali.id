@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ajaran;
+use App\Models\Artikel;
+use App\Models\Filsafat;
+use App\Models\AjaranTertua;
 use App\Models\Cecimpedan;
 use App\Models\Satua;
 use App\Models\Istilah;
@@ -21,9 +23,9 @@ class AdminController extends Controller
 
     public function index(): View
     {
-        $totalAjaran   = Ajaran::count();
-        $pending       = Ajaran::where('status', 'pending')->count();
-        $disetujui     = Ajaran::where('status', 'disetujui')->count();
+        $totalAjaran   = Artikel::count();
+        $pending       = Artikel::where('status', 'pending')->count();
+        $disetujui     = Artikel::where('status', 'disetujui')->count();
         $totalPenulis  = User::where('role', 'penulis')->count();
         $totalPengguna = User::count();
 
@@ -45,21 +47,21 @@ class AdminController extends Controller
     public function verifikasiAjaran(): View
     {
         // Murni hanya mengambil data Artikel biasa (Ajaran) yang pending
-        $ajaran = Ajaran::where('status', 'pending')->latest()->get();
+        $ajaran = Artikel::where('status', 'pending')->latest()->get();
 
         return view('admin.verifikasi.artikel', compact('ajaran'));
     }
 
     public function detailAjaran(int $id): View
     {
-        $ajaran = Ajaran::with('user')->findOrFail($id);
+        $ajaran = Artikel::with('user')->findOrFail($id);
 
-        return view('admin.verifikasi.detail-ajaran', compact('ajaran'));
+        return view('admin.verifikasi.detail-artikel', compact('ajaran'));
     }
 
     public function setujuiAjaran(int $id): RedirectResponse
     {
-        $ajaran = Ajaran::findOrFail($id);
+        $ajaran = Artikel::findOrFail($id);
         $ajaran->update(['status' => 'disetujui']);
 
         return redirect()->back()->with('success', 'Artikel berhasil disetujui.');
@@ -67,10 +69,100 @@ class AdminController extends Controller
 
     public function tolakAjaran(int $id): RedirectResponse
     {
-        $ajaran = Ajaran::findOrFail($id);
+        $ajaran = Artikel::findOrFail($id);
         $ajaran->update(['status' => 'ditolak']);
 
         return redirect()->back()->with('success', 'Artikel berhasil ditolak.');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | VERIFIKASI AJARAN TERTUA
+    |--------------------------------------------------------------------------
+    */
+
+    public function verifikasiAjaranTertua(): View
+    {
+        $ajaranTertua = AjaranTertua::with('user')
+            ->where('status', 'pending')
+            ->latest()
+            ->paginate(10);
+
+        return view('admin.verifikasi.ajaran-tertua', compact('ajaranTertua'));
+    }
+
+    public function detailAjaranTertua(int $id): View
+    {
+        $ajaranTertua = AjaranTertua::with('user')->findOrFail($id);
+
+        return view('admin.verifikasi.detail-ajaran-tertua', compact('ajaranTertua'));
+    }
+
+    public function updateStatusAjaranTertua(Request $request, int $id): RedirectResponse
+    {
+        $request->validate([
+            'status' => 'required|in:disetujui,ditolak,pending',
+        ]);
+
+        $ajaran = AjaranTertua::findOrFail($id);
+        $ajaran->update(['status' => $request->status]);
+
+        return redirect()->route('admin.verifikasi.ajaran-tertua')
+            ->with('success', 'Status ajaran tertua berhasil diperbarui!');
+    }
+
+    public function setujuiAjaranTertua(int $id): RedirectResponse
+    {
+        $ajaran = AjaranTertua::findOrFail($id);
+        $ajaran->update(['status' => 'disetujui']);
+
+        return redirect()->back()->with('success', 'Ajaran Tertua berhasil disetujui.');
+    }
+
+    public function tolakAjaranTertua(int $id): RedirectResponse
+    {
+        $ajaran = AjaranTertua::findOrFail($id);
+        $ajaran->update(['status' => 'ditolak']);
+
+        return redirect()->back()->with('success', 'Ajaran Tertua berhasil ditolak.');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | VERIFIKASI FILSAFAT
+    |--------------------------------------------------------------------------
+    */
+
+    public function verifikasiFilsafat(): View
+    {
+        $filsafats = Filsafat::where('status', 'pending')
+            ->latest()
+            ->paginate(10);
+
+        return view('admin.verifikasi.filsafat', compact('filsafats'));
+    }
+
+    public function detailFilsafat(int $id): View
+    {
+        $filsafat = Filsafat::with('user')->findOrFail($id);
+
+        return view('admin.verifikasi.detail-filsafat', compact('filsafat'));
+    }
+
+    public function setujuiFilsafat(int $id): RedirectResponse
+    {
+        $filsafat = Filsafat::findOrFail($id);
+        $filsafat->update(['status' => 'disetujui']);
+
+        return redirect()->back()->with('success', 'Filsafat berhasil disetujui.');
+    }
+
+    public function tolakFilsafat(int $id): RedirectResponse
+    {
+        $filsafat = Filsafat::findOrFail($id);
+        $filsafat->update(['status' => 'ditolak']);
+
+        return redirect()->back()->with('success', 'Filsafat berhasil ditolak.');
     }
 
     /*

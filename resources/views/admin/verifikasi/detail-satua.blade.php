@@ -3,6 +3,23 @@
 @section('content')
     <div class="max-w-5xl mx-auto">
 
+        <!-- Header Atas: Judul di Kiri & Tombol Kembali di Kanan -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-[#1A110A]">
+                    Detail Verifikasi Satua Bali
+                </h1>
+                <p class="text-sm text-gray-600 mt-1">
+                    Periksa naskah cerita satua sebelum memberikan keputusan verifikasi.
+                </p>
+            </div>
+            <!-- Tombol Kembali Sesuai Gambar yang Diminta -->
+            <a href="{{ route('admin.verifikasi.satua') }}"
+                class="px-6 py-2.5 bg-white hover:bg-gray-50 border border-gray-300 rounded-xl text-gray-700 font-medium text-sm transition shadow-sm">
+                Kembali
+            </a>
+        </div>
+
         <div class="bg-white rounded-xl shadow-lg p-8">
 
             <!-- Header Detail Satua -->
@@ -32,9 +49,9 @@
                 <!-- Badge Status -->
                 <span
                     class="px-4 py-2 rounded-full font-medium text-sm
-                @if (($satua->status ?? 'pending') == 'pending') bg-yellow-100 text-yellow-700
-                @elseif(($satua->status ?? '') == 'disetujui' || ($satua->status ?? '') == 'published') bg-green-100 text-green-700
-                @else bg-red-100 text-red-700 @endif">
+            @if (($satua->status ?? 'pending') == 'pending') bg-yellow-100 text-yellow-700
+            @elseif(($satua->status ?? '') == 'disetujui' || ($satua->status ?? '') == 'published') bg-green-100 text-green-700
+            @else bg-red-100 text-red-700 @endif">
                     {{ ucfirst($satua->status ?? 'Pending') }}
                 </span>
 
@@ -63,7 +80,7 @@
                     </div>
                 @endif
 
-                <!-- 2. Isi Satua (Judul Tanpa 'Cerita Lengkap' & Tanpa Garis Bawah) -->
+                <!-- 2. Isi Satua -->
                 <div class="p-5 bg-white border border-gray-200 rounded-2xl shadow-sm">
                     <h2 class="font-bold text-base text-[#1A110A] mb-3">
                         Isi Satua
@@ -156,16 +173,6 @@
                         </button>
                     </form>
                 @endif
-
-                <!-- 3. Tombol Kembali (Abu-abu Muda) -->
-                <a href="{{ route('admin.verifikasi.satua') }}"
-                    class="bg-[#F1F5F9] hover:bg-[#E2E8F0] text-[#1E293B] px-5 py-2.5 rounded-2xl font-semibold flex items-center gap-2 shadow-sm transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
-                    Kembali
-                </a>
 
             </div>
 

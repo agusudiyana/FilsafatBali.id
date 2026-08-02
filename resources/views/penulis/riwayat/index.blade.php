@@ -31,120 +31,168 @@
                     <tbody class="divide-y divide-gray-100 text-sm">
                         @php $no = 1; @endphp
 
-                        {{-- Loop Data Ajaran --}}
-                        @foreach($ajaran as $item)
-                            <tr class="hover:bg-[#FBF9F5]/60 transition">
-                                <td class="p-4 font-medium text-gray-500">{{ $no++ }}</td>
-                                <td class="p-4">
-                                    <span class="bg-[#F3E7D0] text-[#2C221E] px-3 py-1 rounded-full text-xs font-medium inline-block">
-                                        Ajaran
-                                    </span>
-                                </td>
-                                <td class="p-4 font-semibold text-[#2C221E]">{{ $item->judul }}</td>
-                                <td class="p-4">
-                                    @if ($item->status == 'pending')
-                                        <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
-                                            <i data-feather="clock" class="w-3.5 h-3.5"></i> Pending
+                        {{-- Loop Data Artikel --}}
+                        @if(isset($artikel))
+                            @foreach($artikel as $item)
+                                <tr class="hover:bg-[#FBF9F5]/60 transition">
+                                    <td class="p-4 font-medium text-gray-500">{{ $no++ }}</td>
+                                    <td class="p-4">
+                                        <span class="bg-[#F3E7D0] text-[#2C221E] px-3 py-1 rounded-full text-xs font-medium inline-block">
+                                            Artikel
                                         </span>
-                                    @elseif($item->status == 'disetujui')
-                                        <span class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-semibold">
-                                            <i data-feather="check-circle" class="w-3.5 h-3.5"></i> Disetujui
+                                    </td>
+                                    <td class="p-4 font-semibold text-[#2C221E]">
+                                        {{ $item->judul ?? '-' }}
+                                    </td>
+                                    <td class="p-4">
+                                        @if ($item->status == 'pending')
+                                            <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
+                                                <i data-feather="clock" class="w-3.5 h-3.5"></i> Pending
+                                            </span>
+                                        @elseif($item->status == 'disetujui')
+                                            <span class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-semibold">
+                                                <i data-feather="check-circle" class="w-3.5 h-3.5"></i> Disetujui
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center gap-1.5 bg-rose-50 text-rose-700 border border-rose-200 px-3 py-1 rounded-full text-xs font-semibold">
+                                                <i data-feather="x-circle" class="w-3.5 h-3.5"></i> Ditolak
+                                            </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+
+                        {{-- Loop Data Filsafat --}}
+                        @if(isset($filsafat))
+                            @foreach($filsafat as $item)
+                                <tr class="hover:bg-[#FBF9F5]/60 transition">
+                                    <td class="p-4 font-medium text-gray-500">{{ $no++ }}</td>
+                                    <td class="p-4">
+                                        <span class="bg-[#F3E7D0] text-[#2C221E] px-3 py-1 rounded-full text-xs font-medium inline-block">
+                                            Filsafat
                                         </span>
-                                    @else
-                                        <span class="inline-flex items-center gap-1.5 bg-rose-50 text-rose-700 border border-rose-200 px-3 py-1 rounded-full text-xs font-semibold">
-                                            <i data-feather="x-circle" class="w-3.5 h-3.5"></i> Ditolak
-                                        </span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
+                                    </td>
+                                    <td class="p-4 font-semibold text-[#2C221E]">
+                                        {{ $item->judul ?? '-' }}
+                                    </td>
+                                    <td class="p-4">
+                                        @if ($item->status == 'pending')
+                                            <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
+                                                <i data-feather="clock" class="w-3.5 h-3.5"></i> Pending
+                                            </span>
+                                        @elseif($item->status == 'disetujui')
+                                            <span class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-semibold">
+                                                <i data-feather="check-circle" class="w-3.5 h-3.5"></i> Disetujui
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center gap-1.5 bg-rose-50 text-rose-700 border border-rose-200 px-3 py-1 rounded-full text-xs font-semibold">
+                                                <i data-feather="x-circle" class="w-3.5 h-3.5"></i> Ditolak
+                                            </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
 
                         {{-- Loop Data Cecimpedan --}}
-                        @foreach($cecimpedan as $item)
-                            <tr class="hover:bg-[#FBF9F5]/60 transition">
-                                <td class="p-4 font-medium text-gray-500">{{ $no++ }}</td>
-                                <td class="p-4">
-                                    <span class="bg-[#F3E7D0] text-[#2C221E] px-3 py-1 rounded-full text-xs font-medium inline-block">
-                                        Cecimpedan
-                                    </span>
-                                </td>
-                                <td class="p-4 font-semibold text-[#2C221E]">{{ $item->judul }}</td>
-                                <td class="p-4">
-                                    @if ($item->status == 'pending')
-                                        <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
-                                            <i data-feather="clock" class="w-3.5 h-3.5"></i> Pending
+                        @if(isset($cecimpedan))
+                            @foreach($cecimpedan as $item)
+                                <tr class="hover:bg-[#FBF9F5]/60 transition">
+                                    <td class="p-4 font-medium text-gray-500">{{ $no++ }}</td>
+                                    <td class="p-4">
+                                        <span class="bg-[#F3E7D0] text-[#2C221E] px-3 py-1 rounded-full text-xs font-medium inline-block">
+                                            Cecimpedan
                                         </span>
-                                    @elseif($item->status == 'disetujui')
-                                        <span class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-semibold">
-                                            <i data-feather="check-circle" class="w-3.5 h-3.5"></i> Disetujui
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center gap-1.5 bg-rose-50 text-rose-700 border border-rose-200 px-3 py-1 rounded-full text-xs font-semibold">
-                                            <i data-feather="x-circle" class="w-3.5 h-3.5"></i> Ditolak
-                                        </span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
+                                    </td>
+                                    <td class="p-4 font-semibold text-[#2C221E]">
+                                        {{ $item->pertanyaan ?? $item->cecimpedan ?? $item->judul ?? '-' }}
+                                    </td>
+                                    <td class="p-4">
+                                        @if ($item->status == 'pending')
+                                            <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
+                                                <i data-feather="clock" class="w-3.5 h-3.5"></i> Pending
+                                            </span>
+                                        @elseif($item->status == 'disetujui')
+                                            <span class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-semibold">
+                                                <i data-feather="check-circle" class="w-3.5 h-3.5"></i> Disetujui
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center gap-1.5 bg-rose-50 text-rose-700 border border-rose-200 px-3 py-1 rounded-full text-xs font-semibold">
+                                                <i data-feather="x-circle" class="w-3.5 h-3.5"></i> Ditolak
+                                            </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
 
                         {{-- Loop Data Satua --}}
-                        @foreach($satua as $item)
-                            <tr class="hover:bg-[#FBF9F5]/60 transition">
-                                <td class="p-4 font-medium text-gray-500">{{ $no++ }}</td>
-                                <td class="p-4">
-                                    <span class="bg-[#F3E7D0] text-[#2C221E] px-3 py-1 rounded-full text-xs font-medium inline-block">
-                                        Satua Bali
-                                    </span>
-                                </td>
-                                <td class="p-4 font-semibold text-[#2C221E]">{{ $item->judul }}</td>
-                                <td class="p-4">
-                                    @if ($item->status == 'pending')
-                                        <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
-                                            <i data-feather="clock" class="w-3.5 h-3.5"></i> Pending
+                        @if(isset($satua))
+                            @foreach($satua as $item)
+                                <tr class="hover:bg-[#FBF9F5]/60 transition">
+                                    <td class="p-4 font-medium text-gray-500">{{ $no++ }}</td>
+                                    <td class="p-4">
+                                        <span class="bg-[#F3E7D0] text-[#2C221E] px-3 py-1 rounded-full text-xs font-medium inline-block">
+                                            Satua Bali
                                         </span>
-                                    @elseif($item->status == 'disetujui')
-                                        <span class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-semibold">
-                                            <i data-feather="check-circle" class="w-3.5 h-3.5"></i> Disetujui
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center gap-1.5 bg-rose-50 text-rose-700 border border-rose-200 px-3 py-1 rounded-full text-xs font-semibold">
-                                            <i data-feather="x-circle" class="w-3.5 h-3.5"></i> Ditolak
-                                        </span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
+                                    </td>
+                                    <td class="p-4 font-semibold text-[#2C221E]">
+                                        {{ $item->judul ?? $item->nama_satua ?? $item->nama ?? '-' }}
+                                    </td>
+                                    <td class="p-4">
+                                        @if ($item->status == 'pending')
+                                            <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
+                                                <i data-feather="clock" class="w-3.5 h-3.5"></i> Pending
+                                            </span>
+                                        @elseif($item->status == 'disetujui')
+                                            <span class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-semibold">
+                                                <i data-feather="check-circle" class="w-3.5 h-3.5"></i> Disetujui
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center gap-1.5 bg-rose-50 text-rose-700 border border-rose-200 px-3 py-1 rounded-full text-xs font-semibold">
+                                                <i data-feather="x-circle" class="w-3.5 h-3.5"></i> Ditolak
+                                            </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
 
                         {{-- Loop Data Istilah --}}
-                        @foreach($istilah as $item)
-                            <tr class="hover:bg-[#FBF9F5]/60 transition">
-                                <td class="p-4 font-medium text-gray-500">{{ $no++ }}</td>
-                                <td class="p-4">
-                                    <span class="bg-[#F3E7D0] text-[#2C221E] px-3 py-1 rounded-full text-xs font-medium inline-block">
-                                        Istilah Bali
-                                    </span>
-                                </td>
-                                <td class="p-4 font-semibold text-[#2C221E]">{{ $item->istilah }}</td>
-                                <td class="p-4">
-                                    @if ($item->status == 'pending')
-                                        <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
-                                            <i data-feather="clock" class="w-3.5 h-3.5"></i> Pending
+                        @if(isset($istilah))
+                            @foreach($istilah as $item)
+                                <tr class="hover:bg-[#FBF9F5]/60 transition">
+                                    <td class="p-4 font-medium text-gray-500">{{ $no++ }}</td>
+                                    <td class="p-4">
+                                        <span class="bg-[#F3E7D0] text-[#2C221E] px-3 py-1 rounded-full text-xs font-medium inline-block">
+                                            Istilah Bali
                                         </span>
-                                    @elseif($item->status == 'disetujui')
-                                        <span class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-semibold">
-                                            <i data-feather="check-circle" class="w-3.5 h-3.5"></i> Disetujui
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center gap-1.5 bg-rose-50 text-rose-700 border border-rose-200 px-3 py-1 rounded-full text-xs font-semibold">
-                                            <i data-feather="x-circle" class="w-3.5 h-3.5"></i> Ditolak
-                                        </span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
+                                    </td>
+                                    <td class="p-4 font-semibold text-[#2C221E]">
+                                        {{ $item->istilah ?? $item->nama_istilah ?? $item->judul ?? '-' }}
+                                    </td>
+                                    <td class="p-4">
+                                        @if ($item->status == 'pending')
+                                            <span class="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-3 py-1 rounded-full text-xs font-semibold">
+                                                <i data-feather="clock" class="w-3.5 h-3.5"></i> Pending
+                                            </span>
+                                        @elseif($item->status == 'disetujui')
+                                            <span class="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1 rounded-full text-xs font-semibold">
+                                                <i data-feather="check-circle" class="w-3.5 h-3.5"></i> Disetujui
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center gap-1.5 bg-rose-50 text-rose-700 border border-rose-200 px-3 py-1 rounded-full text-xs font-semibold">
+                                                <i data-feather="x-circle" class="w-3.5 h-3.5"></i> Ditolak
+                                            </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
 
                         {{-- Tampilan Saat Tidak Ada Data Sama Sekali --}}
-                        @if($ajaran->isEmpty() && $cecimpedan->isEmpty() && $satua->isEmpty() && $istilah->isEmpty())
+                        @if((!isset($artikel) || $artikel->isEmpty()) && (!isset($filsafat) || $filsafat->isEmpty()) && (!isset($cecimpedan) || $cecimpedan->isEmpty()) && (!isset($satua) || $satua->isEmpty()) && (!isset($istilah) || $istilah->isEmpty()))
                             <tr>
                                 <td colspan="4" class="text-center py-12 text-gray-400">
                                     <div class="flex flex-col items-center justify-center gap-2">

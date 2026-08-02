@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ajaran;
+use App\Models\Artikel;
 use App\Models\Cecimpedan;
 use App\Models\Satua;
 use App\Models\Istilah;
@@ -11,7 +11,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $ajarans = Ajaran::where('status', 'disetujui')
+        $ajarans = Artikel::where('status', 'disetujui')
             ->latest()
             ->get();
 

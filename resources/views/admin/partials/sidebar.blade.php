@@ -12,8 +12,7 @@
     <nav class="mt-6">
 
         <!-- Dashboard -->
-        <a href="{{ route('admin.dashboard') }}"
-            class="block px-6 py-3 hover:bg-[#C48D2D] transition-colors">
+        <a href="{{ route('admin.dashboard') }}" class="block px-6 py-3 hover:bg-[#C48D2D] transition-colors">
             Dashboard
         </a>
 
@@ -22,9 +21,18 @@
         </p>
 
         <!-- Verifikasi Artikel -->
-        <a href="{{ route('admin.verifikasi.artikel') }}"
-            class="block px-6 py-3 hover:bg-[#C48D2D] transition-colors">
+        <a href="{{ route('admin.verifikasi.artikel') }}" class="block px-6 py-3 hover:bg-[#C48D2D] transition-colors">
             Verifikasi Artikel
+        </a>
+
+        <!-- Verifikasi Filsafat -->
+        <a href="{{ route('admin.verifikasi.filsafat') }}" class="block px-6 py-3 hover:bg-[#C48D2D] transition-colors">
+            Verifikasi Filsafat
+        </a>
+
+        <!-- Verifikasi Sorotan Ajaran Tetua (DITAMBAHKAN DI SINI) -->
+        <a href="{{ route('admin.verifikasi.ajaran-tertua') }}" class="block px-6 py-3 hover:bg-[#C48D2D] transition-colors">
+            Verifikasi Sorotan Ajaran Tetua
         </a>
 
         <!-- Cecimpedan -->
@@ -34,14 +42,12 @@
         </a>
 
         <!-- Satua -->
-        <a href="{{ route('admin.verifikasi.satua') }}"
-            class="block px-6 py-3 hover:bg-[#C48D2D] transition-colors">
+        <a href="{{ route('admin.verifikasi.satua') }}" class="block px-6 py-3 hover:bg-[#C48D2D] transition-colors">
             Verifikasi Satua Bali
         </a>
 
         <!-- Istilah -->
-        <a href="{{ route('admin.verifikasi.istilah') }}"
-            class="block px-6 py-3 hover:bg-[#C48D2D] transition-colors">
+        <a href="{{ route('admin.verifikasi.istilah') }}" class="block px-6 py-3 hover:bg-[#C48D2D] transition-colors">
             Verifikasi Istilah Bali
         </a>
 
@@ -50,14 +56,12 @@
         </p>
 
         <!-- Penulis -->
-        <a href="{{ route('admin.penulis.index') }}"
-            class="block px-6 py-3 hover:bg-[#C48D2D] transition-colors">
+        <a href="{{ route('admin.penulis.index') }}" class="block px-6 py-3 hover:bg-[#C48D2D] transition-colors">
             Penulis
         </a>
 
         <!-- Pengguna -->
-        <a href="{{ route('admin.pengguna.index') }}"
-            class="block px-6 py-3 hover:bg-[#C48D2D] transition-colors">
+        <a href="{{ route('admin.pengguna.index') }}" class="block px-6 py-3 hover:bg-[#C48D2D] transition-colors">
             Pengguna
         </a>
 
