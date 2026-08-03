@@ -36,6 +36,10 @@
                 <option value="Umum" {{ old('kategori') == 'Umum' ? 'selected' : '' }}>Umum</option>
                 <option value="Agama" {{ old('kategori') == 'Agama' ? 'selected' : '' }}>Agama</option>
                 <option value="Adat" {{ old('kategori') == 'Adat' ? 'selected' : '' }}>Adat</option>
+                <option value="Tempat" {{ old('kategori') == 'Tempat' ? 'selected' : '' }}>Tempat</option>
+                <option value="Ritual" {{ old('kategori') == 'Ritual' ? 'selected' : '' }}>Ritual</option>
+                <option value="Sosial" {{ old('kategori') == 'Sosial' ? 'selected' : '' }}>Sosial</option>
+                <option value="Ruang" {{ old('kategori') == 'Ruang' ? 'selected' : '' }}>Ruang</option>
             </select>
         </div>
 
