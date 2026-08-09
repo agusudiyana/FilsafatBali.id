@@ -15,11 +15,14 @@ use App\Http\Controllers\AjaranTertuaController;
 
 /*
 |--------------------------------------------------------------------------
-| HALAMAN UTAMA (PUBLIC)
+| HALAMAN UTAMA & PUBLIC API ROUTES
 |--------------------------------------------------------------------------
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// ROUTE LIVE SEARCH API (DAPAT DIAKSES PUBLIC OLEH SEARCH BAR HERO)
+Route::get('/search-live', [HomeController::class, 'searchLive'])->name('search.live');
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +44,8 @@ Route::middleware(['auth'])->group(function () {
             return redirect()->route('penulis.dashboard');
         }
 
-        return redirect()->route('home');
+        // Pengguna biasa diarahkan ke dashboard pengguna (Bukan lagi ke home)
+        return redirect()->route('pengguna.dashboard');
     })->name('dashboard');
 
     /*
@@ -164,13 +168,14 @@ Route::middleware(['auth'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | PENGGUNA ROUTES
+    | PENGGUNA ROUTES (DIUBAH UNTUK MENAMPILKAN DASHBOARD PENGGUNA)
     |--------------------------------------------------------------------------
     */
     Route::prefix('pengguna')->middleware('role:pengguna')->group(function () {
 
+        // Memuat view dashboard pengguna
         Route::get('/dashboard', function () {
-            return redirect()->route('home');
+            return view('dashboard');
         })->name('pengguna.dashboard');
 
         Route::get('/arsip', [PenggunaController::class, 'arsipIndex'])->name('pengguna.arsip.index');

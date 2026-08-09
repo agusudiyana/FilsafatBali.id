@@ -93,6 +93,76 @@
     const USER_LOGGED_IN = @json(auth()->check());
 
     // ==========================================
+    // LOGIKA RIWAYAT PENCARIAN (FIFO MAX 6 ITEM)
+    // ==========================================
+    var DEFAULT_KEYWORDS = [
+        "TRI HITA KARANA", 
+        "NGABEN", 
+        "I SIAP SELEM", 
+        "I BELOG", 
+        "TAKSU", 
+        "SUBAK"
+    ];
+
+    function getSearchHistory() {
+        var saved = localStorage.getItem("balinesia_search_history");
+        if (saved) {
+            try {
+                var parsed = JSON.parse(saved);
+                return Array.isArray(parsed) && parsed.length > 0 ? parsed : DEFAULT_KEYWORDS;
+            } catch (e) {
+                return DEFAULT_KEYWORDS;
+            }
+        }
+        return DEFAULT_KEYWORDS;
+    }
+
+    function simpanKeRiwayat(keyword) {
+        if (!keyword || keyword.trim() === "") return;
+        
+        var history = getSearchHistory();
+        var cleanKeyword = keyword.trim().toUpperCase();
+
+        // Mencegah duplikasi kata kunci
+        history = history.filter(function(item) {
+            return item.toUpperCase() !== cleanKeyword;
+        });
+
+        // Masukkan kata kunci baru di paling depan
+        history.unshift(cleanKeyword);
+
+        // Batasi maksimal 6 item
+        if (history.length > 6) {
+            history = history.slice(0, 6);
+        }
+
+        localStorage.setItem("balinesia_search_history", JSON.stringify(history));
+        renderKeywordChips();
+    }
+
+    function renderKeywordChips() {
+        var keywordBox = document.getElementById("keywordBox");
+        if (!keywordBox) return;
+
+        var history = getSearchHistory();
+        keywordBox.innerHTML = "";
+
+        history.forEach(function(text) {
+            var a = document.createElement("a");
+            a.href = "#";
+            a.className = "border border-white/40 rounded-md px-4 py-2 text-[10px] uppercase tracking-[2px] text-white font-medium hover:bg-white hover:text-black transition cursor-pointer shrink-0";
+            a.innerText = text;
+            
+            a.onclick = function(e) {
+                cariKeyword(e, text);
+                return false;
+            };
+
+            keywordBox.appendChild(a);
+        });
+    }
+
+    // ==========================================
     // 0. FITUR ARSIP / BOOKMARK
     // ==========================================
     function handleBookmarkAction(evt, element, title, type) {
@@ -105,7 +175,7 @@
         }
 
         if (!USER_LOGGED_IN) {
-            alert("Silakan login terlebih dahulu untuk menyimpan satua ini ke arsip!");
+            alert("Silakan login terlebih dahulu untuk menyimpan " + type + " ini ke arsip!");
             window.location.href = "{{ route('login') }}";
             return false;
         }
@@ -129,6 +199,12 @@
             }
         }
 
+        let targetHash = '#sectionSatua';
+        if (type.toLowerCase().includes('istilah')) targetHash = '#sectionIstilah';
+        if (type.toLowerCase().includes('artikel')) targetHash = '#artikel';
+
+        const itemUrl = window.location.href.split('#')[0] + '?open=' + encodeURIComponent(title) + targetHash;
+
         const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
         const csrfToken = csrfTokenMeta ? csrfTokenMeta.getAttribute('content') : '';
 
@@ -142,7 +218,7 @@
                 body: JSON.stringify({
                     item_title: title,
                     item_type: type,
-                    item_url: window.location.href.split('#')[0] + '#sectionSatua'
+                    item_url: itemUrl
                 })
             })
             .then(response => response.json())
@@ -165,9 +241,11 @@
     }
 
     // ==========================================
-    // 1. INITIALIZATION & GLOBAL EVENT LISTENERS
+    // 1. INITIALIZATION & AUTO-OPEN MODAL LISTENERS
     // ==========================================
     document.addEventListener("DOMContentLoaded", function() {
+        renderKeywordChips();
+
         if (typeof feather !== 'undefined') {
             feather.replace();
         }
@@ -212,12 +290,66 @@
             });
         }
 
-        // AMAN: Cek keberadaan fungsi sebelum dipanggil
+        const searchInput = document.getElementById("searchInput");
+        if (searchInput) {
+            searchInput.addEventListener("keypress", function(e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    const val = searchInput.value.trim();
+                    if (val !== "") {
+                        simpanKeRiwayat(val);
+                        liveSearch(val);
+                    }
+                }
+            });
+        }
+
         if (typeof changeSlide === 'function') {
             changeSlide(1);
         }
         if (typeof startAutoSlide === 'function') {
             startAutoSlide();
+        }
+
+        // AUTO-OPEN MODAL DARI ARSIP PADA URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const itemToOpen = urlParams.get('open');
+
+        if (itemToOpen) {
+            const decodedTitle = decodeURIComponent(itemToOpen).trim().toLowerCase();
+
+            if (window.location.hash === '#sectionSatua') {
+                showSatua();
+                setTimeout(() => {
+                    const cards = document.querySelectorAll('#sectionSatua [onclick*="openSatuaCard"]');
+                    cards.forEach(card => {
+                        if (card.dataset.nama && card.dataset.nama.trim().toLowerCase() === decodedTitle) {
+                            openSatuaCard(card);
+                        }
+                    });
+                }, 400);
+            } else if (window.location.hash === '#sectionIstilah') {
+                showIstilah();
+                setTimeout(() => {
+                    const items = document.querySelectorAll('#listIstilahContainer .item-istilah');
+                    items.forEach(item => {
+                        const judulEl = item.querySelector('h3');
+                        if (judulEl && judulEl.innerText.trim().toLowerCase() === decodedTitle) {
+                            const clickArea = item.querySelector('[onclick*="openIstilah"]');
+                            if (clickArea) clickArea.click();
+                        }
+                    });
+                }, 400);
+            } else if (window.location.hash === '#artikel') {
+                setTimeout(() => {
+                    const cards = document.querySelectorAll('.card-artikel');
+                    cards.forEach(card => {
+                        if (card.dataset.judul && card.dataset.judul.trim().toLowerCase() === decodedTitle) {
+                            if (typeof openModalForCard === 'function') openModalForCard(card);
+                        }
+                    });
+                }, 400);
+            }
         }
     });
 
@@ -290,60 +422,72 @@
         });
     }
 
-    const databaseSearch = [{
-            id: 1,
-            judul: "Tri Hita Karana",
-            kategori: "AJARAN",
-            penulis: "I Wayan Sadia"
-        },
-        {
-            id: 2,
-            judul: "Tat Twam Asi",
-            kategori: "AJARAN",
-            penulis: "Ida Bagus Mantra"
-        },
-        {
-            id: 3,
-            judul: "I Siap Selem",
-            kategori: "SATUA BALI",
-            penulis: "Ketut Suardana"
-        },
-        {
-            id: 4,
-            judul: "Sor Singgih Basa Bali",
-            kategori: "ISTILAH BALI",
-            penulis: "Ida Bagus Komang"
-        },
-        {
-            id: 5,
-            judul: "Rwa Bhineda",
-            kategori: "AJARAN",
-            penulis: "Gede Sukarma"
-        },
-        {
-            id: 6,
-            judul: "Cecimpedan Bali",
-            kategori: "CECIMPEDAN",
-            penulis: "Made Sudiarta"
-        },
-        {
-            id: 7,
-            judul: "Ngaben: Upacara Pitra Yadnya",
-            kategori: "ISTILAH BALI",
-            penulis: "I Putu Gede"
-        },
-        {
-            id: 8,
-            judul: "Taksu: Pancaran Karisma Budaya Bali",
-            kategori: "ISTILAH BALI",
-            penulis: "I Nyoman Suartha"
-        },
-        {
-            id: 9,
-            judul: "Subak: Demokrasi Air dalam Peradaban Bali",
-            kategori: "AJARAN TETUA",
-            penulis: "Ni Luh Putu Ariani"
-        }
+    const databaseSearch = [
+        @if(isset($satuas))
+            @foreach($satuas as $s)
+                {
+                    id: @json($s->id),
+                    judul: @json($s->judul ?? $s->nama ?? $s->judul_satua ?? $s->title ?? 'Satua Bali'),
+                    kategori: 'SATUA BALI',
+                    penulis: @json($s->penulis ?? $s->pengarang ?? ($s->user->name ?? 'Masyarakat Bali'))
+                },
+            @endforeach
+        @endif
+
+        @if(isset($ajarans))
+            @foreach($ajarans as $aj)
+                {
+                    id: @json($aj->id),
+                    judul: @json($aj->judul ?? $aj->nama ?? $aj->title ?? 'Ajaran Tertua'),
+                    kategori: 'AJARAN',
+                    penulis: @json($aj->penulis ?? ($aj->user->name ?? 'Tetua Bali'))
+                },
+            @endforeach
+        @endif
+
+        @if(isset($artikels))
+            @foreach($artikels as $a)
+                {
+                    id: @json($a->id),
+                    judul: @json($a->judul ?? $a->title ?? 'Artikel'),
+                    kategori: @json(strtoupper($a->kategori ?? 'AJARAN')),
+                    penulis: @json($a->penulis ?? ($a->user->name ?? 'Penulis'))
+                },
+            @endforeach
+        @endif
+
+        @if(isset($cecimpedans))
+            @foreach($cecimpedans as $c)
+                {
+                    id: @json($c->id),
+                    judul: @json($c->judul ?? $c->pertanyaan ?? $c->nama ?? 'Cecimpedan'),
+                    kategori: 'CECIMPEDAN',
+                    penulis: @json($c->penulis ?? ($c->user->name ?? 'Anonim'))
+                },
+            @endforeach
+        @endif
+
+        @if(isset($istilahs))
+            @foreach($istilahs as $i)
+                {
+                    id: @json($i->id),
+                    judul: @json($i->istilah ?? $i->judul ?? $i->nama ?? 'Istilah Bali'),
+                    kategori: 'ISTILAH BALI',
+                    penulis: @json($i->penulis ?? ($i->user->name ?? 'Budayawan'))
+                },
+            @endforeach
+        @endif
+
+        @if(isset($filsafats))
+            @foreach($filsafats as $f)
+                {
+                    id: @json($f->id),
+                    judul: @json($f->judul ?? $f->nama ?? 'Filsafat'),
+                    kategori: 'FILSAFAT',
+                    penulis: @json($f->penulis ?? ($f->user->name ?? 'Filsuf'))
+                },
+            @endforeach
+        @endif
     ];
 
     function aktifkanBorderMerah() {
@@ -375,7 +519,6 @@
     function liveSearch(keyword) {
         const hasilCari = document.getElementById("hasilCari");
         const btnClear = document.getElementById("btnClearSearch");
-
         const query = keyword.trim().toLowerCase();
 
         aktifkanBorderMerah();
@@ -406,7 +549,7 @@
             if (hasilCari) {
                 hasilCari.classList.remove("hidden");
                 hasilCari.innerHTML = results.map(item => `
-                    <div onclick="pilihHasilSearch(${item.id}, '${item.judul.toLowerCase()}', '${item.kategori.toLowerCase()}')" class="flex items-center gap-4 px-6 py-4 hover:bg-[#F0E6D8] transition duration-200 cursor-pointer text-left">
+                    <div onclick="pilihHasilSearch(${item.id}, '${item.judul.toLowerCase().replace(/'/g, "\\'")}', '${item.kategori.toLowerCase()}')" class="flex items-center gap-4 px-6 py-4 hover:bg-[#F0E6D8] transition duration-200 cursor-pointer text-left border-b border-[#EADCC9]">
                         <span class="bg-[#8D2B1D] text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded shrink-0">
                             ${item.kategori}
                         </span>
@@ -426,7 +569,7 @@
                 hasilCari.classList.remove("hidden");
                 hasilCari.innerHTML = `
                     <div class="px-6 py-5 text-center text-[#8C7A65] text-sm italic">
-                        Tidak ada hasil ditemukan untuk "<span class="font-semibold">${keyword}</span>"
+                        Tidak ada hasil ditemukan di database untuk "<span class="font-semibold">${keyword}</span>"
                     </div>
                 `;
             }
@@ -454,26 +597,64 @@
         if (hasilCari) hasilCari.classList.add("hidden");
 
         hilangkanBorderMerah();
+        simpanKeRiwayat(judul);
 
-        if (judul.includes("tri hita karana")) {
-            if (typeof changeSlide === 'function') changeSlide(1);
-            scrollToTarget("ajaran-tetua");
-        } else if (judul.includes("i siap selem") || kategori.includes("satua")) {
+        const judulLower = judul.toLowerCase().trim();
+        const katLower = kategori.toLowerCase().trim();
+
+        if (katLower.includes("satua")) {
             if (typeof showSatua === 'function') showSatua();
             scrollToTarget("sectionSatua");
-        } else if (judul.includes("ngaben") || judul.includes("taksu") || judul.includes("subak") || kategori.includes(
-                "istilah")) {
+
+            setTimeout(() => {
+                const cardsSatua = document.querySelectorAll('#sectionSatua [onclick*="openSatuaCard"]');
+                let targetCard = null;
+
+                cardsSatua.forEach(card => {
+                    const dJudul = card.dataset.nama ? card.dataset.nama.toLowerCase() : '';
+                    if (dJudul.includes(judulLower)) {
+                        targetCard = card;
+                    }
+                });
+
+                if (targetCard) {
+                    openSatuaCard(targetCard);
+                }
+            }, 600);
+
+        } else if (katLower.includes("istilah")) {
             if (typeof showIstilah === 'function') showIstilah();
             scrollToTarget("sectionIstilah");
-        } else if (kategori.includes("tradisi")) {
-            if (typeof filterArtikel === 'function') filterArtikel('tradisi');
-            scrollToTarget("artikel");
-        } else if (kategori.includes("ajaran")) {
-            if (typeof filterArtikel === 'function') filterArtikel('ajaran');
-            scrollToTarget("artikel");
+
+            setTimeout(() => {
+                const itemsIstilah = document.querySelectorAll("#listIstilahContainer .item-istilah");
+                itemsIstilah.forEach(item => {
+                    if (item.innerText.toLowerCase().includes(judulLower)) {
+                        const clickArea = item.querySelector('[onclick*="openIstilah"]');
+                        if (clickArea) clickArea.click();
+                    }
+                });
+            }, 600);
+
+        } else if (katLower.includes("cecimpedan")) {
+            scrollToTarget("cecimpedan");
+            setTimeout(() => {
+                if (typeof toggleCard === 'function') toggleCard(1);
+            }, 600);
+
+        } else if (katLower.includes("filsafat")) {
+            scrollToTarget("filsafat");
+            setTimeout(() => {
+                if (typeof openFilsafat === 'function') openFilsafat("barat");
+            }, 600);
+
         } else {
             scrollToTarget("artikel");
-            if (typeof filterArtikel === 'function') filterArtikel('semua');
+            setTimeout(() => {
+                if (typeof openDetailArtikel === 'function' && idArtikel) {
+                    openDetailArtikel(idArtikel);
+                }
+            }, 600);
         }
     }
 
@@ -483,29 +664,13 @@
             event.preventDefault();
         }
 
+        simpanKeRiwayat(keyword);
+
         const searchInput = document.getElementById("searchInput");
         if (searchInput) {
             searchInput.value = keyword;
             liveSearch(keyword);
             searchInput.focus();
-        }
-
-        const keyLower = keyword.toLowerCase();
-
-        if (keyLower.includes("tri hita karana")) {
-            if (typeof changeSlide === 'function') changeSlide(1);
-            scrollToTarget("ajaran-tetua");
-        } else if (keyLower.includes("i siap selem")) {
-            if (typeof showSatua === 'function') showSatua();
-            scrollToTarget("sectionSatua");
-        } else if (keyLower.includes("ngaben") || keyLower.includes("taksu") || keyLower.includes("subak")) {
-            if (typeof showIstilah === 'function') showIstilah();
-            scrollToTarget("sectionIstilah");
-        } else if (keyLower.includes("rwa bhineda")) {
-            if (typeof filterArtikel === 'function') filterArtikel('ajaran');
-            scrollToTarget("artikel");
-        } else {
-            scrollToTarget("artikel");
         }
     }
 
@@ -526,7 +691,7 @@
     });
 
     // ==========================================
-    // 5. DATA & MODAL DETAIL BACA ARTIKEL PILIHAN
+    // 5. MODAL DETAIL ARTIKEL
     // ==========================================
     const dataArtikelPilihan = {
         1: {
@@ -563,17 +728,14 @@
         if (document.getElementById("artImage")) document.getElementById("artImage").src = data.image;
         if (document.getElementById("artPenulis")) document.getElementById("artPenulis").innerText = data.penulis;
         if (document.getElementById("artAvatar")) document.getElementById("artAvatar").innerText = data.avatar;
-        if (document.getElementById("artMeta")) document.getElementById("artMeta").innerText =
-            `${data.tgl} • ${data.waktu}`;
+        if (document.getElementById("artMeta")) document.getElementById("artMeta").innerText = `${data.tgl} • ${data.waktu}`;
         if (document.getElementById("artIsi")) document.getElementById("artIsi").innerHTML = data.isi;
-        if (document.getElementById("artKesimpulan")) document.getElementById("artKesimpulan").innerText = data
-            .kesimpulan;
+        if (document.getElementById("artKesimpulan")) document.getElementById("artKesimpulan").innerText = data.kesimpulan;
 
         const badge = document.getElementById("artKategoriBadge");
         if (badge) {
             badge.innerText = data.kategori;
-            badge.className =
-                `text-white text-[10px] tracking-[2px] uppercase font-semibold px-3 py-1.5 rounded-full ${data.bgKategori}`;
+            badge.className = `text-white text-[10px] tracking-[2px] uppercase font-semibold px-3 py-1.5 rounded-full ${data.bgKategori}`;
         }
 
         const overlay = document.getElementById("overlayArtikel");
@@ -581,7 +743,7 @@
 
         if (!overlay || !panel) return;
 
-        document.body.style.overflow = "hidden";
+        document.body.style.overflow = "hidden"; // Kunci Scroll saat Buka
         overlay.classList.remove("hidden");
 
         setTimeout(() => {
@@ -592,6 +754,7 @@
         if (typeof feather !== 'undefined') feather.replace();
     }
 
+    // TUTUP MODAL ARTIKEL (SCROLL DIKEMBALIKAN)
     function closeDetailArtikel() {
         const overlay = document.getElementById("overlayArtikel");
         const panel = document.getElementById("panelArtikel");
@@ -601,14 +764,15 @@
         panel.classList.add("translate-x-full");
         overlay.classList.add("opacity-0");
 
+        document.body.style.overflow = "auto"; // Kembalikan Scroll
+
         setTimeout(() => {
             overlay.classList.add("hidden");
-            document.body.style.overflow = "auto";
         }, 300);
     }
 
     // ==========================================
-    // 6. TOGGLE SATUA & ISTILAH
+    // 6. TOGGLE SATUA & ISTILAH BALI
     // ==========================================
     function showSatua() {
         const secSatua = document.getElementById("sectionSatua");
@@ -616,16 +780,11 @@
         if (secSatua) secSatua.classList.remove("hidden");
         if (secIstilah) secIstilah.classList.add("hidden");
 
-        const btnsSatua = document.querySelectorAll("#sectionSatua #btnSatua, #sectionSatua #btnIstilah");
-        btnsSatua.forEach(btn => {
-            if (btn.id === "btnSatua") {
-                btn.className =
-                    "w-36 md:w-40 py-3 bg-[#C58A3C] text-white uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all";
-            } else {
-                btn.className =
-                    "w-36 md:w-40 py-3 bg-transparent text-[#C58A3C] uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all";
-            }
-        });
+        const btnsSatua = document.querySelectorAll("#btnSatua");
+        const btnsIstilah = document.querySelectorAll("#btnIstilah");
+        
+        btnsSatua.forEach(b => b.className = "w-36 md:w-40 py-3 bg-[#C58A3C] text-white uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all");
+        btnsIstilah.forEach(b => b.className = "w-36 md:w-40 py-3 bg-transparent text-[#C58A3C] uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all");
     }
 
     function showIstilah() {
@@ -634,26 +793,24 @@
         if (secSatua) secSatua.classList.add("hidden");
         if (secIstilah) secIstilah.classList.remove("hidden");
 
-        const btnsIstilah = document.querySelectorAll("#sectionIstilah #btnSatua, #sectionIstilah #btnIstilah");
-        btnsIstilah.forEach(btn => {
-            if (btn.id === "btnIstilah") {
-                btn.className =
-                    "w-36 md:w-40 py-3 bg-[#C58A3C] text-white uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all";
-            } else {
-                btn.className =
-                    "w-36 md:w-40 py-3 bg-transparent text-[#C58A3C] uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all";
-            }
-        });
+        const btnsSatua = document.querySelectorAll("#btnSatua");
+        const btnsIstilah = document.querySelectorAll("#btnIstilah");
+
+        btnsIstilah.forEach(b => b.className = "w-36 md:w-40 py-3 bg-[#C58A3C] text-white uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all");
+        btnsSatua.forEach(b => b.className = "w-36 md:w-40 py-3 bg-transparent text-[#C58A3C] uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all");
     }
 
+    // OPEN DRAWER ISTILAH
     function openIstilah(judul, kategori, deskripsi, sejarah, contoh, padanan, konteks) {
-        if (document.getElementById("detailTitle")) document.getElementById("detailTitle").innerHTML = judul;
-        if (document.getElementById("detailKategori")) document.getElementById("detailKategori").innerHTML = kategori;
-        if (document.getElementById("detailDesc")) document.getElementById("detailDesc").innerHTML = deskripsi;
-        if (document.getElementById("detailSejarah")) document.getElementById("detailSejarah").innerHTML = sejarah;
-        if (document.getElementById("detailContoh")) document.getElementById("detailContoh").innerHTML = contoh;
-        if (document.getElementById("detailPadanan")) document.getElementById("detailPadanan").innerHTML = padanan;
-        if (document.getElementById("detailKonteks")) document.getElementById("detailKonteks").innerHTML = konteks;
+        if (document.getElementById("detailTitle")) document.getElementById("detailTitle").innerHTML = judul || '-';
+        if (document.getElementById("detailKategori")) document.getElementById("detailKategori").innerHTML = kategori || 'Umum';
+        if (document.getElementById("detailDesc")) document.getElementById("detailDesc").innerHTML = deskripsi || '-';
+        if (document.getElementById("detailSejarah")) document.getElementById("detailSejarah").innerHTML = sejarah || '-';
+        if (document.getElementById("detailContoh")) document.getElementById("detailContoh").innerHTML = contoh || '-';
+        if (document.getElementById("detailPadanan")) document.getElementById("detailPadanan").innerHTML = padanan || '-';
+        if (document.getElementById("detailKonteks")) document.getElementById("detailKonteks").innerHTML = konteks || '-';
+
+        document.body.style.overflow = "hidden"; // Kunci Scroll saat Buka
 
         const overlay = document.getElementById("overlay");
         const detailPanel = document.getElementById("detailPanel");
@@ -661,49 +818,64 @@
         if (detailPanel) detailPanel.classList.remove("translate-x-full");
     }
 
+    // CLOSE DRAWER ISTILAH (SCROLL DIKEMBALIKAN)
     function closeDetail() {
         const overlay = document.getElementById("overlay");
         const detailPanel = document.getElementById("detailPanel");
-        if (overlay) overlay.classList.add("hidden");
+        
         if (detailPanel) detailPanel.classList.add("translate-x-full");
+
+        document.body.style.overflow = "auto"; // Kembalikan Scroll
+
+        setTimeout(() => {
+            if (overlay) overlay.classList.add("hidden");
+        }, 300);
     }
 
-    function openSatua(nama, latin, status, gambar, ringkasan, tokoh, alur, moral, filosofi) {
-        if (document.getElementById("satuaNama")) document.getElementById("satuaNama").innerHTML = nama;
-        if (document.getElementById("satuaLatin")) document.getElementById("satuaLatin").innerHTML = latin;
-        if (document.getElementById("satuaStatus")) document.getElementById("satuaStatus").innerHTML = status;
-        if (document.getElementById("satuaImage")) document.getElementById("satuaImage").src = gambar;
-        if (document.getElementById("satuaRingkasan")) document.getElementById("satuaRingkasan").innerHTML = ringkasan;
-        if (document.getElementById("satuaTokoh")) document.getElementById("satuaTokoh").innerHTML = tokoh;
-        if (document.getElementById("satuaAlur")) document.getElementById("satuaAlur").innerHTML = alur;
-        if (document.getElementById("satuaMoral")) document.getElementById("satuaMoral").innerHTML = moral;
-        if (document.getElementById("satuaFilosofi")) document.getElementById("satuaFilosofi").innerHTML = filosofi;
+    // OPEN DRAWER SATUA
+    function openSatuaCard(element) {
+        if (!element) return;
+        const ds = element.dataset;
+
+        if (document.getElementById("satuaNama")) document.getElementById("satuaNama").innerText = ds.nama || '-';
+        if (document.getElementById("satuaLatin")) document.getElementById("satuaLatin").innerText = ds.latin || '';
+        if (document.getElementById("satuaImage")) document.getElementById("satuaImage").src = ds.img || '';
+
+        if (document.getElementById("satuaRingkasan")) document.getElementById("satuaRingkasan").innerText = ds.ringkasan || '-';
+        if (document.getElementById("satuaTokoh")) document.getElementById("satuaTokoh").innerText = ds.tokoh || '-';
+        if (document.getElementById("satuaAlur")) document.getElementById("satuaAlur").innerText = ds.alur || '-';
+        if (document.getElementById("satuaMoral")) document.getElementById("satuaMoral").innerText = ds.moral || '-';
+        if (document.getElementById("satuaFilosofi")) document.getElementById("satuaFilosofi").innerText = ds.filosofi || '-';
+
+        document.body.style.overflow = "hidden"; // Kunci Scroll saat Buka
 
         const overlay = document.getElementById("overlaySatua");
         const panel = document.getElementById("panelSatua");
         if (overlay) overlay.classList.remove("hidden");
-        if (panel) panel.classList.remove("translate-x-full");
+        setTimeout(() => {
+            if (panel) panel.classList.remove("translate-x-full");
+        }, 10);
     }
 
+    // CLOSE DRAWER SATUA (SCROLL DIKEMBALIKAN)
     function closeSatua() {
         const overlay = document.getElementById("overlaySatua");
         const panel = document.getElementById("panelSatua");
-        if (overlay) overlay.classList.add("hidden");
+
         if (panel) panel.classList.add("translate-x-full");
+
+        document.body.style.overflow = "auto"; // Kembalikan Scroll
+
+        setTimeout(() => {
+            if (overlay) overlay.classList.add("hidden");
+        }, 300);
     }
 
     // ==========================================
-    // 7. SECTION CECIMPEDAN (ACCORDION & SLIDER)
+    // 7. SECTION CECIMPEDAN
     // ==========================================
     let isFilosofiOpen = false;
-
-    let activeCards = {
-        1: false,
-        2: false,
-        3: false,
-        4: false,
-        5: false
-    };
+    let activeCards = { 1: false, 2: false, 3: false, 4: false, 5: false };
 
     function toggleCard(no) {
         const detail = document.getElementById(`detailCard${no}`);
@@ -714,14 +886,12 @@
         if (activeCards[no]) {
             detail.classList.remove("max-h-[1000px]", "opacity-100", "pt-6");
             detail.classList.add("max-h-0", "opacity-0");
-
             hideJawaban(no);
             btn.innerHTML = `<i data-feather="chevron-right" class="w-4 h-4"></i> Jawab Teka-Teki`;
             activeCards[no] = false;
         } else {
             detail.classList.remove("max-h-0", "opacity-0");
             detail.classList.add("max-h-[1000px]", "opacity-100", "pt-6");
-
             btn.innerHTML = `<i data-feather="chevron-down" class="w-4 h-4"></i> Tutup`;
             activeCards[no] = true;
         }
@@ -798,37 +968,29 @@
         }, 2500);
     }
 
-    function pauseSlide() {
-        isUserInteracting = true;
-    }
-
-    function resumeSlide() {
-        isUserInteracting = false;
-        startAutoSlide();
-    }
+    function pauseSlide() { isUserInteracting = true; }
+    function resumeSlide() { isUserInteracting = false; startAutoSlide(); }
 
     if (wrapper) {
         wrapper.addEventListener("mouseenter", pauseSlide);
         wrapper.addEventListener("mouseleave", resumeSlide);
-        wrapper.addEventListener("touchstart", pauseSlide, {
-            passive: true
-        });
+        wrapper.addEventListener("touchstart", pauseSlide, { passive: true });
         wrapper.addEventListener("touchend", resumeSlide);
         wrapper.addEventListener("scroll", () => {
             pauseSlide();
             clearTimeout(resumeTimeout);
             resumeTimeout = setTimeout(resumeSlide, 2000);
-        }, {
-            passive: true
-        });
+        }, { passive: true });
     }
 
     // ==========================================
-    // 8. PANEL FILSAFAT (BARAT, TIMUR, MORAL, DLL)
+    // 8. PANEL FILSAFAT
     // ==========================================
     function openFilsafat(jenis) {
         const overlay = document.getElementById("overlayBarat");
         const panel = document.getElementById("panelBarat");
+
+        document.body.style.overflow = "hidden"; // Kunci Scroll saat Buka
 
         if (overlay) overlay.classList.remove("hidden");
         setTimeout(function() {
@@ -836,229 +998,25 @@
         }, 10);
 
         if (jenis === "barat") {
-            if (document.getElementById("judulFilsafat")) document.getElementById("judulFilsafat").innerHTML =
-                "Filsafat Barat";
-            if (document.getElementById("ringkasanFilsafat")) document.getElementById("ringkasanFilsafat").innerHTML =
-                "Filsafat Barat berkembang sejak Yunani Kuno dan menjadi dasar lahirnya ilmu pengetahuan modern, logika, etika, politik, serta pemikiran rasional.";
-            if (document.getElementById("asalFilsafat")) document.getElementById("asalFilsafat").innerHTML =
-                "Yunani Kuno";
-            if (document.getElementById("fokusFilsafat")) document.getElementById("fokusFilsafat").innerHTML =
-                "Logika & Rasionalitas";
-            if (document.getElementById("tokohFilsafat")) {
-                document.getElementById("tokohFilsafat").innerHTML = `
-                    <div class="bg-white border border-[#E5D6BF] rounded-lg p-5">
-                        <h4 class="font-semibold text-[#992B20]">Socrates</h4>
-                        <p class="mt-2 text-[#675A4D] text-sm">Mengajarkan pentingnya berpikir kritis melalui dialog.</p>
-                    </div>
-                    <div class="bg-white border border-[#E5D6BF] rounded-lg p-5">
-                        <h4 class="font-semibold text-[#992B20]">Plato</h4>
-                        <p class="mt-2 text-[#675A4D] text-sm">Pendiri Akademi dan pencetus teori dunia ide.</p>
-                    </div>
-                    <div class="bg-white border border-[#E5D6BF] rounded-lg p-5">
-                        <h4 class="font-semibold text-[#992B20]">Aristoteles</h4>
-                        <p class="mt-2 text-[#675A4D] text-sm">Mengembangkan logika, etika, politik, dan ilmu alam.</p>
-                    </div>
-                `;
-            }
-            if (document.getElementById("karakteristikFilsafat")) {
-                document.getElementById("karakteristikFilsafat").innerHTML = `
-                    <ul class="list-disc pl-5 space-y-1 text-sm text-[#675A4D]">
-                        <li>Berpikir logis dan analitis.</li>
-                        <li>Argumentasi rasional mendalam.</li>
-                        <li>Penggunaan metode ilmiah.</li>
-                        <li>Pencarian kebenaran universal.</li>
-                    </ul>
-                `;
-            }
-            if (document.getElementById("pengaruhFilsafat")) document.getElementById("pengaruhFilsafat").innerHTML =
-                "Menjadi dasar perkembangan ilmu pengetahuan, demokrasi, pendidikan, hukum, dan teknologi modern.";
-
-        } else if (jenis === "timur") {
-            if (document.getElementById("judulFilsafat")) document.getElementById("judulFilsafat").innerHTML =
-                "Filsafat Timur";
-            if (document.getElementById("ringkasanFilsafat")) document.getElementById("ringkasanFilsafat").innerHTML =
-                "Filsafat Timur berkembang di Asia dan menekankan keseimbangan hidup, spiritualitas, serta keharmonisan manusia dengan alam.";
-            if (document.getElementById("asalFilsafat")) document.getElementById("asalFilsafat").innerHTML =
-                "Asia (India, Tiongkok, Jepang)";
-            if (document.getElementById("fokusFilsafat")) document.getElementById("fokusFilsafat").innerHTML =
-                "Spiritualitas & Keharmonisan";
-            if (document.getElementById("tokohFilsafat")) {
-                document.getElementById("tokohFilsafat").innerHTML = `
-                    <div class="bg-white border border-[#E5D6BF] rounded-lg p-5">
-                        <h4 class="font-semibold text-[#2F7D4B]">Konfusius</h4>
-                        <p class="mt-2 text-[#675A4D] text-sm">Mengajarkan moralitas, etika, dan tata krama dalam kehidupan bermasyarakat.</p>
-                    </div>
-                    <div class="bg-white border border-[#E5D6BF] rounded-lg p-5">
-                        <h4 class="font-semibold text-[#2F7D4B]">Laozi</h4>
-                        <p class="mt-2 text-[#675A4D] text-sm">Pendiri Taoisme yang mengajarkan hidup menyatu dengan jalan alam (Tao).</p>
-                    </div>
-                    <div class="bg-white border border-[#E5D6BF] rounded-lg p-5">
-                        <h4 class="font-semibold text-[#2F7D4B]">Siddhartha Gautama</h4>
-                        <p class="mt-2 text-[#675A4D] text-sm">Mengajarkan jalan pencerahan dan kebebasan dari penderitaan.</p>
-                    </div>
-                `;
-            }
-            if (document.getElementById("karakteristikFilsafat")) {
-                document.getElementById("karakteristikFilsafat").innerHTML = `
-                    <ul class="list-disc pl-5 space-y-1 text-sm text-[#675A4D]">
-                        <li>Keharmonisan hidup dengan alam.</li>
-                        <li>Keseimbangan kosmis (Yin & Yang).</li>
-                        <li>Kedalaman spiritualitas dan introspeksi.</li>
-                        <li>Pengendalian diri dan kebijaksanaan batin.</li>
-                    </ul>
-                `;
-            }
-            if (document.getElementById("pengaruhFilsafat")) document.getElementById("pengaruhFilsafat").innerHTML =
-                "Mempengaruhi budaya Asia, praktik meditasi, etika keluarga, pandangan agama, dan kearifan hidup sehari-hari.";
-
-        } else if (jenis === "moral") {
-            if (document.getElementById("judulFilsafat")) document.getElementById("judulFilsafat").innerHTML =
-                "Filsafat Moral";
-            if (document.getElementById("ringkasanFilsafat")) document.getElementById("ringkasanFilsafat").innerHTML =
-                "Filsafat Moral (Etika) mengkaji nilai baik dan buruk, serta membimbing bagaimana manusia seharusnya bertindak secara bijaksana dan bertanggung jawab.";
-            if (document.getElementById("asalFilsafat")) document.getElementById("asalFilsafat").innerHTML =
-            "Universal";
-            if (document.getElementById("fokusFilsafat")) document.getElementById("fokusFilsafat").innerHTML =
-                "Etika & Nilai Kebaikan";
-            if (document.getElementById("tokohFilsafat")) {
-                document.getElementById("tokohFilsafat").innerHTML = `
-                    <div class="bg-white border border-[#E5D6BF] rounded-lg p-5">
-                        <h4 class="font-semibold text-[#C58A3C]">Immanuel Kant</h4>
-                        <p class="mt-2 text-[#675A4D] text-sm">Mengembangkan etika deontologi (kewajiban moral mutlak).</p>
-                    </div>
-                    <div class="bg-white border border-[#E5D6BF] rounded-lg p-5">
-                        <h4 class="font-semibold text-[#C58A3C]">John Stuart Mill</h4>
-                        <p class="mt-2 text-[#675A4D] text-sm">Tokoh Utilitarianisme (tindakan terbaik memberi manfaat terbanyak).</p>
-                    </div>
-                `;
-            }
-            if (document.getElementById("karakteristikFilsafat")) {
-                document.getElementById("karakteristikFilsafat").innerHTML = `
-                    <ul class="list-disc pl-5 space-y-1 text-sm text-[#675A4D]">
-                        <li>Penilaian tindakan baik vs buruk.</li>
-                        <li>Penekanan pada etika dan integritas.</li>
-                        <li>Prinsip kewajiban dan hak asasi.</li>
-                        <li>Tanggung jawab moral individu.</li>
-                    </ul>
-                `;
-            }
-            if (document.getElementById("pengaruhFilsafat")) document.getElementById("pengaruhFilsafat").innerHTML =
-                "Menjadi dasar hukum etika profesi, norma sosial, pendidikan karakter, dan hak asasi manusia.";
-
-        } else if (jenis === "politik") {
-            if (document.getElementById("judulFilsafat")) document.getElementById("judulFilsafat").innerHTML =
-                "Filsafat Politik";
-            if (document.getElementById("ringkasanFilsafat")) document.getElementById("ringkasanFilsafat").innerHTML =
-                "Membahas konsep negara, kekuasaan, keadilan, hukum, serta hubungan ideal antara pemerintah dengan rakyat.";
-            if (document.getElementById("asalFilsafat")) document.getElementById("asalFilsafat").innerHTML =
-                "Yunani Kuno & Modern";
-            if (document.getElementById("fokusFilsafat")) document.getElementById("fokusFilsafat").innerHTML =
-                "Negara & Keadilan Sosial";
-            if (document.getElementById("tokohFilsafat")) {
-                document.getElementById("tokohFilsafat").innerHTML = `
-                    <div class="bg-white border border-[#E5D6BF] rounded-lg p-5">
-                        <h4 class="font-semibold text-[#305F9E]">Niccolò Machiavelli</h4>
-                        <p class="mt-2 text-[#675A4D] text-sm">Pemikir realisme politik tentang kekuasaan dan negara.</p>
-                    </div>
-                    <div class="bg-white border border-[#E5D6BF] rounded-lg p-5">
-                        <h4 class="font-semibold text-[#305F9E]">John Locke</h4>
-                        <p class="mt-2 text-[#675A4D] text-sm">Pencetus teori kontrak sosial dan hak asasi individu.</p>
-                    </div>
-                `;
-            }
-            if (document.getElementById("karakteristikFilsafat")) {
-                document.getElementById("karakteristikFilsafat").innerHTML = `
-                    <ul class="list-disc pl-5 space-y-1 text-sm text-[#675A4D]">
-                        <li>Prinsip keadilan dan hukum.</li>
-                        <li>Pembagian kekuasaan negara.</li>
-                        <li>Perlindungan hak-hak masyarakat.</li>
-                        <li>Sistem tata kelola pemerintahan.</li>
-                    </ul>
-                `;
-            }
-            if (document.getElementById("pengaruhFilsafat")) document.getElementById("pengaruhFilsafat").innerHTML =
-                "Melandasi lahirnya sistem demokrasi, konstitusi negara, hukum internasional, dan kebebasan sipil.";
-
-        } else if (jenis === "ilmu") {
-            if (document.getElementById("judulFilsafat")) document.getElementById("judulFilsafat").innerHTML =
-                "Filsafat Ilmu";
-            if (document.getElementById("ringkasanFilsafat")) document.getElementById("ringkasanFilsafat").innerHTML =
-                "Mempelajari hakikat ilmu pengetahuan, metode ilmiah, kebenaran bukti, serta batasan kemampuan berpikir manusia.";
-            if (document.getElementById("asalFilsafat")) document.getElementById("asalFilsafat").innerHTML =
-                "Era Modern";
-            if (document.getElementById("fokusFilsafat")) document.getElementById("fokusFilsafat").innerHTML =
-                "Metodologi & Kebenaran Ilmiah";
-            if (document.getElementById("tokohFilsafat")) {
-                document.getElementById("tokohFilsafat").innerHTML = `
-                    <div class="bg-white border border-[#E5D6BF] rounded-lg p-5">
-                        <h4 class="font-semibold text-[#D9B35D]">Karl Popper</h4>
-                        <p class="mt-2 text-[#675A4D] text-sm">Mengembangkan prinsip falsifikasi dalam pengujian sains.</p>
-                    </div>
-                    <div class="bg-white border border-[#E5D6BF] rounded-lg p-5">
-                        <h4 class="font-semibold text-[#D9B35D]">Thomas Kuhn</h4>
-                        <p class="mt-2 text-[#675A4D] text-sm">Memperkenalkan teori pergeseran paradigma ilmiah.</p>
-                    </div>
-                `;
-            }
-            if (document.getElementById("karakteristikFilsafat")) {
-                document.getElementById("karakteristikFilsafat").innerHTML = `
-                    <ul class="list-disc pl-5 space-y-1 text-sm text-[#675A4D]">
-                        <li>Penggunaan metode ilmiah ketat.</li>
-                        <li>Pembuktian empiris dan observasi.</li>
-                        <li>Logika deduktif dan induktif.</li>
-                        <li>Evaluasi kritis terhadap teori.</li>
-                    </ul>
-                `;
-            }
-            if (document.getElementById("pengaruhFilsafat")) document.getElementById("pengaruhFilsafat").innerHTML =
-                "Menjadi fondasi utama penelitian akademik, teknologi modern, riset medis, dan perkembangan sains.";
-
-        } else if (jenis === "agama") {
-            if (document.getElementById("judulFilsafat")) document.getElementById("judulFilsafat").innerHTML =
-                "Filsafat Agama";
-            if (document.getElementById("ringkasanFilsafat")) document.getElementById("ringkasanFilsafat").innerHTML =
-                "Mengkaji makna keberadaan Ketuhanan, hubungan antara akal pikiran dan keimanan, serta tujuan hakiki kehidupan.";
-            if (document.getElementById("asalFilsafat")) document.getElementById("asalFilsafat").innerHTML =
-            "Universal";
-            if (document.getElementById("fokusFilsafat")) document.getElementById("fokusFilsafat").innerHTML =
-                "Ketuhanan & Keimanan";
-            if (document.getElementById("tokohFilsafat")) {
-                document.getElementById("tokohFilsafat").innerHTML = `
-                    <div class="bg-white border border-[#E5D6BF] rounded-lg p-5">
-                        <h4 class="font-semibold text-[#6B4A8E]">Thomas Aquinas</h4>
-                        <p class="mt-2 text-[#675A4D] text-sm">Menyelaraskan ajaran iman dengan rasionalitas filsafat.</p>
-                    </div>
-                    <div class="bg-white border border-[#E5D6BF] rounded-lg p-5">
-                        <h4 class="font-semibold text-[#6B4A8E]">Al-Ghazali</h4>
-                        <p class="mt-2 text-[#675A4D] text-sm">Menggabungkan logika, ajaran agama, dan kedalaman sufisme.</p>
-                    </div>
-                `;
-            }
-            if (document.getElementById("karakteristikFilsafat")) {
-                document.getElementById("karakteristikFilsafat").innerHTML = `
-                    <ul class="list-disc pl-5 space-y-1 text-sm text-[#675A4D]">
-                        <li>Perenungan tentang Ketuhanan.</li>
-                        <li>Pencarian makna dan tujuan hidup.</li>
-                        <li>Penyelarasan wahyu dan akal budi.</li>
-                        <li>Refleksi atas kehidupan setelah kematian.</li>
-                    </ul>
-                `;
-            }
-            if (document.getElementById("pengaruhFilsafat")) document.getElementById("pengaruhFilsafat").innerHTML =
-                "Memberikan kedalaman pemahaman spiritual, kerukunan beragama, serta landasan etika moral bermasyarakat.";
+            if (document.getElementById("judulFilsafat")) document.getElementById("judulFilsafat").innerHTML = "Filsafat Barat";
+            if (document.getElementById("ringkasanFilsafat")) document.getElementById("ringkasanFilsafat").innerHTML = "Filsafat Barat berkembang sejak Yunani Kuno dan menjadi dasar lahirnya ilmu pengetahuan modern, logika, etika, politik, serta pemikiran rasional.";
+            if (document.getElementById("asalFilsafat")) document.getElementById("asalFilsafat").innerHTML = "Yunani Kuno";
+            if (document.getElementById("fokusFilsafat")) document.getElementById("fokusFilsafat").innerHTML = "Logika & Rasionalitas";
         }
-
         if (typeof feather !== 'undefined') feather.replace();
     }
 
+    // CLOSE PANEL FILSAFAT (SCROLL DIKEMBALIKAN)
     function closeBarat() {
         const panel = document.getElementById("panelBarat");
         const overlay = document.getElementById("overlayBarat");
 
         if (panel) panel.classList.add("translate-x-full");
+
+        document.body.style.overflow = "auto"; // Kembalikan Scroll
+
         setTimeout(function() {
             if (overlay) overlay.classList.add("hidden");
-            document.body.style.overflow = "auto";
         }, 300);
     }
 

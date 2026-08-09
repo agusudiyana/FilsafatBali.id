@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bookmark;
-use App\Models\Favorite;
-use App\Models\Download;
 use App\Models\Discussion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +11,7 @@ class PenggunaController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
-    | 1. KOLEKSI ARSIP / SIMPANAN
+    | 1. KOLEKSI ARSIP / SIMPANAN (SUPPORT AJAX TOGGLE & JSON)
     |--------------------------------------------------------------------------
     */
     public function arsipIndex()
@@ -24,27 +22,51 @@ class PenggunaController extends Controller
 
     public function storeArsip(Request $request)
     {
+        // Validasi data masukan dari AJAX
         $request->validate([
             'item_title' => 'required|string',
-            'item_type'  => 'required|string',
-            'item_url'   => 'required|string',
+            'item_type'  => 'nullable|string',
+            'item_url'   => 'nullable|string',
         ]);
 
-        // Cegah duplikasi simpanan
-        $exists = Bookmark::where('user_id', Auth::id())
-            ->where('item_url', $request->item_url)
+        $userId = Auth::id();
+        $title = $request->item_title;
+        $type = $request->item_type ?? 'artikel';
+        $url = $request->item_url ?? '#';
+
+        // Cek apakah artikel/item ini sudah ada di simpanan user
+        $exists = Bookmark::where('user_id', $userId)
+            ->where('item_title', $title)
             ->first();
 
+        // JIKA SUDAH ADA -> TOGGLE OFF (BATAL SIMPAN / HAPUS)
         if ($exists) {
-            return back()->with('info', 'Artikel ini sudah ada di dalam simpanan Anda.');
+            $exists->delete();
+
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json([
+                    'status'  => 'removed',
+                    'message' => 'Artikel berhasil dihapus dari simpanan.'
+                ]);
+            }
+
+            return back()->with('info', 'Artikel dihapus dari simpanan Anda.');
         }
 
+        // JIKA BELUM ADA -> TOGGLE ON (SIMPAN BARU)
         Bookmark::create([
-            'user_id'    => Auth::id(),
-            'item_title' => $request->item_title,
-            'item_type'  => $request->item_type,
-            'item_url'   => $request->item_url,
+            'user_id'    => $userId,
+            'item_title' => $title,
+            'item_type'  => $type,
+            'item_url'   => $url,
         ]);
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'status'  => 'saved',
+                'message' => 'Artikel berhasil disimpan ke Koleksi Arsip!'
+            ]);
+        }
 
         return back()->with('success', 'Artikel berhasil disimpan ke Koleksi Arsip!');
     }
@@ -57,36 +79,7 @@ class PenggunaController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | 2. ARTIKEL FAVORIT
-    |--------------------------------------------------------------------------
-    */
-    public function favoritIndex()
-    {
-        $favorites = Favorite::where('user_id', Auth::id())->latest()->get();
-        return view('pengguna.favorit.index', compact('favorites'));
-    }
-
-    public function toggleFavorit(Request $request, $id)
-    {
-        $favorite = Favorite::where('id', $id)->where('user_id', Auth::id())->first();
-
-        if ($favorite) {
-            $favorite->delete();
-            return back()->with('success', 'Artikel berhasil dihapus dari favorit.');
-        }
-
-        Favorite::create([
-            'user_id'       => Auth::id(),
-            'article_title' => $request->article_title ?? 'Artikel Tanpa Judul',
-            'article_url'   => $request->article_url ?? '#',
-        ]);
-
-        return back()->with('success', 'Artikel berhasil ditambahkan ke favorit!');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | 3. FORUM DISKUSI KOMUNITAS
+    | 2. FORUM DISKUSI KOMUNITAS
     |--------------------------------------------------------------------------
     */
     public function komunitasIndex()
@@ -107,16 +100,5 @@ class PenggunaController extends Controller
         ]);
 
         return back()->with('success', 'Diskusi berhasil dikirim ke forum!');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | 4. PUSAT UNDUHAN
-    |--------------------------------------------------------------------------
-    */
-    public function unduhanIndex()
-    {
-        $downloads = Download::where('user_id', Auth::id())->latest()->get();
-        return view('pengguna.unduhan.index', compact('downloads'));
     }
 }

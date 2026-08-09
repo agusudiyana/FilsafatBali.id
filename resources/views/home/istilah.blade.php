@@ -1,22 +1,44 @@
+<!-- CSRF TOKEN FOR AJAX -->
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
+<!-- Style Khusus Bookmark -->
+<style>
+    .btn-bookmark-custom {
+        cursor: pointer !important;
+        transition: all 0.25s ease-in-out;
+    }
+    .btn-bookmark-custom * {
+        pointer-events: none !important;
+    }
+    .btn-bookmark-custom[data-saved="true"] svg,
+    .btn-bookmark-custom[data-saved="true"] i {
+        fill: #C58A3C !important;
+        color: #C58A3C !important;
+        stroke: #C58A3C !important;
+    }
+    .btn-bookmark-custom[data-saved="false"] svg,
+    .btn-bookmark-custom[data-saved="false"] i {
+        fill: none !important;
+        color: #8F7A61 !important;
+        stroke: #8F7A61 !important;
+    }
+</style>
+
 <!-- ========================================== -->
 <!-- SECTION ISTILAH BALI                      -->
 <!-- ========================================== -->
 <section id="sectionIstilah" class="bg-[#1A110A] py-24 hidden">
-
     <div class="max-w-7xl mx-auto px-8">
 
         <!-- Header Istilah -->
         <div class="flex justify-between items-start mb-12">
-
             <div>
                 <p class="uppercase tracking-[5px] text-[#C89438] text-xs mb-3">
                     — ENSIKLOPEDIA
                 </p>
-
                 <h2 style="font-family:'Cormorant Garamond',serif;" class="text-6xl font-bold text-white">
                     Satua & Istilah Bali
                 </h2>
-
                 <p class="text-[#B9986D] mt-3 text-lg">
                     Klik item untuk membuka informasi lengkap.
                 </p>
@@ -28,99 +50,100 @@
                     class="w-36 md:w-40 py-3 bg-transparent text-[#C58A3C] uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all">
                     SATUA BALI
                 </button>
-
                 <button id="btnIstilah" onclick="showIstilah()"
                     class="w-36 md:w-40 py-3 bg-[#C58A3C] text-white uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all">
                     ISTILAH BALI
                 </button>
             </div>
-
         </div>
 
         <!-- Search Input khusus Cari Judul saja -->
         <div class="mb-10 relative max-w-md">
-
             <input id="searchIstilahInput" type="text" placeholder="Cari judul istilah..."
                 oninput="filterIstilahList(this.value)"
-                class="w-full
-                bg-transparent
-                border border-[#3E2D1E]
-                rounded-md
-                px-5 py-3 pr-10
-                text-[#D8C7AE]
-                placeholder:text-[#6E5B45]
-                outline-none
-                focus:border-[#C48D2D] transition duration-200">
+                class="w-full bg-transparent border border-[#3E2D1E] rounded-md px-5 py-3 pr-10 text-[#D8C7AE] placeholder:text-[#6E5B45] outline-none focus:border-[#C48D2D] transition duration-200">
 
             <button id="btnClearSearchIstilah" onclick="clearSearchIstilah()"
                 class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-[#6E5B45] hover:text-[#D8C7AE] transition font-bold">
                 ✕
             </button>
-
         </div>
 
-        <!-- LIST ISTILAH (DARI DATABASE) -->
+        <!-- LIST ISTILAH (DARI DATABASE + TOMBOL SIMPAN) -->
         <div id="listIstilahContainer" class="divide-y divide-[#3E2D1E]">
-
             @forelse($istilahs as $item)
-                <div onclick="openIstilah(
-                    '{{ addslashes($item->istilah ?? ($item->judul ?? '-')) }}',
-                    '{{ addslashes($item->kategori ?? 'Umum') }}',
-                    '{{ addslashes($item->arti ?? ($item->definisi ?? '-')) }}',
-                    '{{ addslashes($item->sejarah ?? ($item->penjelasan ?? '-')) }}',
-                    '{{ addslashes($item->contoh_penggunaan ?? ($item->contoh ?? '-')) }}',
-                    '{{ addslashes($item->padanan_kata ?? ($item->keterangan ?? '-')) }}'
-                    )"
-                    class="item-istilah grid grid-cols-[170px_120px_1fr] py-6 items-center cursor-pointer hover:bg-[#2A1A10] hover:px-4 transition-all duration-300 rounded-lg">
+                @php
+                    $judulIstilah = $item->istilah ?? ($item->judul ?? '-');
+                    $kategoriIst  = $item->kategori ?? 'Umum';
+                    $artiIst      = $item->arti ?? ($item->definisi ?? '-');
+                    $sejarahIst   = $item->sejarah ?? ($item->penjelasan ?? '-');
+                    $contohIst    = $item->contoh_penggunaan ?? ($item->contoh ?? '-');
+                    $padananIst   = $item->padanan_kata ?? ($item->keterangan ?? '-');
 
-                    <h3 class="text-white text-4xl font-bold" style="font-family:'Cormorant Garamond',serif;">
-                        {{ $item->istilah ?? ($item->judul ?? '-') }}
-                    </h3>
+                    // Cek status simpan di database
+                    $isSavedIstilah = auth()->check() && \App\Models\Bookmark::where('user_id', auth()->id())
+                        ->where('item_title', $judulIstilah)
+                        ->exists();
+                @endphp
 
-                    <span class="text-[10px] uppercase tracking-[2px] border border-[#6A5135] text-[#C89438] rounded px-3 py-1 w-fit">
-                        {{ $item->kategori ?? 'Umum' }}
-                    </span>
+                <div class="item-istilah grid grid-cols-[170px_120px_1fr_auto] py-6 items-center gap-4 hover:bg-[#2A1A10] hover:px-4 transition-all duration-300 rounded-lg">
+                    
+                    <!-- AREA KLIK DETAIL MODAL -->
+                    <div onclick="openIstilah(
+                            '{{ addslashes($judulIstilah) }}',
+                            '{{ addslashes($kategoriIst) }}',
+                            '{{ addslashes($artiIst) }}',
+                            '{{ addslashes($sejarahIst) }}',
+                            '{{ addslashes($contohIst) }}',
+                            '{{ addslashes($padananIst) }}'
+                        )" 
+                        class="col-span-3 grid grid-cols-[170px_120px_1fr] items-center cursor-pointer">
+                        
+                        <h3 class="text-white text-4xl font-bold" style="font-family:'Cormorant Garamond',serif;">
+                            {{ $judulIstilah }}
+                        </h3>
 
-                    <p class="text-[#C8B299] leading-8 line-clamp-2">
-                        {{ $item->arti ?? ($item->definisi ?? '-') }}
-                    </p>
+                        <span class="text-[10px] uppercase tracking-[2px] border border-[#6A5135] text-[#C89438] rounded px-3 py-1 w-fit">
+                            {{ $kategoriIst }}
+                        </span>
 
+                        <p class="text-[#C8B299] leading-8 line-clamp-2">
+                            {{ $artiIst }}
+                        </p>
+                    </div>
+
+                    <!-- TOMBOL SIMPAN / BOOKMARK -->
+                    <button type="button"
+                        onclick="handleBookmarkAction(event, this, '{{ addslashes($judulIstilah) }}', 'Istilah Bali')"
+                        data-saved="{{ $isSavedIstilah ? 'true' : 'false' }}"
+                        title="{{ $isSavedIstilah ? 'Batal Simpan' : 'Simpan ke Arsip' }}"
+                        class="btn-bookmark-custom relative z-10 p-2 rounded-lg border border-[#6E4E1E] bg-transparent hover:bg-[#3E2D1E] transition shrink-0 flex items-center justify-center">
+                        <i data-feather="bookmark"
+                            class="w-4 h-4 {{ $isSavedIstilah ? 'text-[#C58A3C]' : 'text-[#8F7A61]' }}"
+                            style="{{ $isSavedIstilah ? 'fill:#C58A3C; color:#C58A3C;' : '' }}"></i>
+                    </button>
                 </div>
             @empty
                 <div class="py-12 text-center text-[#B9986D]">
                     Belum ada Istilah Bali yang terverifikasi / disetujui.
                 </div>
             @endforelse
-
         </div>
 
     </div>
-
 </section>
 
 <!-- Overlay -->
-<div id="overlay" onclick="closeDetail()" class="fixed inset-0 bg-black/60 hidden z-40">
-</div>
+<div id="overlay" onclick="closeDetail()" class="fixed inset-0 bg-black/60 hidden z-40"></div>
 
 <!-- Panel Detail -->
 <div id="detailPanel"
-    class="fixed top-0 right-0 w-[520px] max-w-full h-full
-        bg-[#F6E9D7]
-        shadow-2xl
-        translate-x-full
-        transition-all duration-500
-        z-50
-        overflow-y-auto">
+    class="fixed top-0 right-0 w-[520px] max-w-full h-full bg-[#F6E9D7] shadow-2xl translate-x-full transition-all duration-500 z-50 overflow-y-auto">
 
     <div class="p-8">
-
         <!-- tombol tutup -->
         <button onclick="closeDetail()"
-            class="absolute top-5 right-5
-                w-10 h-10 rounded-full
-                bg-[#E8D6BD]
-                hover:bg-[#D8C3A3]
-                flex items-center justify-center font-bold text-[#5C4836] transition">
+            class="absolute top-5 right-5 w-10 h-10 rounded-full bg-[#E8D6BD] hover:bg-[#D8C3A3] flex items-center justify-center font-bold text-[#5C4836] transition">
             ✕
         </button>
 
@@ -131,18 +154,12 @@
 
         <!-- Kategori -->
         <span id="detailKategori"
-            class="inline-block mt-4
-                border border-[#C79A4A]
-                text-[#B57D27]
-                uppercase
-                tracking-[2px]
-                text-[11px]
-                px-3 py-1 rounded">
+            class="inline-block mt-4 border border-[#C79A4A] text-[#B57D27] uppercase tracking-[2px] text-[11px] px-3 py-1 rounded">
             -
         </span>
 
         <!-- Deskripsi / Arti -->
-        <p id="detailDesc" class="mt-8 text-[#675A4D] leading-10 text-[18px]">
+        <p id="detailDesc" class="mt-8 text-[#675A4D] leading-10 text-[18px] whitespace-pre-line">
             -
         </p>
 
@@ -151,7 +168,7 @@
             <p class="uppercase tracking-[4px] text-[11px] text-[#C58A3C] font-semibold">
                 SEJARAH
             </p>
-            <div id="detailSejarah" class="mt-4 text-[#675A4D] leading-9">
+            <div id="detailSejarah" class="mt-4 text-[#675A4D] leading-9 whitespace-pre-line">
                 -
             </div>
         </div>
@@ -164,7 +181,7 @@
         </p>
 
         <div class="mt-3 bg-[#F1DFC3] border border-[#D7BE99] rounded-lg p-5">
-            <p id="detailContoh" class="italic text-[#5D4937]">
+            <p id="detailContoh" class="italic text-[#5D4937] whitespace-pre-line">
                 -
             </p>
         </div>
@@ -174,17 +191,81 @@
             Padanan Kata
         </p>
 
-        <p id="detailPadanan" class="mt-3 text-[#5C4836]">
+        <p id="detailPadanan" class="mt-3 text-[#5C4836] whitespace-pre-line">
             -
         </p>
-
     </div>
-
 </div>
 
-<!-- SCRIPT PENCARIAN KHUSUS JUDUL & OPERASIONAL MODAL -->
+<!-- SCRIPT CONTROLLER JS -->
 <script>
-    // 1. Fungsi Pencarian Khusus Judul (Tag <h3>)
+    const IS_USER_AUTH = @json(auth()->check());
+    const PAGE_LOGIN_URL = "{{ route('login') }}";
+
+    // 1. Fungsi Toggle Simpan / Bookmark via AJAX
+    function handleBookmarkAction(event, btnElement, title, type) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        if (!IS_USER_AUTH) {
+            alert("Silakan login terlebih dahulu untuk menyimpan " + type + " ini ke arsip!");
+            window.location.href = PAGE_LOGIN_URL;
+            return;
+        }
+
+        fetch("{{ route('pengguna.arsip.store') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                item_title: title,
+                item_type: type
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'saved') {
+                btnElement.setAttribute('data-saved', 'true');
+                btnElement.setAttribute('title', 'Batal Simpan');
+            } else if (data.status === 'removed') {
+                btnElement.setAttribute('data-saved', 'false');
+                btnElement.setAttribute('title', 'Simpan ke Arsip');
+            }
+
+            if (typeof feather !== 'undefined') {
+                feather.replace();
+            }
+        })
+        .catch(err => {
+            console.error('Error Bookmark:', err);
+        });
+    }
+
+    // 2. Fungsi Buka Panel Detail
+    function openIstilah(title, kategori, desc, sejarah, contoh, padanan) {
+        document.getElementById("detailTitle").innerText = title || '-';
+        document.getElementById("detailKategori").innerText = kategori || 'Umum';
+        document.getElementById("detailDesc").innerText = desc || '-';
+        document.getElementById("detailSejarah").innerText = sejarah || '-';
+        document.getElementById("detailContoh").innerText = contoh || '-';
+        document.getElementById("detailPadanan").innerText = padanan || '-';
+
+        document.getElementById("overlay").classList.remove("hidden");
+        document.getElementById("detailPanel").classList.remove("translate-x-full");
+    }
+
+    // 3. Fungsi Tutup Panel Detail
+    function closeDetail() {
+        document.getElementById("detailPanel").classList.add("translate-x-full");
+        setTimeout(() => {
+            document.getElementById("overlay").classList.add("hidden");
+        }, 500);
+    }
+
+    // 4. Pencarian Istilah Khusus Judul (h3)
     function filterIstilahList(keyword) {
         const query = keyword.trim().toLowerCase();
         const btnClear = document.getElementById("btnClearSearchIstilah");
@@ -213,4 +294,45 @@
             }
         });
     }
+
+    // 5. Clear Search
+    function clearSearchIstilah() {
+        const input = document.getElementById("searchIstilahInput");
+        if (input) {
+            input.value = "";
+            filterIstilahList("");
+        }
+    }
+
+    // 6. FITUR AUTO-OPEN MODAL DARI HALAMAN TERSIMPAN / ARSIP
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof feather !== 'undefined') {
+            feather.replace();
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const itemToOpen = urlParams.get('open');
+
+        if (itemToOpen) {
+            const decodedTitle = decodeURIComponent(itemToOpen).trim().toLowerCase();
+
+            // Cek jika Hash mengarah ke #sectionIstilah
+            if (window.location.hash === '#sectionIstilah') {
+                if (typeof showIstilah === 'function') {
+                    showIstilah(); // Buka tab Istilah Bali
+                }
+
+                setTimeout(() => {
+                    const items = document.querySelectorAll('#listIstilahContainer .item-istilah');
+                    items.forEach(item => {
+                        const judulEl = item.querySelector('h3');
+                        if (judulEl && judulEl.innerText.trim().toLowerCase() === decodedTitle) {
+                            const clickArea = item.querySelector('[onclick*="openIstilah"]');
+                            if (clickArea) clickArea.click(); // Otomatis klik item untuk buka modal
+                        }
+                    });
+                }, 400);
+            }
+        }
+    });
 </script>

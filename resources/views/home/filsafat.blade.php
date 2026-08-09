@@ -1,7 +1,7 @@
 <section id="jenis-filsafat" class="bg-[#F7F0E7] py-24">
     <div class="max-w-7xl mx-auto px-8">
 
-        <!-- Judul -->
+        <!-- Judul Section -->
         <div class="text-center mb-16">
             <p class="uppercase tracking-[6px] text-[#C58A3C] text-xs mb-4">
                 — WAWASAN FILSAFAT
@@ -17,70 +17,46 @@
         </div>
 
         @php
-            $listFilsafat = $filsafats ?? collect([]);
+            $listFilsafat = isset($filsafats) 
+                ? $filsafats->where('status', 'disetujui') 
+                : collect([]);
+
+            if($listFilsafat->isEmpty() && isset($filsafats)) {
+                $listFilsafat = $filsafats;
+            }
         @endphp
 
         <!-- GRID CARDS (DINAMIS DARI DATABASE) -->
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             @forelse($listFilsafat as $item)
                 @php
-                    $slug = strtolower(trim($item->slug ?? 'barat'));
+                    $idKey = $item->id;
                     $bgIkon = $item->warna_bg ?? 'bg-[#992B20]';
                     $colorText = $item->warna_teks ?? 'text-[#B27A27]';
-
-                    // Fleksibilitas deskripsi kartu depan
-                    $deskripsiTampil =
-                        $item->deskripsi_singkat ??
-                        ($item->deskripsi ??
-                            ($item->ringkasan ??
-                                ($item->penjelasan ??
-                                    'Mengkaji nilai-nilai kehidupan dan pandangan hidup secara mendalam.')));
-
-                    // EKSTRAKSI NAMA TOKOH (PENCATATAN SERUPA OVERLAY)
+                    $deskripsiTampil = $item->deskripsi ?? 'Mengkaji nilai-nilai kehidupan dan pandangan hidup secara mendalam.';
+                    
+                    // =========================================================
+                    // LOGIKA EKSTRAKSI SEMUA NAMA TOKOH UNTUK BADGE KARTU DEPAN
+                    // =========================================================
+                    $tokohStr = $item->tokoh_terkenal ?? '';
                     $tokohList = [];
 
-                    // 1. Cek jika tokoh tersimpan di kolom terpisah (tokoh1_nama, dll)
-                    if (!empty($item->tokoh1_nama)) {
-                        $tokohList[] = $item->tokoh1_nama;
-                    }
-                    if (!empty($item->tokoh2_nama)) {
-                        $tokohList[] = $item->tokoh2_nama;
-                    }
-                    if (!empty($item->tokoh3_nama)) {
-                        $tokohList[] = $item->tokoh3_nama;
-                    }
-
-                    // 2. Cek jika tokoh tersimpan di kolom array / JSON `tokoh`
-                    if (empty($tokohList)) {
-                        $rawTokoh = $item->tokoh;
-
-                        if (is_string($rawTokoh)) {
-                            $decoded = json_decode($rawTokoh, true);
-                            if (json_last_error() === JSON_ERROR_NONE) {
-                                $rawTokoh = $decoded;
-                            } else {
-                                $tokohList = array_map('trim', explode(',', $rawTokoh));
-                            }
-                        }
-
-                        if (is_array($rawTokoh)) {
-                            foreach ($rawTokoh as $tkh) {
-                                if (is_array($tkh)) {
-                                    $nama =
-                                        $tkh['nama'] ??
-                                        ($tkh['nama_tokoh'] ?? ($tkh['name'] ?? ($tkh['tokoh'] ?? reset($tkh))));
-                                    if ($nama && is_string($nama)) {
-                                        $tokohList[] = trim($nama);
-                                    }
-                                } elseif (is_string($tkh) && trim($tkh) !== '') {
-                                    $tokohList[] = trim($tkh);
+                    if (!empty($tokohStr)) {
+                        $rawItems = preg_split('/[\.;]/', $tokohStr);
+                        foreach ($rawItems as $raw) {
+                            $raw = trim($raw);
+                            if (!empty($raw)) {
+                                $parts = explode(':', $raw);
+                                $namaOnly = trim($parts[0]);
+                                if (!empty($namaOnly) && !in_array($namaOnly, $tokohList)) {
+                                    $tokohList[] = $namaOnly;
                                 }
                             }
                         }
                     }
                 @endphp
 
-                <div onclick="openFilsafat('{{ $slug }}')"
+                <div onclick="openFilsafat('{{ $idKey }}')"
                     class="group bg-white rounded-xl border border-[#E5D6BF]
                     p-8 hover:-translate-y-2 hover:shadow-xl
                     duration-300 cursor-pointer flex flex-col justify-between h-full">
@@ -104,12 +80,11 @@
                             {{ Str::limit($deskripsiTampil, 120) }}
                         </p>
 
-                        <!-- Tokoh Pill Badges (Presisi Mengikuti Overlay) -->
+                        <!-- Tokoh Pill Badges (MENAMPILKAN SEMUA TOKOH) -->
                         <div class="mt-6 flex flex-wrap gap-2 pt-2">
                             @if (!empty($tokohList))
-                                @foreach (array_slice($tokohList, 0, 3) as $namaTokoh)
-                                    <span
-                                        class="px-3 py-1 rounded-full bg-[#F8F1E6] {{ $colorText }} text-xs font-medium">
+                                @foreach ($tokohList as $namaTokoh)
+                                    <span class="px-3 py-1 rounded-full bg-[#F8F1E6] {{ $colorText }} text-xs font-medium">
                                         {{ $namaTokoh }}
                                     </span>
                                 @endforeach
@@ -129,7 +104,7 @@
                 </div>
             @empty
                 <div class="col-span-3 text-center py-12 text-[#675A4D]">
-                    Belum ada data filsafat yang tersedia di database.
+                    Belum ada data filsafat yang disetujui di database.
                 </div>
             @endforelse
         </div>
@@ -137,19 +112,19 @@
     </div>
 </section>
 
-<!-- Overlay Drawer Side-Panel -->
-<div id="overlayBarat" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden z-50">
-    <div id="panelBarat"
-        class="absolute right-0 top-0 w-[42%] h-full bg-[#FAF5ED] overflow-y-auto translate-x-full shadow-2xl transition-transform duration-500 ease-in-out">
+<!-- OVERLAY DRAWER SIDE-PANEL -->
+<div id="overlayBarat" onclick="handleOverlayClick(event)" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden z-50 transition-opacity duration-300">
+    <div id="panelBarat" onclick="event.stopPropagation()"
+        class="absolute right-0 top-0 w-full max-w-[500px] h-full bg-[#FAF5ED] overflow-y-auto translate-x-full shadow-2xl transition-transform duration-500 ease-in-out">
 
         <!-- Close Button -->
-        <button onclick="closeBarat()"
-            class="absolute top-6 right-6 w-11 h-11 rounded-full bg-[#EFE3CC] hover:bg-[#E5D4B7] flex items-center justify-center font-bold text-[#23160E]">
+        <button type="button" onclick="closeBarat()"
+            class="absolute top-6 right-6 w-11 h-11 rounded-full bg-[#EFE3CC] hover:bg-[#E5D4B7] flex items-center justify-center font-bold text-[#23160E] transition cursor-pointer">
             ✕
         </button>
 
         <div class="p-10">
-            <p class="uppercase tracking-[4px] text-[#C58A3C] text-xs">
+            <p class="uppercase tracking-[4px] text-[#C58A3C] text-xs font-semibold">
                 WAWASAN FILSAFAT
             </p>
 
@@ -157,47 +132,49 @@
                 class="text-5xl font-bold mt-4 text-[#23160E]">
             </h2>
 
-            <p id="ringkasanFilsafat" class="mt-6 text-[#675A4D] leading-8">
+            <p id="ringkasanFilsafat" class="mt-6 text-[#675A4D] leading-8 text-[15px]">
             </p>
 
-            <div class="border-t border-[#E4D4BF] my-10"></div>
+            <div class="border-t border-[#E4D4BF] my-8"></div>
 
             <h3 style="font-family:'Cormorant Garamond',serif;" class="text-3xl text-[#23160E]">
                 Asal
             </h3>
-            <p id="asalFilsafat" class="mt-5 text-[#675A4D] leading-8">
+            <p id="asalFilsafat" class="mt-4 text-[#675A4D] leading-8 text-[15px]">
             </p>
 
-            <div class="border-t border-[#E4D4BF] my-10"></div>
+            <div class="border-t border-[#E4D4BF] my-8"></div>
 
             <h3 style="font-family:'Cormorant Garamond',serif;" class="text-3xl text-[#23160E]">
                 Fokus
             </h3>
-            <p id="fokusFilsafat" class="mt-5 text-[#675A4D] leading-8">
+            <p id="fokusFilsafat" class="mt-4 text-[#675A4D] leading-8 text-[15px]">
             </p>
 
-            <div class="border-t border-[#E4D4BF] my-10"></div>
+            <div class="border-t border-[#E4D4BF] my-8"></div>
 
             <h3 style="font-family:'Cormorant Garamond',serif;" class="text-3xl text-[#23160E]">
                 Tokoh Terkenal
             </h3>
-            <div id="tokohFilsafat" class="mt-5 space-y-4">
+            <!-- Container untuk Card Tokoh Terkenal -->
+            <div id="tokohFilsafat" class="mt-6 space-y-4">
             </div>
 
-            <div class="border-t border-[#E4D4BF] my-10"></div>
+            <div class="border-t border-[#E4D4BF] my-8"></div>
 
             <h3 style="font-family:'Cormorant Garamond',serif;" class="text-3xl text-[#23160E]">
                 Karakteristik
             </h3>
-            <ul id="karakteristikFilsafat" class="mt-5 space-y-3 text-[#675A4D] leading-8 list-disc pl-6">
+            <!-- Container untuk List Karakteristik Bullets -->
+            <ul id="karakteristikFilsafat" class="mt-6 space-y-3 text-[#675A4D] leading-7 list-disc pl-5 text-[15px]">
             </ul>
 
-            <div class="border-t border-[#E4D4BF] my-10"></div>
+            <div class="border-t border-[#E4D4BF] my-8"></div>
 
             <h3 style="font-family:'Cormorant Garamond',serif;" class="text-3xl text-[#23160E]">
-                Pengaruh
+                Pengaruh / Implikasi
             </h3>
-            <p id="pengaruhFilsafat" class="mt-5 text-[#675A4D] leading-8">
+            <p id="pengaruhFilsafat" class="mt-4 text-[#675A4D] leading-8 text-[15px]">
             </p>
         </div>
     </div>
@@ -208,125 +185,114 @@
     @php
         $dbFilsafatData = [];
         foreach ($listFilsafat as $f) {
-            // Parsing Tokoh untuk Overlay Side Panel
-            $tokohJS = [];
-
-            // Pilihan A: Jika memakai kolom terpisah
-            if (!empty($f->tokoh1_nama)) {
-                $tokohJS[] = ['nama' => $f->tokoh1_nama, 'deskripsi' => $f->tokoh1_deskripsi ?? ''];
-            }
-            if (!empty($f->tokoh2_nama)) {
-                $tokohJS[] = ['nama' => $f->tokoh2_nama, 'deskripsi' => $f->tokoh2_deskripsi ?? ''];
-            }
-            if (!empty($f->tokoh3_nama)) {
-                $tokohJS[] = ['nama' => $f->tokoh3_nama, 'deskripsi' => $f->tokoh3_deskripsi ?? ''];
-            }
-
-            // Pilihan B: Jika memakai JSON/Array/String
-            if (empty($tokohJS)) {
-                $rawTokoh = $f->tokoh;
-                if (is_string($rawTokoh)) {
-                    $decoded = json_decode($rawTokoh, true);
-                    if (json_last_error() === JSON_ERROR_NONE) {
-                        $rawTokoh = $decoded;
-                    } else {
-                        $rawTokoh = explode(',', $rawTokoh);
-                    }
-                }
-                $tokohJS = $rawTokoh;
-            }
-
-            // Parsing Karakteristik untuk JS Overlay
-            $karakJS = $f->karakteristik;
-            if (is_string($karakJS)) {
-                $decoded = json_decode($karakJS, true);
-                if (json_last_error() === JSON_ERROR_NONE) {
-                    $karakJS = $decoded;
-                } else {
-                    $karakJS = explode(',', $karakJS);
-                }
-            }
-
-            $keySlug = strtolower(trim($f->slug ?? ''));
-
-            $dbFilsafatData[$keySlug] = [
+            $dbFilsafatData[$f->id] = [
+                'id' => $f->id,
                 'judul' => $f->judul ?? 'Tanpa Judul',
-                'ringkasan' => $f->ringkasan ?? ($f->deskripsi_singkat ?? ($f->deskripsi ?? '-')),
+                'ringkasan' => $f->deskripsi ?? '-',
                 'asal' => $f->asal ?? '-',
                 'fokus' => $f->fokus ?? '-',
-                'tokoh' => $tokohJS ?? [],
-                'karakteristik' => $karakJS ?? [],
-                'pengaruh' => $f->pengaruh ?? '-',
-                'warna_teks' => $f->warna_teks ?? 'text-[#992B20]',
+                'tokoh_raw' => $f->tokoh_terkenal ?? '',
+                'karakteristik_raw' => $f->karakteristik ?? '',
+                'pengaruh' => $f->implikasi ?? '-',
+                'warna_teks' => $f->warna_teks ?? 'text-[#8C281E]',
             ];
         }
     @endphp
 
     var DB_FILSAFAT = @json($dbFilsafatData);
 
-    function openFilsafat(jenis) {
+    function openFilsafat(id) {
         var overlay = document.getElementById("overlayBarat");
         var panel = document.getElementById("panelBarat");
+
+        // Kunci scroll body utama
+        document.body.style.overflow = "hidden";
 
         if (overlay) overlay.classList.remove("hidden");
         setTimeout(function() {
             if (panel) panel.classList.remove("translate-x-full");
         }, 10);
 
-        var key = String(jenis).toLowerCase().trim();
-        var data = DB_FILSAFAT[key];
+        var data = DB_FILSAFAT[id];
+
+        if (!data) {
+            var keys = Object.keys(DB_FILSAFAT);
+            if (keys.length > 0) data = DB_FILSAFAT[keys[0]];
+        }
 
         if (data) {
-            if (document.getElementById("judulFilsafat")) document.getElementById("judulFilsafat").innerText = data
-                .judul;
-            if (document.getElementById("ringkasanFilsafat")) document.getElementById("ringkasanFilsafat").innerText =
-                data.ringkasan;
-            if (document.getElementById("asalFilsafat")) document.getElementById("asalFilsafat").innerText = data.asal;
-            if (document.getElementById("fokusFilsafat")) document.getElementById("fokusFilsafat").innerText = data
-                .fokus;
-            if (document.getElementById("pengaruhFilsafat")) document.getElementById("pengaruhFilsafat").innerText =
-                data.pengaruh;
+            if (document.getElementById("judulFilsafat")) 
+                document.getElementById("judulFilsafat").innerText = data.judul || '-';
+            if (document.getElementById("ringkasanFilsafat")) 
+                document.getElementById("ringkasanFilsafat").innerText = data.ringkasan || '-';
+            if (document.getElementById("asalFilsafat")) 
+                document.getElementById("asalFilsafat").innerText = data.asal || '-';
+            if (document.getElementById("fokusFilsafat")) 
+                document.getElementById("fokusFilsafat").innerText = data.fokus || '-';
+            if (document.getElementById("pengaruhFilsafat")) 
+                document.getElementById("pengaruhFilsafat").innerText = data.pengaruh || '-';
 
-            // Render Tokoh di Overlay Side Panel
+            // =========================================================
+            // PARSER TOKOH TERKENAL (CARD BOXES PUTIH)
+            // =========================================================
             var tokohContainer = document.getElementById("tokohFilsafat");
             if (tokohContainer) {
                 tokohContainer.innerHTML = "";
-                if (Array.isArray(data.tokoh) && data.tokoh.length > 0) {
-                    data.tokoh.forEach(function(t) {
-                        var namaTokoh = (typeof t === 'object' && t !== null) ? (t.nama || t.nama_tokoh || t
-                            .name || t.tokoh || '') : t;
-                        var descTokoh = (typeof t === 'object' && t !== null) ? (t.deskripsi || t.desc || '') :
-                            '';
+                var rawTokoh = data.tokoh_raw.trim();
 
-                        if (namaTokoh) {
-                            tokohContainer.innerHTML += `
-                                <div class="bg-white border border-[#E5D6BF] rounded-lg p-5">
-                                    <h4 class="font-semibold ${data.warna_teks}">${namaTokoh}</h4>
-                                    ${descTokoh ? `<p class="mt-2 text-[#675A4D] text-sm">${descTokoh}</p>` : ''}
-                                </div>
-                            `;
+                if (rawTokoh !== "") {
+                    // Split berdasarkan titik (.) untuk memisahkan antar tokoh
+                    var items = rawTokoh.split(/(?<=\.)\s+/);
+                    var htmlTokoh = "";
+
+                    items.forEach(function(item) {
+                        item = item.trim();
+                        if (item.length > 0) {
+                            var parts = item.split(':');
+                            var namaTokoh = parts[0] ? parts[0].trim() : '';
+                            var deskTokoh = parts[1] ? parts.slice(1).join(':').trim() : '';
+
+                            if (namaTokoh) {
+                                htmlTokoh += `
+                                    <div class="bg-white border border-[#E5D6BF] rounded-xl p-5 shadow-sm text-left">
+                                        <h4 class="font-bold text-[#8C281E] text-[16px]">${namaTokoh}</h4>
+                                        ${deskTokoh ? `<p class="mt-2 text-[#675A4D] text-[14px] leading-relaxed">${deskTokoh}</p>` : ''}
+                                    </div>
+                                `;
+                            }
                         }
                     });
-                } else if (typeof data.tokoh === 'string' && data.tokoh.trim() !== '') {
-                    tokohContainer.innerHTML =
-                        `<div class="bg-white border border-[#E5D6BF] rounded-lg p-5 text-[#675A4D] text-sm">${data.tokoh}</div>`;
+
+                    tokohContainer.innerHTML = htmlTokoh !== "" ? htmlTokoh : `
+                        <div class="bg-white border border-[#E5D6BF] rounded-xl p-5 shadow-sm text-left">
+                            <h4 class="font-bold text-[#8C281E] text-[16px]">${rawTokoh}</h4>
+                        </div>
+                    `;
                 } else {
                     tokohContainer.innerHTML = `<p class="text-[#675A4D] text-sm italic">-</p>`;
                 }
             }
 
-            // Render Karakteristik
+            // =========================================================
+            // PARSER KARAKTERISTIK (BULLET LIST)
+            // =========================================================
             var karakContainer = document.getElementById("karakteristikFilsafat");
             if (karakContainer) {
                 karakContainer.innerHTML = "";
-                if (Array.isArray(data.karakteristik) && data.karakteristik.length > 0) {
-                    data.karakteristik.forEach(function(k) {
-                        if (k && String(k).trim() !== '') {
-                            karakContainer.innerHTML += `<li>${k}</li>`;
+                var rawKarak = data.karakteristik_raw.trim();
+
+                if (rawKarak !== "") {
+                    var bullets = rawKarak.split('.');
+                    var htmlList = "";
+
+                    bullets.forEach(function(b) {
+                        b = b.trim();
+                        if (b.length > 1) {
+                            htmlList += `<li>${b}.</li>`;
                         }
                     });
-                } else if (typeof data.karakteristik === 'string' && data.karakteristik.trim() !== '') {
-                    karakContainer.innerHTML = `<li>${data.karakteristik}</li>`;
+
+                    karakContainer.innerHTML = htmlList !== "" ? htmlList : `<li>${rawKarak}</li>`;
                 } else {
                     karakContainer.innerHTML = `<li class="italic">-</li>`;
                 }
@@ -336,6 +302,13 @@
         if (typeof feather !== 'undefined') feather.replace();
     }
 
+    // Fungsi Penanganan Klik Kiri Overlay Samping
+    function handleOverlayClick(e) {
+        if (e.target === document.getElementById("overlayBarat")) {
+            closeBarat();
+        }
+    }
+
     function closeBarat() {
         var panel = document.getElementById("panelBarat");
         var overlay = document.getElementById("overlayBarat");
@@ -343,6 +316,7 @@
         if (panel) panel.classList.add("translate-x-full");
         setTimeout(function() {
             if (overlay) overlay.classList.add("hidden");
+            // Kembalikan scroll layar utama ke normal
             document.body.style.overflow = "auto";
         }, 300);
     }
