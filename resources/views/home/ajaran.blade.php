@@ -441,20 +441,104 @@
         }
     });
 
-    function openAjaran() {
-        stopAjaranAutoSlide();
-        if (!activeAjaranId || !AJARAN_DATA[activeAjaranId]) return;
-        var data = AJARAN_DATA[activeAjaranId];
+    function changeSlide(id) {
+        id = String(id);
+        if (!AJARAN_DATA[id]) return;
 
+        activeAjaranId = id;
+        var data = AJARAN_DATA[id];
+
+        var imgMain = document.getElementById('mainImage');
+        var contentBox = document.getElementById('mainContentBox');
+
+        // 1. Animasi
+        if (imgMain) {
+            imgMain.classList.remove('animate-fade-left');
+            void imgMain.offsetWidth;
+            imgMain.classList.add('animate-fade-left');
+        }
+
+        if (contentBox) {
+            contentBox.classList.remove('animate-fade-up');
+            void contentBox.offsetWidth;
+            contentBox.classList.add('animate-fade-up');
+        }
+
+        // 2. Update Konten Utama
+        if (imgMain) imgMain.src = data.gambar;
+        if (document.getElementById('mainLocation')) document.getElementById('mainLocation').innerText = data.lokasi;
+        if (document.getElementById('mainTag')) document.getElementById('mainTag').innerText = data.tags;
+        if (document.getElementById('mainTitle')) document.getElementById('mainTitle').innerText = data.judul;
+        if (document.getElementById('mainDesc')) document.getElementById('mainDesc').innerText = data.deskripsi;
+        if (document.getElementById('mainAuthor')) document.getElementById('mainAuthor').innerText = data.penulis;
+        if (document.getElementById('mainAvatarInitial')) document.getElementById('mainAvatarInitial').innerText = data.inisial;
+        if (document.getElementById('mainRole')) document.getElementById('mainRole').innerText = data.tahun;
+
+        // 3. Reset Border Thumbnail & Dot
+        var thumbs = document.querySelectorAll('.thumb-card');
+        thumbs.forEach(function(t) {
+            t.classList.remove('border-[#D4A64A]');
+            t.classList.add('border-transparent');
+        });
+        var selectedThumb = document.getElementById('thumb-' + id);
+        if (selectedThumb) {
+            selectedThumb.classList.remove('border-transparent');
+            selectedThumb.classList.add('border-[#D4A64A]');
+        }
+
+        var dots = document.querySelectorAll('.dot-card');
+        dots.forEach(function(d) {
+            d.classList.remove('bg-[#D9B35D]');
+            d.classList.add('bg-[#665548]');
+        });
+        var selectedDot = document.getElementById('dot-' + id);
+        if (selectedDot) {
+            selectedDot.classList.remove('bg-[#665548]');
+            selectedDot.classList.add('bg-[#D9B35D]');
+        }
+    }
+
+    // ==========================================
+   
+    function openAjaran(targetParam) {
+        stopAjaranAutoSlide();
+
+        var targetId = activeAjaranId;
+
+        // Jika dipanggil membawa parameter ID (misal dari pencarian: 5 atau "5")
+        if (targetParam !== undefined && targetParam !== null && targetParam !== "") {
+            var paramStr = String(targetParam).trim();
+            
+            // 1. Pencocokan langsung berdasarkan ID
+            if (AJARAN_DATA[paramStr]) {
+                targetId = paramStr;
+            } else {
+                // 2. Pencocokan berdasarkan nama Judul (Toleran Spasi/Huruf)
+                for (var key in AJARAN_DATA) {
+                    var judulLower = AJARAN_DATA[key].judul.toLowerCase().replace(/\s+/g, ' ').trim();
+                    var searchLower = paramStr.toLowerCase().replace(/\s+/g, ' ').trim();
+                    if (judulLower.includes(searchLower) || searchLower.includes(judulLower)) {
+                        targetId = key;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!targetId || !AJARAN_DATA[targetId]) return;
+
+        // Pindahkan slide aktif ke item yang dipilih
+        changeSlide(targetId);
+
+        var data = AJARAN_DATA[targetId];
+
+        // Isikan Data ke Modal Drawer
         if (document.getElementById('panelImage')) document.getElementById('panelImage').src = data.gambar;
         if (document.getElementById('panelTagBadge')) document.getElementById('panelTagBadge').innerText = data.tags;
         if (document.getElementById('panelTitle')) document.getElementById('panelTitle').innerText = data.judul;
-        if (document.getElementById('panelSubHeader')) document.getElementById('panelSubHeader').innerText = '📍 ' +
-            data.lokasi + ' • ' + data.tahun;
-        if (document.getElementById('panelPenjelasan')) document.getElementById('panelPenjelasan').innerHTML = data
-            .deskripsi;
-        if (document.getElementById('panelPenerapan')) document.getElementById('panelPenerapan').innerText = '"' + data
-            .penerapan + '"';
+        if (document.getElementById('panelSubHeader')) document.getElementById('panelSubHeader').innerText = '📍 ' + data.lokasi + ' • ' + data.tahun;
+        if (document.getElementById('panelPenjelasan')) document.getElementById('panelPenjelasan').innerHTML = data.deskripsi;
+        if (document.getElementById('panelPenerapan')) document.getElementById('panelPenerapan').innerText = '"' + data.penerapan + '"';
         if (document.getElementById('panelSumber')) document.getElementById('panelSumber').innerText = data.sumber;
 
         var prinsipContainer = document.getElementById('panelPrinsip');
@@ -465,9 +549,7 @@
                 if (prinsipWrapper) prinsipWrapper.classList.remove('hidden');
                 data.prinsip.forEach(function(p) {
                     var item = document.createElement('div');
-                    item.innerHTML =
-                        '<h4 class="font-bold text-[#23160E] text-lg" style="font-family:\'Cormorant Garamond\',serif;">' +
-                        p.nama + '</h4><p class="text-sm text-[#675A4D] mt-1">' + p.deskripsi + '</p>';
+                    item.innerHTML = '<h4 class="font-bold text-[#23160E] text-lg" style="font-family:\'Cormorant Garamond\',serif;">' + p.nama + '</h4><p class="text-sm text-[#675A4D] mt-1">' + p.deskripsi + '</p>';
                     prinsipContainer.appendChild(item);
                 });
             } else {

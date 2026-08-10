@@ -1,140 +1,142 @@
 <footer class="bg-[#1B1108] text-white pt-20 pb-8">
 
-        <div class="max-w-7xl mx-auto px-8">
+    <div class="max-w-7xl mx-auto px-8">
 
-            <!-- Isi Footer -->
-            <div class="grid lg:grid-cols-4 gap-16">
+        <!-- Isi Footer -->
+        <div class="grid lg:grid-cols-4 gap-16">
 
-                <!-- Logo -->
-                <div>
+            <!-- Logo -->
+            <div>
 
-                    <h2 style="font-family:'Cormorant Garamond',serif;" class="text-5xl font-bold">
+                <h2 style="font-family:'Cormorant Garamond',serif;" class="text-5xl font-bold">
 
-                        FilsafatBali.id
+                    FilsafatBali.id
 
-                    </h2>
+                </h2>
 
-                    <p class="mt-6 text-[#A99376] leading-8">
+                <p class="mt-6 text-[#A99376] leading-8">
 
-                        Platform arsip digital budaya dan kearifan lokal Bali.
-                        Menjaga warisan, menerangi masa depan.
+                    Platform arsip digital budaya dan kearifan lokal Bali.
+                    Menjaga warisan, menerangi masa depan.
 
-                    </p>
+                </p>
 
-                    <div class="mt-8 flex items-center gap-3">
+                <div class="mt-8 flex items-center gap-3">
 
-                        <i data-feather="shield" class="w-4 h-4 text-[#C48D2D]"></i>
+                    <i data-feather="shield" class="w-4 h-4 text-[#C48D2D]"></i>
 
-                        <span class="uppercase tracking-[3px] text-[11px] text-[#C48D2D]">
+                    <span class="uppercase tracking-[3px] text-[11px] text-[#C48D2D]">
 
-                            Konten Terverifikasi
+                        Konten Terverifikasi
 
-                        </span>
-
-                    </div>
-
-                </div>
-
-                <!-- Koleksi -->
-                <div>
-
-                    <p class="uppercase tracking-[5px] text-[11px] text-[#8D765B] mb-8">
-                        Koleksi
-                    </p>
-
-                    <ul class="space-y-5">
-
-                        <li><a href="#filsafat" class="hover:text-[#D9B35D] transition">Filsafat</a></li>
-
-                        <li><a href="#ajaran" class="hover:text-[#D9B35D] transition">Ajaran Tetua</a></li>
-
-                        <li><a href="#cecimpedan" class="hover:text-[#D9B35D] transition">Cecimpedan</a></li>
-
-                        <li><a href="#sectionSatua" class="hover:text-[#D9B35D] transition">Satua Bali</a></li>
-
-                        <li><a href="#sectionIstilah" class="hover:text-[#D9B35D] transition">Istilah Bali</a></li>
-
-                        <li><a href="#koleksi" class="hover:text-[#D9B35D] transition">Artikel Pilihan</a></li>
-
-                    </ul>
-
-                </div>
-
-                <!-- Komunitas -->
-                <div>
-
-                    <p class="uppercase tracking-[5px] text-[11px] text-[#8D765B] mb-8">
-                        Komunitas
-                    </p>
-
-                    <ul class="space-y-5">
-
-                        <li>
-                            <a href="{{ route('login') }}" class="hover:text-[#D9B35D] transition">
-                                Jadi Penulis
-                            </a>
-                        </li>
-
-                        <li><a href="#" class="hover:text-[#D9B35D] transition">Forum Diskusi</a></l
-
-                    </ul>
-
-                </div>
-
-                <!-- Tentang -->
-                <div>
-
-                    <p class="uppercase tracking-[5px] text-[11px] text-[#8D765B] mb-8">
-                        Tentang
-                    </p>
-
-                    <ul class="space-y-5">
-
-                        <li><a href="#" class="hover:text-[#D9B35D] transition">Tentang Kami</a></li>
-
-                        <li><a href="#" class="hover:text-[#D9B35D] transition">Kebijakan Privasi</a></li>
-
-                        <li><a href="#" class="hover:text-[#D9B35D] transition">Syarat & Ketentuan</a></li>
-
-                        <li><a href="#" class="hover:text-[#D9B35D] transition">Hubungi Kami</a></li>
-
-                    </ul>
+                    </span>
 
                 </div>
 
             </div>
 
-            <!-- Garis -->
-            <div class="border-t border-[#3B2A1C] mt-16 pt-8 flex flex-col md:flex-row justify-between items-center">
+            <!-- Koleksi -->
+            <div>
 
-                <p class="text-[#7F6B56] text-[12px] tracking-[2px] uppercase">
-
-                    © 2026 FILSAFATBALI.ID — HAK CIPTA DILINDUNGI
-
+                <p class="uppercase tracking-[5px] text-[11px] text-[#8D765B] mb-8">
+                    Koleksi
                 </p>
 
-                <div class="flex gap-8 mt-6 md:mt-0">
+                <ul class="space-y-5">
 
-                    <a href="#"
-                        class="text-[#7F6B56] text-[12px] uppercase tracking-[2px] hover:text-[#D9B35D]">
+                    <li><a href="#jenis-filsafat" class="hover:text-[#D9B35D] transition">Filsafat</a></li>
 
-                        Bahasa Bali
+                    <li><a href="#ajaran" class="hover:text-[#D9B35D] transition">Ajaran Tetua</a></li>
 
-                    </a>
+                    <li><a href="#cecimpedan" class="hover:text-[#D9B35D] transition">Cecimpedan</a></li>
 
-                    <a href="#"
-                        class="text-[#7F6B56] text-[12px] uppercase tracking-[2px] hover:text-[#D9B35D]">
+                    <li><a href="#sectionSatua" class="hover:text-[#D9B35D] transition">Satua Bali</a></li>
 
-                        Indonesia
+                    <li><a href="#sectionIstilah" class="hover:text-[#D9B35D] transition">Istilah Bali</a></li>
 
-                    </a>
+                    <li><a href="#artikel" class="hover:text-[#D9B35D] transition">Artikel Pilihan</a></li>
 
-                    
+                </ul>
 
-                </div>
+            </div>
+
+            <!-- Komunitas -->
+            <div>
+
+                <p class="uppercase tracking-[5px] text-[11px] text-[#8D765B] mb-8">
+                    Komunitas
+                </p>
+
+                <ul class="space-y-5">
+
+                    <li>
+                        <a href="{{ route('login') }}" class="hover:text-[#D9B35D] transition">
+                            Jadi Penulis
+                        </a>
+                    </li>
+
+
+
+            </div>
+
+            <!-- Tentang -->
+            <div>
+
+                <p class="uppercase tracking-[5px] text-[11px] text-[#8D765B] mb-8">
+                    Tentang
+                </p>
+
+                <ul class="space-y-5">
+
+                    <li>
+                        <a href="{{ route('tentang.kami') }}" class="hover:text-[#D9B35D] transition">
+                            Tentang Kami
+                        </a>
+                    </li>
+
+                    <li><a href="{{ route('privacy.policy') }}" class="hover:text-[#D9B35D] transition">Kebijakan
+                            Privasi</a></li>
+
+                    <li><a href="{{ route('syarat.ketentuan') }}" class="hover:text-[#D9B35D] transition">Syarat &
+                            Ketentuan</a></li>
+
+                    <li><a href="{{ route('hubungi.kami') }}" class="hover:text-[#D9B35D] transition">Hubungi Kami</a>
+                    </li>
+                </ul>
 
             </div>
 
         </div>
 
-    </footer>
+        <!-- Garis -->
+        <div class="border-t border-[#3B2A1C] mt-16 pt-8 flex flex-col md:flex-row justify-between items-center">
+
+            <p class="text-[#7F6B56] text-[12px] tracking-[2px] uppercase">
+
+                © 2026 FILSAFATBALI.ID — HAK CIPTA DILINDUNGI
+
+            </p>
+
+            <div class="flex gap-8 mt-6 md:mt-0">
+
+                <a href="#" class="text-[#7F6B56] text-[12px] uppercase tracking-[2px] hover:text-[#D9B35D]">
+
+                    Bahasa Bali
+
+                </a>
+
+                <a href="#" class="text-[#7F6B56] text-[12px] uppercase tracking-[2px] hover:text-[#D9B35D]">
+
+                    Indonesia
+
+                </a>
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</footer>

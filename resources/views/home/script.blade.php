@@ -92,6 +92,19 @@
     // Ambil status login user untuk fitur Bookmark
     const USER_LOGGED_IN = @json(auth()->check());
 
+    // Helper Unlocking Scroll
+    function unlockGlobalScroll() {
+        document.body.style.removeProperty("overflow");
+        document.body.style.overflow = "auto";
+        document.documentElement.style.removeProperty("overflow");
+        document.documentElement.style.overflow = "auto";
+    }
+
+    function lockGlobalScroll() {
+        document.body.style.overflow = "hidden";
+        document.documentElement.style.overflow = "hidden";
+    }
+
     // ==========================================
     // LOGIKA RIWAYAT PENCARIAN (FIFO MAX 6 ITEM)
     // ==========================================
@@ -123,15 +136,12 @@
         var history = getSearchHistory();
         var cleanKeyword = keyword.trim().toUpperCase();
 
-        // Mencegah duplikasi kata kunci
         history = history.filter(function(item) {
             return item.toUpperCase() !== cleanKeyword;
         });
 
-        // Masukkan kata kunci baru di paling depan
         history.unshift(cleanKeyword);
 
-        // Batasi maksimal 6 item
         if (history.length > 6) {
             history = history.slice(0, 6);
         }
@@ -241,7 +251,7 @@
     }
 
     // ==========================================
-    // 1. INITIALIZATION & AUTO-OPEN MODAL LISTENERS
+    // 1. INITIALIZATION & LISTENERS
     // ==========================================
     document.addEventListener("DOMContentLoaded", function() {
         renderKeywordChips();
@@ -251,9 +261,7 @@
         }
 
         const overlayDetail = document.getElementById("overlay");
-        if (overlayDetail) {
-            overlayDetail.onclick = closeDetail;
-        }
+        if (overlayDetail) overlayDetail.onclick = closeDetail;
 
         const overlaySatua = document.getElementById("overlaySatua");
         if (overlaySatua) {
@@ -304,53 +312,8 @@
             });
         }
 
-        if (typeof changeSlide === 'function') {
-            changeSlide(1);
-        }
-        if (typeof startAutoSlide === 'function') {
-            startAutoSlide();
-        }
-
-        // AUTO-OPEN MODAL DARI ARSIP PADA URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const itemToOpen = urlParams.get('open');
-
-        if (itemToOpen) {
-            const decodedTitle = decodeURIComponent(itemToOpen).trim().toLowerCase();
-
-            if (window.location.hash === '#sectionSatua') {
-                showSatua();
-                setTimeout(() => {
-                    const cards = document.querySelectorAll('#sectionSatua [onclick*="openSatuaCard"]');
-                    cards.forEach(card => {
-                        if (card.dataset.nama && card.dataset.nama.trim().toLowerCase() === decodedTitle) {
-                            openSatuaCard(card);
-                        }
-                    });
-                }, 400);
-            } else if (window.location.hash === '#sectionIstilah') {
-                showIstilah();
-                setTimeout(() => {
-                    const items = document.querySelectorAll('#listIstilahContainer .item-istilah');
-                    items.forEach(item => {
-                        const judulEl = item.querySelector('h3');
-                        if (judulEl && judulEl.innerText.trim().toLowerCase() === decodedTitle) {
-                            const clickArea = item.querySelector('[onclick*="openIstilah"]');
-                            if (clickArea) clickArea.click();
-                        }
-                    });
-                }, 400);
-            } else if (window.location.hash === '#artikel') {
-                setTimeout(() => {
-                    const cards = document.querySelectorAll('.card-artikel');
-                    cards.forEach(card => {
-                        if (card.dataset.judul && card.dataset.judul.trim().toLowerCase() === decodedTitle) {
-                            if (typeof openModalForCard === 'function') openModalForCard(card);
-                        }
-                    });
-                }, 400);
-            }
-        }
+        if (typeof changeSlide === 'function') changeSlide(1);
+        if (typeof startAutoSlide === 'function') startAutoSlide();
     });
 
     // ==========================================
@@ -395,7 +358,7 @@
     }
 
     // ==========================================
-    // 4. FILTER ARTIKEL & FITUR LIVE SEARCH
+    // 4. DATABASE SEARCH (MAPPING UNIK VIA RAW_ID)
     // ==========================================
     function filterArtikel(kategori) {
         const allButtons = document.querySelectorAll('#artikel button[id^="btn-"], .filter-tab-btn, .tab-btn');
@@ -404,16 +367,14 @@
         });
 
         const activeBtn = document.getElementById("btn-" + kategori);
-        if (activeBtn) {
-            activeBtn.classList.add("tab-active");
-        }
+        if (activeBtn) activeBtn.classList.add("tab-active");
 
         const cards = document.querySelectorAll(".card-artikel");
         cards.forEach(function(card) {
             card.classList.remove("card-appear-anim");
 
             if (kategori === "semua" || card.classList.contains(kategori)) {
-                card.style.display = "block";
+                card.style.display = "flex";
                 void card.offsetWidth;
                 card.classList.add("card-appear-anim");
             } else {
@@ -426,9 +387,11 @@
         @if(isset($satuas))
             @foreach($satuas as $s)
                 {
-                    id: @json($s->id),
+                    id: @json("satua_" . $s->id),
+                    raw_id: @json($s->id),
                     judul: @json($s->judul ?? $s->nama ?? $s->judul_satua ?? $s->title ?? 'Satua Bali'),
                     kategori: 'SATUA BALI',
+                    target_type: 'satua',
                     penulis: @json($s->penulis ?? $s->pengarang ?? ($s->user->name ?? 'Masyarakat Bali'))
                 },
             @endforeach
@@ -437,9 +400,11 @@
         @if(isset($ajarans))
             @foreach($ajarans as $aj)
                 {
-                    id: @json($aj->id),
+                    id: @json("ajaran_" . $aj->id),
+                    raw_id: @json($aj->id),
                     judul: @json($aj->judul ?? $aj->nama ?? $aj->title ?? 'Ajaran Tertua'),
                     kategori: 'AJARAN',
+                    target_type: 'ajaran',
                     penulis: @json($aj->penulis ?? ($aj->user->name ?? 'Tetua Bali'))
                 },
             @endforeach
@@ -447,11 +412,31 @@
 
         @if(isset($artikels))
             @foreach($artikels as $a)
+                @php
+                    $img = $a->gambar ?? ($a->foto ?? null);
+                    if (!empty($img)) {
+                        if (\Illuminate\Support\Str::startsWith($img, ['http://', 'https://'])) {
+                            $gUrl = $img;
+                        } else {
+                            $cleanP = ltrim(str_replace(['public/', 'storage/'], '', $img), '/');
+                            $gUrl = asset('storage/' . $cleanP);
+                        }
+                    } else {
+                        $gUrl = asset('images/subak.jpeg');
+                    }
+                    $tgl = $a->created_at ? \Carbon\Carbon::parse($a->created_at)->translatedFormat('d F Y') : date('d F Y');
+                @endphp
                 {
-                    id: @json($a->id),
+                    id: @json("artikel_" . $a->id),
+                    raw_id: @json($a->id),
                     judul: @json($a->judul ?? $a->title ?? 'Artikel'),
-                    kategori: @json(strtoupper($a->kategori ?? 'AJARAN')),
-                    penulis: @json($a->penulis ?? ($a->user->name ?? 'Penulis'))
+                    kategori: @json(strtoupper($a->kategori ?? 'AJARAN TETUA')),
+                    target_type: 'artikel',
+                    penulis: @json($a->penulis ?? ($a->user->name ?? 'Tim Balinesia')),
+                    tanggal: @json(strtoupper($tgl)),
+                    isi: @json($a->isi ?? ($a->deskripsi ?? ($a->konten ?? ''))),
+                    gambar: @json($gUrl),
+                    kesimpulan: @json($a->kesimpulan ?? '')
                 },
             @endforeach
         @endif
@@ -459,9 +444,11 @@
         @if(isset($cecimpedans))
             @foreach($cecimpedans as $c)
                 {
-                    id: @json($c->id),
+                    id: @json("cecimpedan_" . $c->id),
+                    raw_id: @json($c->id),
                     judul: @json($c->judul ?? $c->pertanyaan ?? $c->nama ?? 'Cecimpedan'),
                     kategori: 'CECIMPEDAN',
+                    target_type: 'cecimpedan',
                     penulis: @json($c->penulis ?? ($c->user->name ?? 'Anonim'))
                 },
             @endforeach
@@ -470,9 +457,11 @@
         @if(isset($istilahs))
             @foreach($istilahs as $i)
                 {
-                    id: @json($i->id),
+                    id: @json("istilah_" . $i->id),
+                    raw_id: @json($i->id),
                     judul: @json($i->istilah ?? $i->judul ?? $i->nama ?? 'Istilah Bali'),
                     kategori: 'ISTILAH BALI',
+                    target_type: 'istilah',
                     penulis: @json($i->penulis ?? ($i->user->name ?? 'Budayawan'))
                 },
             @endforeach
@@ -481,9 +470,11 @@
         @if(isset($filsafats))
             @foreach($filsafats as $f)
                 {
-                    id: @json($f->id),
+                    id: @json("filsafat_" . $f->id),
+                    raw_id: @json($f->id),
                     judul: @json($f->judul ?? $f->nama ?? 'Filsafat'),
                     kategori: 'FILSAFAT',
+                    target_type: 'filsafat',
                     penulis: @json($f->penulis ?? ($f->user->name ?? 'Filsuf'))
                 },
             @endforeach
@@ -516,6 +507,9 @@
         }
     }
 
+    // ==========================================
+    // LOGIKA PENCARIAN & DIRECT OPEN SLIDE-OVER
+    // ==========================================
     function liveSearch(keyword) {
         const hasilCari = document.getElementById("hasilCari");
         const btnClear = document.getElementById("btnClearSearch");
@@ -532,24 +526,16 @@
         if (btnClear) btnClear.classList.remove("hidden");
 
         const results = databaseSearch.filter(item =>
-            item.judul.toLowerCase().includes(query) ||
-            item.kategori.toLowerCase().includes(query) ||
-            item.penulis.toLowerCase().includes(query)
+            String(item.judul).toLowerCase().includes(query) ||
+            String(item.kategori).toLowerCase().includes(query) ||
+            String(item.penulis).toLowerCase().includes(query)
         );
-
-        results.sort((a, b) => {
-            const aTitleMatch = a.judul.toLowerCase().startsWith(query);
-            const bTitleMatch = b.judul.toLowerCase().startsWith(query);
-            if (aTitleMatch && !bTitleMatch) return -1;
-            if (!aTitleMatch && bTitleMatch) return 1;
-            return 0;
-        });
 
         if (results.length > 0) {
             if (hasilCari) {
                 hasilCari.classList.remove("hidden");
-                hasilCari.innerHTML = results.map(item => `
-                    <div onclick="pilihHasilSearch(${item.id}, '${item.judul.toLowerCase().replace(/'/g, "\\'")}', '${item.kategori.toLowerCase()}')" class="flex items-center gap-4 px-6 py-4 hover:bg-[#F0E6D8] transition duration-200 cursor-pointer text-left border-b border-[#EADCC9]">
+                hasilCari.innerHTML = results.map((item) => `
+                    <div onclick="pilihHasilSearchById('${item.id}')" class="flex items-center gap-4 px-6 py-4 hover:bg-[#F0E6D8] transition duration-200 cursor-pointer text-left border-b border-[#EADCC9]">
                         <span class="bg-[#8D2B1D] text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded shrink-0">
                             ${item.kategori}
                         </span>
@@ -592,69 +578,78 @@
         hilangkanBorderMerah();
     }
 
-    function pilihHasilSearch(idArtikel, judul, kategori) {
+    // ==========================================
+    // SELEKSI PENCARIAN PRESISI DENGAN ID UNIK
+    // ==========================================
+    function pilihHasilSearchById(uniqueId) {
         const hasilCari = document.getElementById("hasilCari");
         if (hasilCari) hasilCari.classList.add("hidden");
-
         hilangkanBorderMerah();
-        simpanKeRiwayat(judul);
 
-        const judulLower = judul.toLowerCase().trim();
-        const katLower = kategori.toLowerCase().trim();
+        const itemData = databaseSearch.find(item => String(item.id) === String(uniqueId));
+        if (!itemData) return;
 
-        if (katLower.includes("satua")) {
+        simpanKeRiwayat(itemData.judul);
+
+        const targetType = (itemData.target_type || itemData.kategori || '').toLowerCase().trim();
+
+        // 1. KATEGORI AJARAN TETUA (SLIDER SLIDE)
+        if (targetType.includes("ajaran")) {
+            scrollToTarget("ajaran");
+            setTimeout(() => {
+                if (typeof openAjaran === 'function') {
+                    openAjaran(itemData.raw_id || itemData.judul);
+                }
+            }, 300);
+
+        // 2. KATEGORI SATUA BALI
+        } else if (targetType.includes("satua")) {
             if (typeof showSatua === 'function') showSatua();
             scrollToTarget("sectionSatua");
-
             setTimeout(() => {
-                const cardsSatua = document.querySelectorAll('#sectionSatua [onclick*="openSatuaCard"]');
+                const cardsSatua = document.querySelectorAll('#sectionSatua [data-nama]');
                 let targetCard = null;
-
                 cardsSatua.forEach(card => {
                     const dJudul = card.dataset.nama ? card.dataset.nama.toLowerCase() : '';
-                    if (dJudul.includes(judulLower)) {
-                        targetCard = card;
-                    }
+                    if (dJudul.includes(itemData.judul.toLowerCase())) targetCard = card;
                 });
+                if (targetCard && typeof openSatuaCard === 'function') openSatuaCard(targetCard);
+            }, 300);
 
-                if (targetCard) {
-                    openSatuaCard(targetCard);
-                }
-            }, 600);
-
-        } else if (katLower.includes("istilah")) {
+        // 3. KATEGORI ISTILAH BALI
+        } else if (targetType.includes("istilah")) {
             if (typeof showIstilah === 'function') showIstilah();
             scrollToTarget("sectionIstilah");
-
             setTimeout(() => {
                 const itemsIstilah = document.querySelectorAll("#listIstilahContainer .item-istilah");
                 itemsIstilah.forEach(item => {
-                    if (item.innerText.toLowerCase().includes(judulLower)) {
-                        const clickArea = item.querySelector('[onclick*="openIstilah"]');
-                        if (clickArea) clickArea.click();
+                    if (item.innerText.toLowerCase().includes(itemData.judul.toLowerCase())) {
+                        const clickArea = item.querySelector('[onclick*="openIstilah"]') || item;
+                        clickArea.click();
                     }
                 });
-            }, 600);
+            }, 300);
 
-        } else if (katLower.includes("cecimpedan")) {
+        // 4. KATEGORI CECIMPEDAN
+        } else if (targetType.includes("cecimpedan")) {
             scrollToTarget("cecimpedan");
             setTimeout(() => {
                 if (typeof toggleCard === 'function') toggleCard(1);
-            }, 600);
+            }, 300);
 
-        } else if (katLower.includes("filsafat")) {
+        // 5. KATEGORI FILSAFAT
+        } else if (targetType.includes("filsafat")) {
             scrollToTarget("filsafat");
             setTimeout(() => {
                 if (typeof openFilsafat === 'function') openFilsafat("barat");
-            }, 600);
+            }, 300);
 
+        // 6. ARTIKEL UMUM
         } else {
             scrollToTarget("artikel");
             setTimeout(() => {
-                if (typeof openDetailArtikel === 'function' && idArtikel) {
-                    openDetailArtikel(idArtikel);
-                }
-            }, 600);
+                if (typeof openDetailArtikel === 'function') openDetailArtikel(itemData.raw_id);
+            }, 300);
         }
     }
 
@@ -691,84 +686,25 @@
     });
 
     // ==========================================
-    // 5. MODAL DETAIL ARTIKEL
+    // 5. HELPER ALIAS UNTUK BUKA/TUTUP ARTIKEL
     // ==========================================
-    const dataArtikelPilihan = {
-        1: {
-            title: "Filosofi Subak: Demokrasi Air dalam Peradaban Bali",
-            kategori: "AJARAN TETUA",
-            bgKategori: "bg-[#992B20]",
-            image: "{{ asset('images/subak.jpeg') }}",
-            penulis: "Ni Luh Putu Ariani",
-            avatar: "N",
-            tgl: "12 JUNI 2025",
-            waktu: "8 MENIT",
-            isi: `<p>Subak adalah sistem irigasi pertanian yang telah ada di Bali selama lebih dari seribu tahun. Lebih dari sekedar teknik pengairan, Subak adalah lembaga sosial, spiritual, dan demokratis yang mengatur penggunaan air di antara para petani dengan cara yang adil dan berkelanjutan.</p>`,
-            kesimpulan: "Subak adalah bukti bahwa kearifan lokal Bali tidak hanya indah secara filosofis, tetapi juga efektif secara praktis. UNESCO mengakuisisinya sebagai Warisan Budaya Dunia pada tahun 2012."
-        },
-        2: {
-            title: "Cecimpedan Bali sebagai Media Pendidikan Karakter Anak",
-            kategori: "CECIMPEDAN",
-            bgKategori: "bg-[#D9A441]",
-            image: "{{ asset('images/cecimpedan.jpeg') }}",
-            penulis: "I Wayan Koster",
-            avatar: "W",
-            tgl: "10 JUNI 2025",
-            waktu: "6 MENIT",
-            isi: `<p>Teka-teki tradisional Bali (Cecimpedan) bukan sekadar permainan kata sederhana untuk anak-anak. Di dalam struktur pertanyaan dan jawabannya, tersimpan nilai-nilai pemikiran kritis, pengamatan alam, dan etika dasar bermasyarakat.</p>`,
-            kesimpulan: "Pelestarian cecimpedan penting untuk menjaga kemampuan nalar kritis anak berbasis kebudayaan lokal di tengah gempuran teknologi digital."
-        }
-    };
-
-    function openDetailArtikel(id) {
-        const data = dataArtikelPilihan[id];
-        if (!data) return;
-
-        if (document.getElementById("artTitle")) document.getElementById("artTitle").innerText = data.title;
-        if (document.getElementById("artImage")) document.getElementById("artImage").src = data.image;
-        if (document.getElementById("artPenulis")) document.getElementById("artPenulis").innerText = data.penulis;
-        if (document.getElementById("artAvatar")) document.getElementById("artAvatar").innerText = data.avatar;
-        if (document.getElementById("artMeta")) document.getElementById("artMeta").innerText = `${data.tgl} • ${data.waktu}`;
-        if (document.getElementById("artIsi")) document.getElementById("artIsi").innerHTML = data.isi;
-        if (document.getElementById("artKesimpulan")) document.getElementById("artKesimpulan").innerText = data.kesimpulan;
-
-        const badge = document.getElementById("artKategoriBadge");
-        if (badge) {
-            badge.innerText = data.kategori;
-            badge.className = `text-white text-[10px] tracking-[2px] uppercase font-semibold px-3 py-1.5 rounded-full ${data.bgKategori}`;
-        }
-
-        const overlay = document.getElementById("overlayArtikel");
-        const panel = document.getElementById("panelArtikel");
-
-        if (!overlay || !panel) return;
-
-        document.body.style.overflow = "hidden"; // Kunci Scroll saat Buka
-        overlay.classList.remove("hidden");
-
-        setTimeout(() => {
-            overlay.classList.remove("opacity-0");
-            panel.classList.remove("translate-x-full");
-        }, 10);
-
-        if (typeof feather !== 'undefined') feather.replace();
+    function closeDetailArtikel() { 
+        if (typeof closeModalArtikelGlobal === 'function') {
+            closeModalArtikelGlobal();
+        } 
     }
 
-    // TUTUP MODAL ARTIKEL (SCROLL DIKEMBALIKAN)
-    function closeDetailArtikel() {
-        const overlay = document.getElementById("overlayArtikel");
-        const panel = document.getElementById("panelArtikel");
+    function openDetailArtikel(id) {
+        const cards = document.querySelectorAll('.card-artikel');
+        let targetCard = null;
 
-        if (!overlay || !panel) return;
+        cards.forEach(card => {
+            if (card.dataset.id == id) targetCard = card;
+        });
 
-        panel.classList.add("translate-x-full");
-        overlay.classList.add("opacity-0");
-
-        document.body.style.overflow = "auto"; // Kembalikan Scroll
-
-        setTimeout(() => {
-            overlay.classList.add("hidden");
-        }, 300);
+        if (targetCard && typeof openModalForCard === 'function') {
+            openModalForCard(targetCard);
+        }
     }
 
     // ==========================================
@@ -810,7 +746,7 @@
         if (document.getElementById("detailPadanan")) document.getElementById("detailPadanan").innerHTML = padanan || '-';
         if (document.getElementById("detailKonteks")) document.getElementById("detailKonteks").innerHTML = konteks || '-';
 
-        document.body.style.overflow = "hidden"; // Kunci Scroll saat Buka
+        lockGlobalScroll();
 
         const overlay = document.getElementById("overlay");
         const detailPanel = document.getElementById("detailPanel");
@@ -818,14 +754,13 @@
         if (detailPanel) detailPanel.classList.remove("translate-x-full");
     }
 
-    // CLOSE DRAWER ISTILAH (SCROLL DIKEMBALIKAN)
     function closeDetail() {
         const overlay = document.getElementById("overlay");
         const detailPanel = document.getElementById("detailPanel");
         
         if (detailPanel) detailPanel.classList.add("translate-x-full");
 
-        document.body.style.overflow = "auto"; // Kembalikan Scroll
+        unlockGlobalScroll();
 
         setTimeout(() => {
             if (overlay) overlay.classList.add("hidden");
@@ -835,7 +770,10 @@
     // OPEN DRAWER SATUA
     function openSatuaCard(element) {
         if (!element) return;
-        const ds = element.dataset;
+        const card = element.closest('[data-nama]') || element;
+        const ds = card.dataset;
+
+        if (!ds || !ds.nama) return;
 
         if (document.getElementById("satuaNama")) document.getElementById("satuaNama").innerText = ds.nama || '-';
         if (document.getElementById("satuaLatin")) document.getElementById("satuaLatin").innerText = ds.latin || '';
@@ -847,7 +785,7 @@
         if (document.getElementById("satuaMoral")) document.getElementById("satuaMoral").innerText = ds.moral || '-';
         if (document.getElementById("satuaFilosofi")) document.getElementById("satuaFilosofi").innerText = ds.filosofi || '-';
 
-        document.body.style.overflow = "hidden"; // Kunci Scroll saat Buka
+        lockGlobalScroll();
 
         const overlay = document.getElementById("overlaySatua");
         const panel = document.getElementById("panelSatua");
@@ -857,14 +795,13 @@
         }, 10);
     }
 
-    // CLOSE DRAWER SATUA (SCROLL DIKEMBALIKAN)
     function closeSatua() {
         const overlay = document.getElementById("overlaySatua");
         const panel = document.getElementById("panelSatua");
 
         if (panel) panel.classList.add("translate-x-full");
 
-        document.body.style.overflow = "auto"; // Kembalikan Scroll
+        unlockGlobalScroll();
 
         setTimeout(() => {
             if (overlay) overlay.classList.add("hidden");
@@ -990,7 +927,7 @@
         const overlay = document.getElementById("overlayBarat");
         const panel = document.getElementById("panelBarat");
 
-        document.body.style.overflow = "hidden"; // Kunci Scroll saat Buka
+        lockGlobalScroll();
 
         if (overlay) overlay.classList.remove("hidden");
         setTimeout(function() {
@@ -1006,14 +943,13 @@
         if (typeof feather !== 'undefined') feather.replace();
     }
 
-    // CLOSE PANEL FILSAFAT (SCROLL DIKEMBALIKAN)
     function closeBarat() {
         const panel = document.getElementById("panelBarat");
         const overlay = document.getElementById("overlayBarat");
 
         if (panel) panel.classList.add("translate-x-full");
 
-        document.body.style.overflow = "auto"; // Kembalikan Scroll
+        unlockGlobalScroll();
 
         setTimeout(function() {
             if (overlay) overlay.classList.add("hidden");

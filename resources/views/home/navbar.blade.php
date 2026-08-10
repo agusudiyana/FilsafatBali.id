@@ -1,5 +1,5 @@
 <!-- ========================================== -->
-<!-- NAVBAR UTUH & FINAL (TEKS MASUK JELAS)     -->
+<!-- NAVBAR UTUH & FINAL                        -->
 <!-- ========================================== -->
 <nav id="navbar" class="fixed top-0 left-0 w-full z-50 bg-transparent transition-all duration-300 py-4">
     <div class="max-w-[1380px] mx-auto px-4 md:px-8 flex items-center justify-between relative">
@@ -47,7 +47,7 @@
 
                     <!-- Avatar Profil -->
                     <div
-                        class="w-9 h-9 rounded-full border-2 border-[#C8A45A] bg-[#8D2B1D] text-white overflow-hidden flex items-center justify-center font-bold text-sm shadow-sm shrink-0 group-hover/user:scale-105 transition-transform">
+                        class="w-9 h-9 rounded-full border-2 border-[#E2B75B] bg-[#8D2B1D] text-white overflow-hidden flex items-center justify-center font-bold text-sm shadow-sm shrink-0 group-hover/user:scale-105 transition-transform">
                         @if (auth()->user()->foto ?? false)
                             <img src="{{ asset('storage/' . auth()->user()->foto) }}" alt="{{ auth()->user()->name }}"
                                 class="w-full h-full object-cover">
@@ -56,14 +56,16 @@
                         @endif
                     </div>
 
-                    <!-- TEKS NAMA USER -->
-                    <span class="hidden sm:inline-block text-xs font-bold text-[#23160E] tracking-wide">
+                    <!-- TEKS NAMA USER (Warna Dinamis + Font Ditingkatkan) -->
+                    <span id="navUsername" 
+                        class="hidden sm:inline-block text-[14px] font-medium text-[#E2B75B] tracking-wide capitalize transition-colors duration-300"
+                        style="font-family: 'Inter', sans-serif;">
                         {{ auth()->user()->name }}
                     </span>
 
-                    <!-- Chevron Arrow -->
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        class="w-4 h-4 text-[#C8A45A] transition-transform duration-200 group-hover/user:translate-y-0.5"
+                    <!-- Chevron Arrow (Warna Dinamis) -->
+                    <svg id="navUserChevron" xmlns="http://www.w3.org/2000/svg"
+                        class="w-4 h-4 text-[#E2B75B] transition-all duration-300 group-hover/user:translate-y-0.5"
                         fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
                     </svg>
@@ -177,7 +179,7 @@
 </nav>
 
 <!-- ========================================== -->
-<!-- SCRIPT JS FIX DROPDOWN & SCROLL           -->
+<!-- SCRIPT JS FIX DROPDOWN & SCROLL            -->
 <!-- ========================================== -->
 <script>
     function toggleUserDropdown(e) {
@@ -226,8 +228,11 @@
         var menuLinks = document.querySelectorAll("#menu a");
         var navLogo = document.getElementById("navLogo");
         var navSubLogo = document.getElementById("navSubLogo");
+        var navUsername = document.getElementById("navUsername");
+        var navUserChevron = document.getElementById("navUserChevron");
 
         if (window.scrollY > 30) {
+            // SAAT DI-SCROLL KE BAWAH (Navbar Terang / Krem / Putih)
             navbar.classList.remove("bg-transparent");
             navbar.style.backgroundColor = "#F7F0E7";
             navbar.style.boxShadow = "0 4px 15px rgba(0,0,0,.10)";
@@ -240,7 +245,12 @@
             if (navLogo) navLogo.style.color = "#8D2B1D";
             if (navSubLogo) navSubLogo.style.color = "#C8A45A";
 
+            // Ubah Warna Teks Nama & Panah ke Cokelat Gelap
+            if (navUsername) navUsername.style.color = "#23160E";
+            if (navUserChevron) navUserChevron.style.color = "#23160E";
+
         } else {
+            // SAAT DI PALING ATAS (Navbar Transparan)
             navbar.classList.add("bg-transparent");
             navbar.style.backgroundColor = "transparent";
             navbar.style.boxShadow = "none";
@@ -252,6 +262,10 @@
             });
             if (navLogo) navLogo.style.color = "#A73D1F";
             if (navSubLogo) navSubLogo.style.color = "#C8A45A";
+
+            // Ubah Warna Teks Nama & Panah Kembali ke Kuning Emas Keemasan
+            if (navUsername) navUsername.style.color = "#E2B75B";
+            if (navUserChevron) navUserChevron.style.color = "#E2B75B";
         }
     }
 

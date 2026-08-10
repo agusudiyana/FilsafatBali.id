@@ -47,11 +47,11 @@
             <!-- Tab Satua & Istilah -->
             <div class="flex border border-[#6E4E1E] rounded-lg overflow-hidden shrink-0 mt-2">
                 <button id="btnSatua" onclick="showSatua()"
-                    class="w-36 md:w-40 py-3 bg-[#C58A3C] text-white uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all">
+                    class="w-36 md:w-40 py-3 bg-[#C58A3C] text-white uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all cursor-pointer">
                     SATUA BALI
                 </button>
                 <button id="btnIstilah" onclick="showIstilah()"
-                    class="w-36 md:w-40 py-3 bg-transparent text-[#C58A3C] uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all">
+                    class="w-36 md:w-40 py-3 bg-transparent text-[#C58A3C] uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all cursor-pointer">
                     ISTILAH BALI
                 </button>
             </div>
@@ -78,7 +78,7 @@
                         ->exists();
                 @endphp
 
-                <div class="group bg-[#24170D] rounded-lg overflow-hidden border border-[#3E2D1E] transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:border-[#C58A3C] flex flex-col justify-between relative">
+                <div class="group bg-[#24170D] rounded-lg overflow-hidden border border-[#3E2D1E] transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:border-[#C58A3C] flex flex-col justify-between relative cursor-pointer">
 
                     <!-- AREA KLIK DETAIL (MENGGUNAKAN DATASET) -->
                     <div onclick="openSatuaCard(this)"
@@ -160,15 +160,13 @@
 <!-- ========================================== -->
 <!-- DRAWER & OVERLAY (DETAIL SATUA BALI)       -->
 <!-- ========================================== -->
-<!-- DIKLIK DI AREA GELAP (OVERLAY) OTOMATIS MENUTUP DRAWER SATUA -->
 <div id="overlaySatua" onclick="closeSatua()" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-[100] cursor-pointer">
     
-    <!-- PANEL CONTENT SATUA (ONCLICK STOPPROPAGATION AGAR KLIK DIDALAM PANEL TIDAK MENUTUP) -->
     <div id="panelSatua" onclick="event.stopPropagation()"
         class="absolute right-0 top-0 w-[42%] max-w-full h-full bg-[#F8F0E5] overflow-y-auto translate-x-full transition-all duration-500 shadow-2xl cursor-default">
         
         <button onclick="closeSatua()"
-            class="absolute top-5 right-5 w-12 h-12 rounded-full bg-[#EBD9BF] hover:bg-[#D4A64A] transition font-bold text-lg z-20 text-[#5F4B3A]">
+            class="absolute top-5 right-5 w-12 h-12 rounded-full bg-[#EBD9BF] hover:bg-[#D4A64A] transition font-bold text-lg z-20 text-[#5F4B3A] cursor-pointer">
             ✕
         </button>
 
@@ -211,7 +209,7 @@
 </div>
 
 <!-- ========================================== -->
-<!-- SCRIPT JS CONTROLLER / SWITCHER TAB        -->
+<!-- SCRIPT JS CONTROLLER                        -->
 <!-- ========================================== -->
 <script>
     // Status Login User
@@ -229,10 +227,8 @@
             return;
         }
 
-        // Tautan URL balik ke section Satua
         const itemUrl = "{{ url('/') }}?open=" + encodeURIComponent(title) + "#sectionSatua";
 
-        // Kirim request ke backend Laravel
         fetch("{{ route('pengguna.arsip.store') }}", {
             method: 'POST',
             headers: {
@@ -256,7 +252,6 @@
                 btnElement.setAttribute('title', 'Simpan ke Arsip');
             }
 
-            // Refeather untuk merender ulang status SVGs
             if (typeof feather !== 'undefined') {
                 feather.replace();
             }
@@ -283,47 +278,85 @@
 
     // Open Drawer Satua via Dataset HTML
     function openSatuaCard(element) {
-        document.getElementById("satuaNama").innerText = element.dataset.nama || '-';
-        document.getElementById("satuaLatin").innerText = element.dataset.latin || '';
-        document.getElementById("satuaImage").src = element.dataset.img || '';
+        if (!element) return;
+        const card = element.closest('[data-nama]') || element;
+        const ds = card.dataset;
 
-        document.getElementById("satuaRingkasan").innerText = element.dataset.ringkasan || '-';
-        document.getElementById("satuaTokoh").innerText = element.dataset.tokoh || '-';
-        document.getElementById("satuaAlur").innerText = element.dataset.alur || '-';
-        document.getElementById("satuaMoral").innerText = element.dataset.moral || '-';
-        document.getElementById("satuaFilosofi").innerText = element.dataset.filosofi || '-';
+        if (!ds || !ds.nama) return;
 
-        document.getElementById("overlaySatua").classList.remove("hidden");
+        if (document.getElementById("satuaNama")) document.getElementById("satuaNama").innerText = ds.nama || '-';
+        if (document.getElementById("satuaLatin")) document.getElementById("satuaLatin").innerText = ds.latin || '';
+        if (document.getElementById("satuaImage")) document.getElementById("satuaImage").src = ds.img || '';
+
+        if (document.getElementById("satuaRingkasan")) document.getElementById("satuaRingkasan").innerText = ds.ringkasan || '-';
+        if (document.getElementById("satuaTokoh")) document.getElementById("satuaTokoh").innerText = ds.tokoh || '-';
+        if (document.getElementById("satuaAlur")) document.getElementById("satuaAlur").innerText = ds.alur || '-';
+        if (document.getElementById("satuaMoral")) document.getElementById("satuaMoral").innerText = ds.moral || '-';
+        if (document.getElementById("satuaFilosofi")) document.getElementById("satuaFilosofi").innerText = ds.filosofi || '-';
+
+        // KUNCI SCROLL HALAMAN
+        document.body.style.overflow = "hidden";
+        document.documentElement.style.overflow = "hidden";
+
+        const overlay = document.getElementById("overlaySatua");
+        const panel = document.getElementById("panelSatua");
+
+        if (overlay) overlay.classList.remove("hidden");
         setTimeout(() => {
-            document.getElementById("panelSatua").classList.remove("translate-x-full");
+            if (panel) panel.classList.remove("translate-x-full");
         }, 10);
     }
 
+    // CLOSE DRAWER SATUA & BUANG KUNCI SCROLL
     function closeSatua() {
-        document.getElementById("panelSatua").classList.add("translate-x-full");
+        const overlay = document.getElementById("overlaySatua");
+        const panel = document.getElementById("panelSatua");
+
+        if (panel) panel.classList.add("translate-x-full");
+
+        // MEMBUKA KUNCI SCROLL (SOLUSI UTAMA FIX SCROLL MACET)
+        document.body.style.removeProperty("overflow");
+        document.body.style.overflow = "auto";
+        document.documentElement.style.removeProperty("overflow");
+        document.documentElement.style.overflow = "auto";
+
         setTimeout(() => {
-            document.getElementById("overlaySatua").classList.add("hidden");
-        }, 500);
+            if (overlay) overlay.classList.add("hidden");
+        }, 300);
     }
 
     // Open Drawer Istilah via Dataset HTML
     function openIstilahCard(element) {
-        document.getElementById("detailTitle").innerText = element.dataset.title || '-';
-        document.getElementById("detailKategori").innerText = element.dataset.kategori || 'Umum';
-        document.getElementById("detailDesc").innerText = element.dataset.desc || '-';
-        document.getElementById("detailSejarah").innerText = element.dataset.sejarah || '-';
-        document.getElementById("detailContoh").innerText = element.dataset.contoh || '-';
-        document.getElementById("detailPadanan").innerText = element.dataset.padanan || '-';
+        if (document.getElementById("detailTitle")) document.getElementById("detailTitle").innerText = element.dataset.title || '-';
+        if (document.getElementById("detailKategori")) document.getElementById("detailKategori").innerText = element.dataset.kategori || 'Umum';
+        if (document.getElementById("detailDesc")) document.getElementById("detailDesc").innerText = element.dataset.desc || '-';
+        if (document.getElementById("detailSejarah")) document.getElementById("detailSejarah").innerText = element.dataset.sejarah || '-';
+        if (document.getElementById("detailContoh")) document.getElementById("detailContoh").innerText = element.dataset.contoh || '-';
+        if (document.getElementById("detailPadanan")) document.getElementById("detailPadanan").innerText = element.dataset.padanan || '-';
 
-        document.getElementById("overlay").classList.remove("hidden");
-        document.getElementById("detailPanel").classList.remove("translate-x-full");
+        document.body.style.overflow = "hidden";
+
+        const overlay = document.getElementById("overlay");
+        const panel = document.getElementById("detailPanel");
+
+        if (overlay) overlay.classList.remove("hidden");
+        if (panel) panel.classList.remove("translate-x-full");
     }
 
     function closeDetail() {
-        document.getElementById("detailPanel").classList.add("translate-x-full");
+        const overlay = document.getElementById("overlay");
+        const panel = document.getElementById("detailPanel");
+
+        if (panel) panel.classList.add("translate-x-full");
+
+        document.body.style.removeProperty("overflow");
+        document.body.style.overflow = "auto";
+        document.documentElement.style.removeProperty("overflow");
+        document.documentElement.style.overflow = "auto";
+
         setTimeout(() => {
-            document.getElementById("overlay").classList.add("hidden");
-        }, 500);
+            if (overlay) overlay.classList.add("hidden");
+        }, 300);
     }
 
     // Pencarian Istilah
@@ -372,9 +405,10 @@
             showSatua();
 
             setTimeout(() => {
-                const cards = document.querySelectorAll('#sectionSatua [onclick*="openSatuaCard"]');
+                const cards = document.querySelectorAll('#sectionSatua [data-nama]');
                 cards.forEach(card => {
-                    if (card.dataset.nama && card.dataset.nama.trim().toLowerCase() === decodedTitle) {
+                    const nama = card.dataset.nama ? card.dataset.nama.trim().toLowerCase() : '';
+                    if (nama === decodedTitle || nama.includes(decodedTitle)) {
                         openSatuaCard(card);
                     }
                 });

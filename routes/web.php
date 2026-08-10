@@ -24,6 +24,26 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // ROUTE LIVE SEARCH API (DAPAT DIAKSES PUBLIC OLEH SEARCH BAR HERO)
 Route::get('/search-live', [HomeController::class, 'searchLive'])->name('search.live');
 
+// ROUTE HALAMAN TENTANG KAMI (PUBLIC)
+Route::get('/tentang-kami', function () {
+    return view('tentang');
+})->name('tentang.kami');
+
+// ROUTE HALAMAN KEBIJAKAN PRIVASI (PUBLIC)
+Route::get('/kebijakan-privasi', function () {
+    return view('privacy-policy');
+})->name('privacy.policy');
+
+// ROUTE HALAMAN SYARAT DAN KETENTUAN (PUBLIC)
+Route::get('/syarat-ketentuan', function () {
+    return view('syarat-ketentuan');
+})->name('syarat.ketentuan');
+
+// ROUTE HALAMAN HUBUNGI KAMI (PUBLIC)
+Route::get('/hubungi-kami', function () {
+    return view('hubungi-kami');
+})->name('hubungi.kami');
+
 /*
 |--------------------------------------------------------------------------
 | HALAMAN DENGAN AUTENTIKASI

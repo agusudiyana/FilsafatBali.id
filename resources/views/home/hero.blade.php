@@ -89,7 +89,7 @@
 <!-- CSS STYLES UNTUK ANIMASI & TAB MERAH      -->
 <!-- ========================================== -->
 <style>
-    /* 1. Garis Merah Underline Eksklusif */
+    /* Garis Merah Underline Eksklusif */
     #artikel button[id^="btn-"],
     .filter-tab-btn,
     .tab-btn {
@@ -139,7 +139,7 @@
         transform: scaleX(1);
     }
 
-    /* 2. Keyframes Animasi Efek Foto / Kartu Artikel Muncul */
+    /* Keyframes Animasi Efek Foto / Kartu Artikel Muncul */
     @keyframes cardAppear {
         0% {
             opacity: 0;
@@ -153,12 +153,10 @@
         }
     }
 
-    /* Class Animasi Kartu Artikel */
     .card-appear-anim {
         animation: cardAppear 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    /* Isolasi Klik Icon Bookmark */
     .btn-bookmark-custom {
         cursor: pointer !important;
     }
@@ -172,7 +170,6 @@
 <!-- SCRIPT JAVASCRIPT GABUNGAN PRESISI & UTUH  -->
 <!-- ========================================== -->
 <script>
-    // Ambil status login user untuk fitur Bookmark
     const USER_LOGGED_IN = @json(auth()->check());
 
     // ==========================================
@@ -181,8 +178,8 @@
     var DEFAULT_KEYWORDS = [
         "TRI HITA KARANA", 
         "DESA KALA PATRA", 
-        "I SIAP SELEM", 
-        "I BELOG", 
+        "TAT TWAM ASI", 
+        "NGABEN", 
         "TAKSU", 
         "SUBAK"
     ];
@@ -243,57 +240,77 @@
     }
 
     // ==========================================
-    // ARRAY SINKRONISASI DATABASE FILSAFATBALI_DB
+    // ARRAY DATABASE PENCARIAN (LENGKAP FIELD MAPPING)
     // ==========================================
     const databaseSearch = [
-        // 1. Tabel satuas (I Belog, I Siap Selem, dll)
+        // 1. TABEL ajaran_tertua
+        @if(isset($ajarans))
+            @foreach($ajarans as $aj)
+                @php
+                    $imgAj = $aj->gambar ?? null;
+                    if (!empty($imgAj)) {
+                        if (\Illuminate\Support\Str::startsWith($imgAj, ['http://', 'https://'])) {
+                            $gAjUrl = $imgAj;
+                        } else {
+                            $cleanP = ltrim(str_replace(['public/', 'storage/'], '', $imgAj), '/');
+                            $gAjUrl = asset('storage/' . $cleanP);
+                        }
+                    } else {
+                        $gAjUrl = asset('images/subak.jpeg');
+                    }
+                @endphp
+                {
+                    id: @json("ajaran_" . $aj->id),
+                    raw_id: @json($aj->id),
+                    judul: @json($aj->judul ?? 'Ajaran Tertua'),
+                    kategori: 'AJARAN TETUA',
+                    target_type: 'ajaran',
+                    penulis: @json($aj->penulis ?? 'Tetua Bali'),
+                    lokasi: @json(strtoupper($aj->lokasi ?? 'BALI')),
+                    tanggal: @json(strtoupper($aj->tahun ?? '')),
+                    isi: @json($aj->deskripsi ?? ''),
+                    gambar: @json($gAjUrl)
+                },
+            @endforeach
+        @endif
+
+        // 2. Tabel satuas
         @if(isset($satuas))
             @foreach($satuas as $s)
                 {
-                    id: @json($s->id),
-                    judul: @json($s->judul ?? $s->nama ?? $s->judul_satua ?? $s->title ?? 'Satua Bali'),
+                    id: @json("satua_" . $s->id),
+                    raw_id: @json($s->id),
+                    judul: @json($s->judul ?? $s->nama ?? 'Satua Bali'),
                     kategori: 'SATUA BALI',
                     target_type: 'satua',
-                    penulis: @json($s->penulis ?? $s->pengarang ?? ($s->user->name ?? 'Masyarakat Bali')),
-                    latin: @json($s->latin ?? $s->subtitle ?? 'The Fool'),
+                    penulis: @json($s->penulis ?? 'Masyarakat Bali'),
+                    latin: @json($s->latin ?? 'Satua Bali'),
                     status: @json($s->status ?? 'Lestari'),
-                    gambar: @json(isset($s->gambar) ? asset('storage/' . $s->gambar) : (isset($s->image) ? asset($s->image) : asset('images/i-belog.jpg'))),
-                    ringkasan: @json($s->ringkasan ?? $s->deskripsi ?? 'Satua Bali yang menceritakan kisah tradisional dengan nilai-nilai kehidupan.'),
-                    tokoh: @json($s->tokoh ?? $s->tokoh_utama ?? 'I Belog<br>Ibu'),
-                    alur: @json($s->alur ?? $s->alur_cerita ?? '1. Nasihat ibu.<br>2. Salah paham.<br>3. Kejadian lucu.'),
-                    moral: @json($s->moral ?? $s->pesan_moral ?? 'Pentingnya memahami maksud perintah dengan bijak.'),
-                    filosofi: @json($s->filosofi ?? 'Nilai nalar kritis dalam budaya Bali.')
+                    gambar: @json(isset($s->gambar) ? asset('storage/' . $s->gambar) : asset('images/i-belog.jpg')),
+                    ringkasan: @json($s->ringkasan ?? $s->deskripsi ?? ''),
+                    tokoh: @json($s->tokoh ?? 'Tokoh Utama'),
+                    alur: @json($s->alur ?? 'Alur Cerita'),
+                    moral: @json($s->moral ?? 'Pesan Moral'),
+                    filosofi: @json($s->filosofi ?? 'Nilai Filosofis')
                 },
             @endforeach
         @endif
 
-        // 2. Tabel istilahs (Pura, Taksu, Subak, dll)
+        // 3. TABEL istilahs
         @if(isset($istilahs))
             @foreach($istilahs as $i)
                 {
-                    id: @json($i->id),
-                    judul: @json($i->istilah ?? $i->judul ?? $i->nama ?? 'Istilah Bali'),
+                    id: @json("istilah_" . $i->id),
+                    raw_id: @json($i->id),
+                    judul: @json($i->istilah ?? $i->judul ?? 'Istilah Bali'),
                     kategori: 'ISTILAH BALI',
                     target_type: 'istilah',
-                    penulis: @json($i->penulis ?? ($i->user->name ?? 'Budayawan')),
-                    deskripsi: @json($i->deskripsi ?? $i->penjelasan ?? 'Penjelasan istilah kebudayaan Bali.'),
-                    sejarah: @json($i->sejarah ?? 'Sejarah dan asal-usul istilah.'),
-                    contoh: @json($i->contoh ?? 'Penerapan dalam tradisi.'),
-                    padanan: @json($i->padanan ?? 'Padanan kata/istilah'),
-                    konteks: @json($i->konteks ?? 'Konteks kehidupan masyarakat Bali')
-                },
-            @endforeach
-        @endif
-
-        // 3. Tabel ajaran_tertua (Desa Kala Patra, Tri Hita Karana, Sad Kerthi, dll)
-        @if(isset($ajarans))
-            @foreach($ajarans as $aj)
-                {
-                    id: @json($aj->id),
-                    judul: @json($aj->judul ?? $aj->nama ?? $aj->title ?? 'Ajaran Tertua'),
-                    kategori: 'AJARAN',
-                    target_type: 'ajaran',
-                    penulis: @json($aj->penulis ?? ($aj->user->name ?? 'Tetua Bali'))
+                    penulis: @json($i->penulis ?? 'Budayawan'),
+                    deskripsi: @json($i->deskripsi ?? $i->penjelasan ?? $i->arti ?? ''),
+                    sejarah: @json($i->sejarah ?? $i->sejarah_singkat ?? $i->asal_usul ?? ''),
+                    contoh: @json($i->contoh ?? $i->contoh_penggunaan ?? $i->penerapan ?? ''),
+                    padanan: @json($i->padanan ?? $i->padanan_kata ?? $i->persamaan ?? ''),
+                    konteks: @json($i->konteks ?? $i->konteks_budaya ?? '')
                 },
             @endforeach
         @endif
@@ -301,12 +318,31 @@
         // 4. Tabel artikels
         @if(isset($artikels))
             @foreach($artikels as $a)
+                @php
+                    $img = $a->gambar ?? ($a->foto ?? null);
+                    if (!empty($img)) {
+                        if (\Illuminate\Support\Str::startsWith($img, ['http://', 'https://'])) {
+                            $gUrl = $img;
+                        } else {
+                            $cleanP = ltrim(str_replace(['public/', 'storage/'], '', $img), '/');
+                            $gUrl = asset('storage/' . $cleanP);
+                        }
+                    } else {
+                        $gUrl = asset('images/subak.jpeg');
+                    }
+                    $tgl = $a->created_at ? \Carbon\Carbon::parse($a->created_at)->translatedFormat('d F Y') : date('d F Y');
+                @endphp
                 {
-                    id: @json($a->id),
-                    judul: @json($a->judul ?? $a->title ?? 'Artikel'),
-                    kategori: @json(strtoupper($a->kategori ?? 'AJARAN')),
+                    id: @json("artikel_" . $a->id),
+                    raw_id: @json($a->id),
+                    judul: @json($a->judul ?? 'Artikel'),
+                    kategori: @json(strtoupper($a->kategori ?? 'ARTIKEL')),
                     target_type: 'artikel',
-                    penulis: @json($a->penulis ?? ($a->user->name ?? 'Penulis'))
+                    penulis: @json($a->penulis ?? 'Tim Balinesia'),
+                    tanggal: @json(strtoupper($tgl)),
+                    isi: @json($a->isi ?? ($a->deskripsi ?? '')),
+                    gambar: @json($gUrl),
+                    kesimpulan: @json($a->kesimpulan ?? '')
                 },
             @endforeach
         @endif
@@ -315,24 +351,32 @@
         @if(isset($cecimpedans))
             @foreach($cecimpedans as $c)
                 {
-                    id: @json($c->id),
-                    judul: @json($c->judul ?? $c->pertanyaan ?? $c->nama ?? 'Cecimpedan'),
+                    id: @json("cecimpedan_" . $c->id),
+                    raw_id: @json($c->id),
+                    judul: @json($c->pertanyaan ?? $c->soal ?? $c->teks ?? $c->judul ?? 'Cecimpedan Bali'),
                     kategori: 'CECIMPEDAN',
                     target_type: 'cecimpedan',
-                    penulis: @json($c->penulis ?? ($c->user->name ?? 'Anonim'))
+                    penulis: @json($c->penulis ?? $c->pembuat ?? $c->creator ?? 'Sastra Tradisional Bali')
                 },
             @endforeach
         @endif
 
-        // 6. Tabel filsafat
+        // 6. TABEL filsafats
         @if(isset($filsafats))
             @foreach($filsafats as $f)
                 {
-                    id: @json($f->id),
+                    id: @json("filsafat_" . $f->id),
+                    raw_id: @json($f->id),
                     judul: @json($f->judul ?? $f->nama ?? 'Filsafat'),
                     kategori: 'FILSAFAT',
                     target_type: 'filsafat',
-                    penulis: @json($f->penulis ?? ($f->user->name ?? 'Filsuf'))
+                    penulis: @json($f->penulis ?? $f->tokoh ?? 'Filsuf'),
+                    deskripsi: @json($f->deskripsi ?? $f->penjelasan ?? ''),
+                    sejarah: @json($f->sejarah ?? $f->asal_usul ?? ''),
+                    contoh: @json($f->contoh ?? $f->penerapan ?? ''),
+                    padanan: @json($f->padanan ?? ''),
+                    konteks: @json($f->konteks ?? ''),
+                    gambar: @json(isset($f->gambar) ? asset('storage/' . $f->gambar) : asset('images/hero.png'))
                 },
             @endforeach
         @endif
@@ -396,14 +440,21 @@
         }
     }
 
-    function scrollToTarget(targetId) {
-        const targetElement = document.getElementById(targetId);
-        if (targetElement) {
-            targetElement.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center'
-            });
+    // Fungsi pemetaan warna badge kategori agar selaras dengan warna kartu di beranda
+    function getCategoryBadgeColor(kategori) {
+        const kat = kategori.toUpperCase();
+        if (kat.includes('AJARAN')) {
+            return 'bg-[#A33B20] text-white'; // Merah Bata (Ajaran Tetua)
+        } else if (kat.includes('SATUA')) {
+            return 'bg-[#2D6C3F] text-white'; // Hijau (Satua Bali)
+        } else if (kat.includes('ISTILAH')) {
+            return 'bg-[#3C6E71] text-white'; // Biru Toska (Istilah Bali)
+        } else if (kat.includes('CECIMPEDAN')) {
+            return 'bg-[#C7962B] text-white'; // Kuning Emas (Cecimpedan)
+        } else if (kat.includes('FILSAFAT')) {
+            return 'bg-[#5C4033] text-white'; // Cokelat Tua (Filsafat)
         }
+        return 'bg-[#8D2B1D] text-white'; // Default Merah
     }
 
     function liveSearch(keyword) {
@@ -431,8 +482,8 @@
             if (hasilCari) {
                 hasilCari.classList.remove("hidden");
                 hasilCari.innerHTML = results.map(item => `
-                    <div onclick="bukaDetailMateri('${item.id}', '${encodeURIComponent(item.judul)}', '${item.target_type || item.kategori.toLowerCase()}')" class="flex items-center gap-4 px-6 py-4 hover:bg-[#F0E6D8] transition duration-200 cursor-pointer text-left border-b border-[#EADCC9]">
-                        <span class="bg-[#8D2B1D] text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded shrink-0">
+                    <div onclick="bukaDetailMateri('${item.id}', '${encodeURIComponent(item.judul)}', '${item.target_type}')" class="flex items-center gap-4 px-6 py-4 hover:bg-[#F0E6D8] transition duration-200 cursor-pointer text-left border-b border-[#EADCC9]">
+                        <span class="${getCategoryBadgeColor(item.kategori)} text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded shrink-0 shadow-sm">
                             ${item.kategori}
                         </span>
                         <div>
@@ -486,8 +537,17 @@
         }
     }
 
+    // Fungsi Pembantu yang Aman untuk Scrolling
+    function scrollToElement(id1, id2) {
+        let el = document.getElementById(id1);
+        if (!el && id2) el = document.getElementById(id2);
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
     // =========================================================================
-    // FUNGSI UTAMA HASIL PENCARIAN (PENCACAHAN PRESISI ID AGAR TIDAK KEBALIK)
+    // FUNGSI UTAMA HASIL PENCARIAN (SCROLL MULUS + LANGSUNG BUKA MODAL/DRAWER)
     // =========================================================================
     function bukaDetailMateri(id, encodedJudul, targetType) {
         pilihHasilSearch(id, decodeURIComponent(encodedJudul), targetType);
@@ -500,23 +560,35 @@
         hilangkanBorderMerah();
         simpanKeRiwayat(judul);
 
-        const keyLower = judul.toLowerCase().trim();
-        const katLower = (kategori || '').toLowerCase().trim();
+        // 1. Cari Presisi berdasarkan ID Unik String
+        let dataObj = databaseSearch.find(item => String(item.id) === String(idArtikel));
 
-        // MATCHING PRESISI: Cari dulu berdasarkan ID dan Target Type unik agar Desa Kala Patra & Tri Hita Karana tidak tertukar!
-        let dataObj = databaseSearch.find(item => 
-            String(item.id) === String(idArtikel) && item.target_type === katLower
-        );
-
-        // Fallback jika ID tidak cocok persis, cari berdasarkan Judul
+        // 2. Jika ID tidak ditemukan, cari dengan toleransi teks judul
         if (!dataObj) {
-            dataObj = databaseSearch.find(item => item.judul.toLowerCase().trim() === keyLower);
+            const cleanTitle = judul.toLowerCase().replace(/\s+/g, ' ').trim();
+            dataObj = databaseSearch.find(item => item.judul.toLowerCase().replace(/\s+/g, ' ').trim() === cleanTitle);
         }
 
-        // 1. KATEGORI: SATUA BALI (I BELOG, I SIAP SELEM, DLL)
-        if (katLower.includes("satua")) {
+        const targetType = dataObj ? dataObj.target_type : (kategori || '').toLowerCase().trim();
+
+        // A. KHUSUS AJARAN TETUA
+        if (targetType === "ajaran" || targetType.includes("ajaran")) {
+            scrollToElement("ajaran", "containerAjaranHero");
+            
+            setTimeout(() => {
+                if (typeof openAjaran === 'function') {
+                    if (dataObj && dataObj.raw_id !== undefined) {
+                        openAjaran(dataObj.raw_id);
+                    } else {
+                        openAjaran(judul);
+                    }
+                }
+            }, 200);
+
+        // B. SATUA BALI
+        } else if (targetType.includes("satua")) {
             if (typeof showSatua === 'function') showSatua();
-            scrollToTarget("sectionSatua");
+            scrollToElement("sectionSatua");
 
             setTimeout(() => {
                 if (typeof openSatua === 'function') {
@@ -531,83 +603,118 @@
                         dataObj ? dataObj.moral : 'Pesan moral kehidupan.',
                         dataObj ? dataObj.filosofi : 'Nilai filosofis Bali.'
                     );
-                } else {
-                    var overlaySatua = document.getElementById("overlaySatua");
-                    var panelSatua = document.getElementById("panelSatua");
-                    if (overlaySatua && panelSatua) {
-                        if (document.getElementById("satuaNama")) document.getElementById("satuaNama").innerHTML = dataObj ? dataObj.judul : judul;
-                        overlaySatua.classList.remove("hidden");
-                        panelSatua.classList.remove("translate-x-full");
-                        document.body.style.overflow = "hidden";
-                    }
                 }
-            }, 450);
+            }, 200);
 
-        // 2. KATEGORI: ISTILAH BALI (PURA, TAKSU, SUBAK, DLL)
-        } else if (katLower.includes("istilah")) {
+        // C. ISTILAH BALI
+        } else if (targetType.includes("istilah")) {
             if (typeof showIstilah === 'function') showIstilah();
-            scrollToTarget("sectionIstilah");
+            scrollToElement("sectionIstilah");
 
             setTimeout(() => {
                 if (typeof openIstilah === 'function') {
                     openIstilah(
                         dataObj ? dataObj.judul : judul,
-                        dataObj ? dataObj.kategori : 'Istilah Bali',
+                        dataObj ? dataObj.kategori : 'ISTILAH BALI',
                         dataObj ? dataObj.deskripsi : 'Penjelasan istilah ' + judul,
-                        dataObj ? dataObj.sejarah : 'Sejarah istilah',
-                        dataObj ? dataObj.contoh : 'Contoh penerapan tradisi',
-                        dataObj ? dataObj.padanan : 'Padanan kata',
-                        dataObj ? dataObj.konteks : 'Konteks budaya'
+                        dataObj ? dataObj.sejarah : '',
+                        dataObj ? dataObj.contoh : '',
+                        dataObj ? dataObj.padanan : '',
+                        dataObj ? dataObj.konteks : ''
                     );
                 }
-            }, 450);
+            }, 200);
 
-        // 3. KATEGORI: AJARAN TETUA (DESA KALA PATRA, TRI HITA KARANA, SAD KERTHI, DLL)
-        } else if (katLower.includes("ajaran") || keyLower.includes("tri hita karana") || keyLower.includes("desa kala patra")) {
-            const targetSec = document.getElementById("ajaran") || document.getElementById("ajaran-tetua") || document.getElementById("sectionAjaran") || document.getElementById("artikel");
-            if (targetSec) targetSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // D. CECIMPEDAN
+        } else if (targetType.includes("cecimpedan")) {
+            scrollToElement("cecimpedan", "sectionCecimpedan");
+            
+            setTimeout(() => {
+                if (typeof window.openCecimpedanById === 'function') {
+                    window.openCecimpedanById(dataObj ? dataObj.raw_id : '', judul);
+                }
+            }, 200);
+
+        // E. FILSAFAT BALI
+        } else if (targetType.includes("filsafat")) {
+            scrollToElement("sectionFilsafat", "filsafat");
+            
+            setTimeout(() => {
+                const titleVal = dataObj ? dataObj.judul : judul;
+                const katVal = dataObj ? dataObj.kategori : 'FILSAFAT BALI';
+                const descVal = dataObj ? (dataObj.deskripsi || dataObj.isi) : 'Penjelasan filsafat ' + judul;
+                const sejVal = dataObj ? (dataObj.sejarah || '-') : '-';
+                const conVal = dataObj ? (dataObj.contoh || '-') : '-';
+                const padVal = dataObj ? (dataObj.padanan || '-') : '-';
+                const konVal = dataObj ? (dataObj.konteks || '-') : '-';
+
+                if (typeof openIstilah === 'function') {
+                    openIstilah(titleVal, katVal, descVal, sejVal, conVal, padVal, konVal);
+                } else if (typeof openFilsafat === 'function') {
+                    openFilsafat(dataObj ? dataObj.raw_id : judul);
+                } else {
+                    if (document.getElementById("detailTitle")) document.getElementById("detailTitle").innerHTML = titleVal;
+                    if (document.getElementById("detailKategori")) document.getElementById("detailKategori").innerHTML = katVal;
+                    if (document.getElementById("detailDesc")) document.getElementById("detailDesc").innerHTML = descVal;
+                    if (document.getElementById("detailSejarah")) document.getElementById("detailSejarah").innerHTML = sejVal;
+                    if (document.getElementById("detailContoh")) document.getElementById("detailContoh").innerHTML = conVal;
+                    if (document.getElementById("detailPadanan")) document.getElementById("detailPadanan").innerHTML = padVal;
+                    if (document.getElementById("detailKonteks")) document.getElementById("detailKonteks").innerHTML = konVal;
+
+                    const overlay = document.getElementById("overlay") || document.getElementById("overlayFilsafat");
+                    const detailPanel = document.getElementById("detailPanel") || document.getElementById("panelFilsafat");
+                    if (overlay) overlay.classList.remove("hidden");
+                    if (detailPanel) detailPanel.classList.remove("translate-x-full");
+                }
+            }, 200);
+
+        // F. ARTIKEL UMUM
+        } else {
+            scrollToElement("artikel");
 
             setTimeout(() => {
-                if (typeof openAjaran === 'function') {
-                    openAjaran(dataObj ? dataObj.id : idArtikel);
-                } else if (typeof openDetailArtikel === 'function') {
-                    openDetailArtikel(dataObj ? dataObj.id : (idArtikel && idArtikel !== 'undefined' ? idArtikel : 1));
-                } else {
-                    var overlayAjaran = document.getElementById("overlayAjaran");
-                    var panelAjaran = document.getElementById("panelAjaran");
-                    if (overlayAjaran && panelAjaran) {
-                        if (document.getElementById("ajaranJudul")) {
-                            document.getElementById("ajaranJudul").innerHTML = dataObj ? dataObj.judul : judul;
+                if (dataObj) {
+                    if (document.getElementById('artTitle')) document.getElementById('artTitle').innerText = dataObj.judul || judul;
+                    if (document.getElementById('artPenulis')) document.getElementById('artPenulis').innerText = dataObj.penulis || 'Tim Balinesia';
+                    if (document.getElementById('artMeta')) document.getElementById('artMeta').innerText = (dataObj.tanggal || '') + ' • BALINESIA';
+                    if (document.getElementById('artIsi')) document.getElementById('artIsi').innerHTML = dataObj.isi || '';
+                    
+                    const writer = dataObj.penulis || 'A';
+                    if (document.getElementById('artAvatar')) document.getElementById('artAvatar').innerText = writer.charAt(0).toUpperCase();
+
+                    const badge = document.getElementById('artKategoriBadge');
+                    if (badge) {
+                        badge.innerText = dataObj.kategori || 'AJARAN TETUA';
+                        badge.style.backgroundColor = '#992B20';
+                    }
+
+                    const img = document.getElementById('artImage');
+                    if (img && dataObj.gambar) img.src = dataObj.gambar;
+
+                    const kesimpulanBox = document.getElementById('boxKesimpulan');
+                    if (kesimpulanBox) {
+                        if (dataObj.kesimpulan && dataObj.kesimpulan.trim() !== '') {
+                            kesimpulanBox.classList.remove('hidden');
+                            document.getElementById('artKesimpulan').innerText = dataObj.kesimpulan;
+                        } else {
+                            kesimpulanBox.classList.add('hidden');
                         }
-                        overlayAjaran.classList.remove("hidden");
-                        panelAjaran.classList.remove("translate-x-full");
-                        document.body.style.overflow = "hidden";
                     }
                 }
-            }, 450);
 
-        // 4. KATEGORI: CECIMPEDAN
-        } else if (katLower.includes("cecimpedan")) {
-            scrollToTarget("cecimpedan");
-            setTimeout(() => {
-                if (typeof toggleCard === 'function') toggleCard(1);
-            }, 450);
+                const overlay = document.getElementById('overlayArtikel');
+                const panel = document.getElementById('panelArtikel');
 
-        // 5. KATEGORI: FILSAFAT
-        } else if (katLower.includes("filsafat")) {
-            scrollToTarget("filsafat");
-            setTimeout(() => {
-                if (typeof openFilsafat === 'function') openFilsafat("barat");
-            }, 450);
-
-        // 6. KATEGORI: ARTIKEL UMUM
-        } else {
-            scrollToTarget("artikel");
-            setTimeout(() => {
-                if (typeof openDetailArtikel === 'function') {
-                    openDetailArtikel(dataObj ? dataObj.id : (idArtikel && idArtikel !== 'undefined' ? idArtikel : 1));
+                if (overlay) {
+                    overlay.style.display = 'block';
+                    overlay.classList.remove('hidden', 'pointer-events-none', 'opacity-0');
+                    overlay.classList.add('pointer-events-auto', 'opacity-100');
                 }
-            }, 450);
+
+                if (panel) {
+                    panel.classList.remove('translate-x-full');
+                }
+            }, 200);
         }
     }
 
@@ -629,7 +736,6 @@
         const panel = document.getElementById("panelSatua");
         if (overlay) overlay.classList.remove("hidden");
         if (panel) panel.classList.remove("translate-x-full");
-        document.body.style.overflow = "hidden";
     }
 
     function closeSatua() {
@@ -637,23 +743,21 @@
         const panel = document.getElementById("panelSatua");
         if (overlay) overlay.classList.add("hidden");
         if (panel) panel.classList.add("translate-x-full");
-        document.body.style.overflow = "auto";
     }
 
     function openIstilah(judul, kategori, deskripsi, sejarah, contoh, padanan, konteks) {
-        if (document.getElementById("detailTitle")) document.getElementById("detailTitle").innerHTML = judul;
-        if (document.getElementById("detailKategori")) document.getElementById("detailKategori").innerHTML = kategori;
-        if (document.getElementById("detailDesc")) document.getElementById("detailDesc").innerHTML = deskripsi;
-        if (document.getElementById("detailSejarah")) document.getElementById("detailSejarah").innerHTML = sejarah;
-        if (document.getElementById("detailContoh")) document.getElementById("detailContoh").innerHTML = contoh;
-        if (document.getElementById("detailPadanan")) document.getElementById("detailPadanan").innerHTML = padanan;
-        if (document.getElementById("detailKonteks")) document.getElementById("detailKonteks").innerHTML = konteks;
+        if (document.getElementById("detailTitle")) document.getElementById("detailTitle").innerHTML = judul || '-';
+        if (document.getElementById("detailKategori")) document.getElementById("detailKategori").innerHTML = kategori || 'Istilah Bali';
+        if (document.getElementById("detailDesc")) document.getElementById("detailDesc").innerHTML = deskripsi || '-';
+        if (document.getElementById("detailSejarah")) document.getElementById("detailSejarah").innerHTML = sejarah || '-';
+        if (document.getElementById("detailContoh")) document.getElementById("detailContoh").innerHTML = contoh || '-';
+        if (document.getElementById("detailPadanan")) document.getElementById("detailPadanan").innerHTML = padanan || '-';
+        if (document.getElementById("detailKonteks")) document.getElementById("detailKonteks").innerHTML = konteks || '-';
 
         const overlay = document.getElementById("overlay");
         const detailPanel = document.getElementById("detailPanel");
         if (overlay) overlay.classList.remove("hidden");
         if (detailPanel) detailPanel.classList.remove("translate-x-full");
-        document.body.style.overflow = "hidden";
     }
 
     function closeDetail() {
@@ -661,7 +765,6 @@
         const detailPanel = document.getElementById("detailPanel");
         if (overlay) overlay.classList.add("hidden");
         if (detailPanel) detailPanel.classList.add("translate-x-full");
-        document.body.style.overflow = "auto";
     }
 
     function closeAjaran() {
@@ -669,7 +772,6 @@
         const panel = document.getElementById("panelAjaran");
         if (overlay) overlay.classList.add("hidden");
         if (panel) panel.classList.add("translate-x-full");
-        document.body.style.overflow = "auto";
     }
 
     function showSatua() {
@@ -682,7 +784,7 @@
     function showIstilah() {
         const secSatua = document.getElementById("sectionSatua");
         const secIstilah = document.getElementById("sectionIstilah");
-        if (secSatua) secSatua.classList.add("hidden");
+        if (secSatua) secSatua.classList.remove("hidden");
         if (secIstilah) secIstilah.classList.remove("hidden");
     }
 

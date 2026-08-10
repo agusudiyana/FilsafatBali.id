@@ -58,6 +58,11 @@
         border: 1px solid #DCCCB4;
         color: #8C7A65;
         transition: all 0.25s ease-in-out;
+        cursor: pointer !important;
+    }
+
+    .btn-bookmark * {
+        pointer-events: none !important;
     }
 
     /* HOVER STATE */
@@ -175,11 +180,16 @@
                     }
                 @endphp
 
-                <!-- CARD ARTIKEL -->
-                <div class="card-artikel js-open-modal {{ $katClass }} bg-white rounded-xl overflow-hidden shadow duration-300 cursor-pointer group flex flex-col justify-between"
-                    data-judul="{{ e($judulText) }}" data-penulis="{{ e($penulisText) }}"
-                    data-tanggal="{{ strtoupper($tanggal) }}" data-kategori="{{ strtoupper($kategoriText) }}"
-                    data-badge-color="{{ $colorHex }}" data-gambar="{{ $gambarUrl }}"
+                <!-- CARD ARTIKEL DENGAN ONCLICK DIRECT -->
+                <div onclick="openModalForCard(this)"
+                    class="card-artikel js-open-modal {{ $katClass }} bg-white rounded-xl overflow-hidden shadow duration-300 cursor-pointer group flex flex-col justify-between"
+                    data-id="{{ $item->id ?? '' }}"
+                    data-judul="{{ e($judulText) }}" 
+                    data-penulis="{{ e($penulisText) }}"
+                    data-tanggal="{{ strtoupper($tanggal) }}" 
+                    data-kategori="{{ strtoupper($kategoriText) }}"
+                    data-badge-color="{{ $colorHex }}" 
+                    data-gambar="{{ $gambarUrl }}"
                     data-kesimpulan="{{ e($kesimpulanText) }}">
 
                     <div>
@@ -233,8 +243,9 @@
                         <span>{{ $tanggal }} &nbsp;•&nbsp; 5 Menit</span>
 
                         <!-- COVER ICON SIMPAN KOTAK -->
-                        <button type="button" onclick="handleBookmark(event, this, '{{ e($judulText) }}', 'artikel')"
-                            class="btn-bookmark w-9 h-9 rounded-lg flex items-center justify-center shadow-sm {{ $isSaved ? 'is-saved' : '' }}"
+                        <button type="button" 
+                            onclick="handleBookmark(event, this, '{{ e($judulText) }}', 'artikel')"
+                            class="btn-bookmark w-9 h-9 rounded-lg flex items-center justify-center shadow-sm relative z-20 {{ $isSaved ? 'is-saved' : '' }}"
                             title="{{ $isSaved ? 'Batal Simpan' : 'Simpan Artikel' }}">
                             <i data-feather="bookmark" class="w-4 h-4"></i>
                         </button>
@@ -254,17 +265,17 @@
     </div>
 </section>
 
-<!-- MODAL OVERLAY DETAIL BACA ARTIKEL (BISA DIKLIK DI AREA GELAP/KIRI UNTUK KEMBALI) -->
-<div id="overlayArtikel" onclick="closeArtikelModal()"
-    class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300 cursor-pointer">
+<!-- MODAL OVERLAY DETAIL BACA ARTIKEL -->
+<div id="overlayArtikel" onclick="closeModalArtikelGlobal()"
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden opacity-0 pointer-events-none transition-opacity duration-300 cursor-pointer">
     
-    <!-- Panel Isi Artikel (onclick stopPropagation agar klik didalam panel tidak menutup modal) -->
+    <!-- Panel Isi Artikel -->
     <div id="panelArtikel" onclick="event.stopPropagation()"
         class="fixed inset-y-0 right-0 w-full max-w-2xl bg-[#FAF6F0] shadow-2xl p-8 overflow-y-auto transform translate-x-full transition-transform duration-300 ease-in-out border-l border-[#D6C5AE] cursor-default">
 
         <!-- Tombol Tutup -->
-        <button id="closeModalBtn" type="button" onclick="closeArtikelModal()"
-            class="absolute top-6 right-6 w-10 h-10 rounded-full bg-[#EFE6D8] text-[#2B1A12] flex items-center justify-center hover:bg-[#992B20] hover:text-white transition duration-300 font-bold">✕</button>
+        <button id="closeModalBtn" type="button" onclick="closeModalArtikelGlobal()"
+            class="absolute top-6 right-6 w-10 h-10 rounded-full bg-[#EFE6D8] text-[#2B1A12] flex items-center justify-center hover:bg-[#992B20] hover:text-white transition duration-300 font-bold cursor-pointer">✕</button>
 
         <div class="mb-4">
             <span id="artKategoriBadge"
@@ -305,13 +316,15 @@
 
     // Handle Klik Bookmark
     function handleBookmark(event, btnElement, title, type) {
-        event.stopPropagation();
-        event.preventDefault();
+        if (event) {
+            event.stopPropagation();
+            event.preventDefault();
+        }
 
         if (!IS_USER_LOGGED_IN) {
             alert("Silakan login terlebih dahulu untuk menyimpan " + type + " ini ke arsip!");
             window.location.href = LOGIN_URL;
-            return;
+            return false;
         }
 
         const itemUrl = "{{ url('/') }}?open=" + encodeURIComponent(title) + "#artikel";
@@ -346,69 +359,118 @@
             .catch(err => {
                 console.error('Error:', err);
             });
+
+        return false;
     }
 
-    // Buka Modal Artikel
-    function openModalForCard(cardElement) {
-        const ds = cardElement.dataset;
-        const isiHtml = cardElement.querySelector('.hidden-isi-content') ? cardElement.querySelector(
-            '.hidden-isi-content').innerHTML : '';
+    // ==========================================
+    // BUKA MODAL ARTIKEL (LEBIH FLEKSIBEL & PASTI BUKA)
+    // ==========================================
+    function openModalForCard(elementData) {
+        if (!elementData) return;
 
-        document.getElementById('artTitle').innerText = ds.judul || 'Tanpa Judul';
-        document.getElementById('artPenulis').innerText = ds.penulis || 'Tim Balinesia';
-        document.getElementById('artMeta').innerText = (ds.tanggal || '') + ' • BALINESIA';
-        document.getElementById('artIsi').innerHTML = isiHtml;
-        document.getElementById('artAvatar').innerText = (ds.penulis ? ds.penulis.charAt(0) : 'A').toUpperCase();
+        let ds = {};
+        let isiHtml = '';
+
+        // Jika dipanggil dari kartu HTML
+        if (elementData instanceof HTMLElement) {
+            const cardElement = elementData.closest('.card-artikel') || elementData;
+            ds = cardElement.dataset || {};
+            isiHtml = cardElement.querySelector('.hidden-isi-content') ? cardElement.querySelector('.hidden-isi-content').innerHTML : '';
+        } else {
+            // Jika dipanggil langsung dari objek JS (Live Search)
+            ds = elementData;
+            isiHtml = elementData.isi || '';
+        }
+
+        const judulText = ds.judul || 'Tanpa Judul';
+        const penulisText = ds.penulis || 'Tim Balinesia';
+        const tanggalText = ds.tanggal || '';
+        const kategoriText = ds.kategori || 'AJARAN TETUA';
+        const badgeColorHex = ds.badgeColor || ds.badge_color || '#992B20';
+        const gambarSrc = ds.gambar || '{{ asset("images/subak.jpeg") }}';
+        const kesimpulanText = ds.kesimpulan || '';
+
+        // Tembak Data ke Elemen Overlay Modal
+        if (document.getElementById('artTitle')) document.getElementById('artTitle').innerText = judulText;
+        if (document.getElementById('artPenulis')) document.getElementById('artPenulis').innerText = penulisText;
+        if (document.getElementById('artMeta')) document.getElementById('artMeta').innerText = tanggalText + (tanggalText ? ' • BALINESIA' : 'BALINESIA');
+        if (document.getElementById('artIsi')) document.getElementById('artIsi').innerHTML = isiHtml;
+        if (document.getElementById('artAvatar')) document.getElementById('artAvatar').innerText = (penulisText ? penulisText.charAt(0) : 'A').toUpperCase();
 
         const badge = document.getElementById('artKategoriBadge');
-        badge.innerText = ds.kategori || 'AJARAN TETUA';
-        badge.style.backgroundColor = ds.badgeColor || '#992B20';
+        if (badge) {
+            badge.innerText = kategoriText;
+            badge.style.backgroundColor = badgeColorHex;
+        }
 
         const img = document.getElementById('artImage');
-        img.src = ds.gambar;
+        if (img) img.src = gambarSrc;
 
         const kesimpulanBox = document.getElementById('boxKesimpulan');
-        if (ds.kesimpulan && ds.kesimpulan.trim() !== '') {
-            kesimpulanBox.classList.remove('hidden');
-            document.getElementById('artKesimpulan').innerText = ds.kesimpulan;
-        } else {
-            kesimpulanBox.classList.add('hidden');
+        if (kesimpulanBox) {
+            if (kesimpulanText && kesimpulanText.trim() !== '') {
+                kesimpulanBox.classList.remove('hidden');
+                document.getElementById('artKesimpulan').innerText = kesimpulanText;
+            } else {
+                kesimpulanBox.classList.add('hidden');
+            }
         }
 
         const overlay = document.getElementById('overlayArtikel');
         const panel = document.getElementById('panelArtikel');
-        overlay.classList.remove('hidden');
-        setTimeout(() => {
-            overlay.classList.remove('opacity-0');
-            panel.classList.remove('translate-x-full');
-        }, 10);
+
+        // Kunci Scroll Layar
+        document.body.style.overflow = "hidden";
+        document.documentElement.style.overflow = "hidden";
+
+        // EKSEKUSI TAMPILKAN OVERLAY (FORCE SHOW)
+        if (overlay) {
+            overlay.style.display = 'block';
+            overlay.classList.remove('hidden', 'pointer-events-none', 'opacity-0');
+            overlay.classList.add('pointer-events-auto', 'opacity-100');
+        }
+        if (panel) {
+            setTimeout(() => {
+                panel.classList.remove('translate-x-full');
+            }, 10);
+        }
     }
 
-    // Tutup Modal Artikel
-    function closeArtikelModal() {
+    // TUTUP MODAL ARTIKEL (PENYATUAN FUNGSI GLOBAL)
+    function closeModalArtikelGlobal() {
         const overlay = document.getElementById('overlayArtikel');
         const panel = document.getElementById('panelArtikel');
-        panel.classList.add('translate-x-full');
-        overlay.classList.add('opacity-0');
+
+        if (panel) panel.classList.add('translate-x-full');
+
+        if (overlay) {
+            overlay.classList.remove('opacity-100', 'pointer-events-auto');
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        // Buka Scroll Kembali
+        document.body.style.removeProperty("overflow");
+        document.body.style.overflow = "auto";
+        document.documentElement.style.removeProperty("overflow");
+        document.documentElement.style.overflow = "auto";
+
         setTimeout(() => {
-            overlay.classList.add('hidden');
+            if (overlay) {
+                overlay.classList.add('hidden');
+                overlay.style.removeProperty('display');
+            }
         }, 300);
     }
+
+    // Alias Fungsi agar kompatibel jika dipanggil dengan nama berbeda
+    function closeArtikelModal() { closeModalArtikelGlobal(); }
+    function closeDetailArtikel() { closeModalArtikelGlobal(); }
 
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof feather !== 'undefined') {
             feather.replace();
         }
-
-        // Modal Event Listener pada Setiap Kartu Artikel
-        document.querySelectorAll('.js-open-modal').forEach(card => {
-            card.addEventListener('click', function(e) {
-                if (e.target.closest('button')) {
-                    return;
-                }
-                openModalForCard(this);
-            });
-        });
 
         // Filter Tab JS Action + Efek Animasi Reveal
         document.querySelectorAll('.tab-btn-action').forEach(btn => {
@@ -428,9 +490,7 @@
 
                     if (kategori === 'semua' || card.classList.contains(kategori)) {
                         card.style.display = 'flex';
-
-                        void card.offsetWidth; // Reflow DOM
-
+                        void card.offsetWidth;
                         card.classList.add('card-reveal-anim');
 
                         setTimeout(() => {
@@ -443,7 +503,7 @@
             });
         });
 
-        // AUTO-OPEN MODAL DARI HALAMAN ARSIP DISIMPAN
+        // AUTO-OPEN MODAL DARI ARSIP
         const urlParams = new URLSearchParams(window.location.search);
         const itemToOpen = urlParams.get('open');
 

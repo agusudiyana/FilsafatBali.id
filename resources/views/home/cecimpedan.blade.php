@@ -1,6 +1,5 @@
 <!-- SECTION CECIMPEDAN BALI -->
-<section id="cecimpedan"
-    class="relative py-24 overflow-hidden bg-gradient-to-b from-[#EFE3CC] via-[#E8D8B8] to-[#E2CEAA]">
+<section id="cecimpedan" class="relative py-24 overflow-hidden bg-gradient-to-b from-[#EFE3CC] via-[#E8D8B8] to-[#E2CEAA]">
 
     <div class="absolute top-0 left-0 w-full h-[1px] bg-[#E7D8B8]"></div>
 
@@ -44,7 +43,7 @@
                         }
                     @endphp
 
-                    <div class="cardCecimpedan bg-white border border-[#E4D4BF] rounded-xl p-7 hover:shadow-xl transition-all duration-500 w-[380px] flex-shrink-0 flex flex-col justify-between">
+                    <div class="cardCecimpedan bg-white border border-[#E4D4BF] rounded-xl p-7 hover:shadow-xl transition-all duration-500 w-[380px] flex-shrink-0 flex flex-col justify-between" data-id="{{ $item->id }}" data-judul="{{ strtolower($pertanyaan) }}">
 
                         <div>
                             <!-- Header Card -->
@@ -100,8 +99,11 @@
                                 </div>
                             </div>
 
-                            <!-- 3. FILOSOFI LENGKAP -->
-                            <button type="button" onclick="openFilosofiDrawer(this)"
+                            <!-- 3. FILOSOFI LENGKAP (DIBERI ID PRESISI UNTUK INTEGRASI PENCARIAN HERO) -->
+                            <button type="button" 
+                                id="btn-filosofi-cecimpedan-{{ $item->id }}"
+                                onclick="openFilosofiDrawer(this)"
+                                data-id="{{ $item->id }}"
                                 data-tingkat="TINGKAT: {{ strtoupper($tingkat) }}"
                                 data-nomor="CECIMPEDAN #{{ $nomor }}"
                                 data-teks="{{ $pertanyaan }}"
@@ -111,7 +113,7 @@
                                 data-variasi="{{ $variasi }}"
                                 data-asal="{{ $asal }}" 
                                 data-rekaman="{{ $rekaman }}"
-                                class="flex items-center gap-1.5 text-[11px] uppercase tracking-[1px] text-[#6B5A45] hover:text-[#C58A3C] transition font-semibold w-fit mt-1 cursor-pointer">
+                                class="btnFilosofiCecimpedan flex items-center gap-1.5 text-[11px] uppercase tracking-[1px] text-[#6B5A45] hover:text-[#C58A3C] transition font-semibold w-fit mt-1 cursor-pointer">
                                 <i data-feather="info" class="w-3.5 h-3.5 text-[#C58A3C] pointer-events-none"></i>
                                 <span class="pointer-events-none">Filosofi Lengkap</span>
                             </button>
@@ -159,7 +161,7 @@
                 -
             </p>
 
-            <!-- TOMBOL TAMPILKAN JAWABAN (FEATHER ICON DENGAN POINTER-EVENTS-NONE) -->
+            <!-- TOMBOL TAMPILKAN JAWABAN -->
             <button type="button" onclick="window.toggleCecimpedanPanelJawaban(this)" class="mt-6 w-full border-2 border-[#D7B88A] rounded-lg p-4 bg-[#F8F0E5] hover:bg-[#F3E6D3] active:bg-[#EBD8C1] flex justify-between items-center cursor-pointer transition relative z-50 select-none shadow-sm">
                 <span class="text-xs uppercase tracking-[2px] text-[#8B6D48] font-bold flex items-center gap-2 pointer-events-none">
                     <i data-feather="key" class="w-3.5 h-3.5 text-[#C7962B] pointer-events-none"></i>
@@ -270,6 +272,23 @@
             }
         }, 10);
     }
+
+    // FUNGSI KHUSUS PANGGILAN OTOMATIS DARI SEARCH HERO
+    window.openCecimpedanById = function(rawId, altJudul) {
+        let btn = document.getElementById('btn-filosofi-cecimpedan-' + rawId);
+        if (!btn && altJudul) {
+            const allBtns = document.querySelectorAll('.btnFilosofiCecimpedan');
+            allBtns.forEach(b => {
+                if (b.dataset.teks && b.dataset.teks.toLowerCase().includes(altJudul.toLowerCase())) {
+                    btn = b;
+                }
+            });
+        }
+
+        if (btn) {
+            openFilosofiDrawer(btn);
+        }
+    };
 
     function closeCecimpedanDrawer() {
         const overlay = document.getElementById('cecimpedanOverlayFilosofi');
