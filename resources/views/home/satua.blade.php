@@ -1,29 +1,3 @@
-<!-- CSRF TOKEN FOR AJAX -->
-<meta name="csrf-token" content="{{ csrf_token() }}">
-
-<!-- Style Khusus -->
-<style>
-    .btn-bookmark-custom {
-        cursor: pointer !important;
-        transition: all 0.25s ease-in-out;
-    }
-    .btn-bookmark-custom * {
-        pointer-events: none !important;
-    }
-    .btn-bookmark-custom[data-saved="true"] svg,
-    .btn-bookmark-custom[data-saved="true"] i {
-        fill: #C58A3C !important;
-        color: #C58A3C !important;
-        stroke: #C58A3C !important;
-    }
-    .btn-bookmark-custom[data-saved="false"] svg,
-    .btn-bookmark-custom[data-saved="false"] i {
-        fill: none !important;
-        color: #8F7A61 !important;
-        stroke: #8F7A61 !important;
-    }
-</style>
-
 <!-- ========================================== -->
 <!-- SECTION SATUA BALI                         -->
 <!-- ========================================== -->
@@ -66,11 +40,13 @@
                     $subJudul   = $item->sub_judul ?? ($item->terjemahan ?? '');
                     $gambarUrl  = !empty($item->gambar) ? asset('storage/' . $item->gambar) : asset('images/default.jpg');
                     
-                    $ringkasan  = $item->ringkasan ?? ($item->ringkasan_cerita ?? ($item->isi ?? ($item->cerita ?? '-')));
-                    $tokoh      = $item->tokoh ?? ($item->tokoh_utama ?? '-');
-                    $alur       = $item->alur ?? ($item->alur_cerita ?? '-');
-                    $moral      = $item->moral ?? ($item->nilai_moral ?? '-');
-                    $filosofi   = $item->filosofi ?? ($item->pesan_filosofi ?? '-');
+                    // PEMETAAN KOLOM DATABASE YANG TEPAT
+                    $ringkasanCard = $item->ringkasan ?? '-';  // Tampil di Cover Kartu (Taman Nasional, dll)
+                    $isiCerita     = $item->isi ?? '-';        // Tampil di dalam Overlay (Pada zaman dahulu...)
+                    $tokoh         = $item->tokoh ?? '-';      // Tampil di dalam Overlay (Jalak Bali, dll)
+                    $alur          = $item->alur ?? '-';       // Tampil di dalam Overlay
+                    $moral         = $item->moral ?? '-';      // Tampil di dalam Overlay
+                    $filosofi      = $item->filosofi ?? '-';   // Tampil di dalam Overlay
 
                     // Cek status bookmark riil dari database
                     $isSaved = auth()->check() && \App\Models\Bookmark::where('user_id', auth()->id())
@@ -85,7 +61,7 @@
                         data-nama="{{ $judulSatua }}"
                         data-latin="{{ $subJudul }}"
                         data-img="{{ $gambarUrl }}"
-                        data-ringkasan="{{ $ringkasan }}"
+                        data-isi="{{ $isiCerita }}"
                         data-tokoh="{{ $tokoh }}"
                         data-alur="{{ $alur }}"
                         data-moral="{{ $moral }}"
@@ -115,8 +91,9 @@
                                         {{ $subJudul }}
                                     </p>
                                 @endif
+                                <!-- Tampil Ringkasan di Cover Kartu -->
                                 <p class="text-[#C7B39A] mt-4 leading-7 line-clamp-3">
-                                    {{ $ringkasan }}
+                                    {{ $ringkasanCard }}
                                 </p>
                             </div>
                         </div>
@@ -180,9 +157,10 @@
         </div>
 
         <div class="p-8 space-y-8">
+            <!-- ISI CERITA UTAMA DI DALAM OVERLAY -->
             <div class="border-l-2 border-[#C58A3C] pl-4">
-                <h5 class="uppercase tracking-[4px] text-xs text-[#C58A3C] font-bold">Ringkasan Cerita</h5>
-                <p id="satuaRingkasan" class="mt-2 text-[#5F4B3A] leading-8 whitespace-pre-line"></p>
+                <h5 class="uppercase tracking-[4px] text-xs text-[#C58A3C] font-bold">Isi Cerita</h5>
+                <p id="satuaIsi" class="mt-2 text-[#5F4B3A] leading-8 whitespace-pre-line"></p>
             </div>
 
             <div class="border-l-2 border-[#8B5E3C] pl-4">
@@ -209,7 +187,7 @@
 </div>
 
 <!-- ========================================== -->
-<!-- SCRIPT JS CONTROLLER                        -->
+<!-- SCRIPT JS CONTROLLER                       -->
 <!-- ========================================== -->
 <script>
     // Status Login User
@@ -276,7 +254,7 @@
         if (secIstilah) secIstilah.classList.remove("hidden");
     }
 
-    // Open Drawer Satua via Dataset HTML
+    // Open Drawer Satua via Dataset HTML (Mengambil data-isi untuk isi cerita)
     function openSatuaCard(element) {
         if (!element) return;
         const card = element.closest('[data-nama]') || element;
@@ -288,7 +266,7 @@
         if (document.getElementById("satuaLatin")) document.getElementById("satuaLatin").innerText = ds.latin || '';
         if (document.getElementById("satuaImage")) document.getElementById("satuaImage").src = ds.img || '';
 
-        if (document.getElementById("satuaRingkasan")) document.getElementById("satuaRingkasan").innerText = ds.ringkasan || '-';
+        if (document.getElementById("satuaIsi")) document.getElementById("satuaIsi").innerText = ds.isi || '-';
         if (document.getElementById("satuaTokoh")) document.getElementById("satuaTokoh").innerText = ds.tokoh || '-';
         if (document.getElementById("satuaAlur")) document.getElementById("satuaAlur").innerText = ds.alur || '-';
         if (document.getElementById("satuaMoral")) document.getElementById("satuaMoral").innerText = ds.moral || '-';
@@ -314,7 +292,7 @@
 
         if (panel) panel.classList.add("translate-x-full");
 
-        // MEMBUKA KUNCI SCROLL (SOLUSI UTAMA FIX SCROLL MACET)
+        // MEMBUKA KUNCI SCROLL
         document.body.style.removeProperty("overflow");
         document.body.style.overflow = "auto";
         document.documentElement.style.removeProperty("overflow");
@@ -323,72 +301,6 @@
         setTimeout(() => {
             if (overlay) overlay.classList.add("hidden");
         }, 300);
-    }
-
-    // Open Drawer Istilah via Dataset HTML
-    function openIstilahCard(element) {
-        if (document.getElementById("detailTitle")) document.getElementById("detailTitle").innerText = element.dataset.title || '-';
-        if (document.getElementById("detailKategori")) document.getElementById("detailKategori").innerText = element.dataset.kategori || 'Umum';
-        if (document.getElementById("detailDesc")) document.getElementById("detailDesc").innerText = element.dataset.desc || '-';
-        if (document.getElementById("detailSejarah")) document.getElementById("detailSejarah").innerText = element.dataset.sejarah || '-';
-        if (document.getElementById("detailContoh")) document.getElementById("detailContoh").innerText = element.dataset.contoh || '-';
-        if (document.getElementById("detailPadanan")) document.getElementById("detailPadanan").innerText = element.dataset.padanan || '-';
-
-        document.body.style.overflow = "hidden";
-
-        const overlay = document.getElementById("overlay");
-        const panel = document.getElementById("detailPanel");
-
-        if (overlay) overlay.classList.remove("hidden");
-        if (panel) panel.classList.remove("translate-x-full");
-    }
-
-    function closeDetail() {
-        const overlay = document.getElementById("overlay");
-        const panel = document.getElementById("detailPanel");
-
-        if (panel) panel.classList.add("translate-x-full");
-
-        document.body.style.removeProperty("overflow");
-        document.body.style.overflow = "auto";
-        document.documentElement.style.removeProperty("overflow");
-        document.documentElement.style.overflow = "auto";
-
-        setTimeout(() => {
-            if (overlay) overlay.classList.add("hidden");
-        }, 300);
-    }
-
-    // Pencarian Istilah
-    function filterIstilahList(keyword) {
-        const query = keyword.trim().toLowerCase();
-        const btnClear = document.getElementById("btnClearSearchIstilah");
-
-        if (btnClear) {
-            if (query.length > 0) btnClear.classList.remove("hidden");
-            else btnClear.classList.add("hidden");
-        }
-
-        const items = document.querySelectorAll("#listIstilahContainer .item-istilah");
-        items.forEach(item => {
-            const judulEl = item.querySelector("h3");
-            if (judulEl) {
-                const judulText = judulEl.innerText.trim().toLowerCase();
-                if (query === "" || judulText.includes(query)) {
-                    item.style.setProperty("display", "grid", "important");
-                } else {
-                    item.style.setProperty("display", "none", "important");
-                }
-            }
-        });
-    }
-
-    function clearSearchIstilah() {
-        const input = document.getElementById("searchIstilahInput");
-        if (input) {
-            input.value = "";
-            filterIstilahList("");
-        }
     }
 
     document.addEventListener('DOMContentLoaded', function() {

@@ -18,8 +18,8 @@
             Klik kartu untuk menjawab teka-teki, atau buka detail lengkap beserta filosofi maknanya.
         </p>
 
-        <!-- Slider Card Cecimpedan -->
-        <div id="sliderWrapper" class="mt-14 overflow-x-auto scrollbar-hide scroll-smooth">
+        <!-- Slider Card Cecimpedan dengan Touch & Smooth Scroll -->
+        <div id="sliderWrapper" class="mt-14 overflow-x-auto scrollbar-hide scroll-smooth cursor-grab active:cursor-grabbing">
             <div id="cecimpedanSlider" class="flex gap-8 w-max pb-6">
 
                 @forelse($cecimpedans as $index => $item)
@@ -43,7 +43,7 @@
                         }
                     @endphp
 
-                    <div class="cardCecimpedan bg-white border border-[#E4D4BF] rounded-xl p-7 hover:shadow-xl transition-all duration-500 w-[380px] flex-shrink-0 flex flex-col justify-between" data-id="{{ $item->id }}" data-judul="{{ strtolower($pertanyaan) }}">
+                    <div class="cardCecimpedan bg-white border border-[#E4D4BF] rounded-xl p-7 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 w-[380px] flex-shrink-0 flex flex-col justify-between select-none" data-id="{{ $item->id }}" data-judul="{{ strtolower($pertanyaan) }}">
 
                         <div>
                             <!-- Header Card -->
@@ -99,7 +99,7 @@
                                 </div>
                             </div>
 
-                            <!-- 3. FILOSOFI LENGKAP (DIBERI ID PRESISI UNTUK INTEGRASI PENCARIAN HERO) -->
+                            <!-- 3. FILOSOFI LENGKAP -->
                             <button type="button" 
                                 id="btn-filosofi-cecimpedan-{{ $item->id }}"
                                 onclick="openFilosofiDrawer(this)"
@@ -212,8 +212,64 @@
     </div>
 </div>
 
-<!-- SCRIPT GLOBAL MURNI -->
+<!-- SCRIPT AUTO SLIDE 3 DETIK & INTERAKSI -->
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const wrapper = document.getElementById('sliderWrapper');
+        const cards = document.querySelectorAll('.cardCecimpedan');
+        let autoSlideTimer = null;
+        let isHovered = false;
+
+        // --- FITUR AUTO SLIDE OTOMATIS 3 DETIK ---
+        function startAutoSlide() {
+            stopAutoSlide();
+            autoSlideTimer = setInterval(() => {
+                if (!isHovered && wrapper && cards.length > 0) {
+                    const cardWidth = cards[0].offsetWidth + 32; // Lebar kartu + gap (gap-8 = 32px)
+                    const maxScrollLeft = wrapper.scrollWidth - wrapper.clientWidth;
+
+                    // Jika sudah di paling ujung kanan, kembali ke paling awal (looping)
+                    if (wrapper.scrollLeft >= maxScrollLeft - 10) {
+                        wrapper.scrollTo({ left: 0, behavior: 'smooth' });
+                    } else {
+                        wrapper.scrollBy({ left: cardWidth, behavior: 'smooth' });
+                    }
+                }
+            }, 3000); // Set interval 3 Detik (3000 ms)
+        }
+
+        function stopAutoSlide() {
+            if (autoSlideTimer) clearInterval(autoSlideTimer);
+        }
+
+        // Jalankan auto slide pertama kali
+        startAutoSlide();
+
+        // Pause auto slide jika kursor diarahkan ke slider (Hover)
+        if (wrapper) {
+            wrapper.addEventListener('mouseenter', () => {
+                isHovered = true;
+            });
+
+            wrapper.addEventListener('mouseleave', () => {
+                isHovered = false;
+            });
+
+            // Pause saat disentuh / drag di HP
+            wrapper.addEventListener('touchstart', () => {
+                isHovered = true;
+            });
+
+            wrapper.addEventListener('touchend', () => {
+                isHovered = false;
+            });
+        }
+
+        if (typeof feather !== 'undefined') {
+            feather.replace();
+        }
+    });
+
     function toggleCardAnswer(btn) {
         const card = btn.closest('.cardCecimpedan');
         const answerBox = card.querySelector('.cardAnswerContent');
@@ -320,10 +376,4 @@
             if (icon) icon.innerText = '▼';
         }
     };
-
-    document.addEventListener('DOMContentLoaded', function() {
-        if (typeof feather !== 'undefined') {
-            feather.replace();
-        }
-    });
 </script>

@@ -3,10 +3,11 @@
 @section('content')
     <div class="flex justify-between items-center mb-8">
         <div>
-            <h1 class="text-3xl font-bold text-[#1A110A]" style="font-family: 'Cormorant Garamond', serif;">
+            <!-- Font Judul Disesuaikan Sesuai Gambar Acuan -->
+            <h1 class="text-3xl font-bold text-[#2C221E] tracking-tight">
                 Verifikasi Satua Bali
             </h1>
-            <p class="text-gray-500 text-sm mt-1">
+            <p class="text-[#6B635B] text-sm mt-1">
                 Kelola dan lakukan verifikasi karya naskah Satua Bali yang diajukan oleh Penulis.
             </p>
         </div>
@@ -15,12 +16,12 @@
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
-                <thead class="bg-[#F5E9D7] text-[#1A110A] text-xs uppercase font-semibold">
+                <thead class="bg-[#F5E9D7] text-[#2C221E] text-xs uppercase font-semibold">
                     <tr>
                         <th class="p-4 text-center w-12">No</th>
                         <th class="p-4">Judul Satua</th>
-                        <th class="p-4">Penulis </th>
-                        <th class="p-4">Sub Judul </th>
+                        <th class="p-4">Penulis</th>
+                        <th class="p-4">Sub Judul</th>
                         <th class="p-4 text-center">Status</th>
                         <th class="p-4 text-center">Aksi Verifikasi</th>
                     </tr>
@@ -32,7 +33,7 @@
                                 {{ $loop->iteration }}
                             </td>
 
-                            <td class="p-4 font-semibold text-[#1A110A]">
+                            <td class="p-4 font-semibold text-[#2C221E]">
                                 {{ $satua->judul ?? ($satua->nama ?? '-') }}
                             </td>
 
@@ -68,11 +69,11 @@
                                 @endif
                             </td>
 
-                            <!-- Bagian Tombol Aksi Verifikasi Ikon -->
+                            <!-- Bagian Tombol Aksi Verifikasi -->
                             <td class="p-4 text-center">
                                 <div class="flex items-center justify-center gap-3">
 
-                                    <!-- 1. Tombol Detail (Mata Biru) -->
+                                    <!-- 1. Tombol Detail -->
                                     <a href="{{ route('admin.verifikasi.satua.detail', $satua->id) }}"
                                         title="Detail Verifikasi"
                                         class="p-1.5 text-sky-600 hover:text-sky-800 hover:bg-sky-50 rounded-lg transition transform hover:scale-105">
@@ -86,7 +87,7 @@
                                     </a>
 
                                     @if (($satua->status ?? 'pending') == 'pending')
-                                        <!-- 2. Tombol Setujui (Centang Hijau) -->
+                                        <!-- 2. Tombol Setujui -->
                                         <form action="{{ route('admin.verifikasi.satua.setujui', $satua->id) }}"
                                             method="POST" class="inline">
                                             @csrf
@@ -102,7 +103,7 @@
                                             </button>
                                         </form>
 
-                                        <!-- 3. Tombol Tolak (Silang Merah) -->
+                                        <!-- 3. Tombol Tolak -->
                                         <form action="{{ route('admin.verifikasi.satua.tolak', $satua->id) }}"
                                             method="POST" class="inline">
                                             @csrf
@@ -131,8 +132,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                             d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                                     </svg>
-                                    <span class="font-medium text-sm">Belum ada kiriman Satua Bali yang perlu
-                                        diverifikasi.</span>
+                                    <span class="font-medium text-sm">Belum ada kiriman Satua Bali yang perlu diverifikasi.</span>
                                 </div>
                             </td>
                         </tr>

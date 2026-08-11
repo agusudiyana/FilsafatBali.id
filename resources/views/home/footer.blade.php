@@ -116,22 +116,15 @@
                 © 2026 FILSAFATBALI.ID — HAK CIPTA DILINDUNGI
 
             </p>
-
             <div class="flex gap-8 mt-6 md:mt-0">
 
-                <a href="#" class="text-[#7F6B56] text-[12px] uppercase tracking-[2px] hover:text-[#D9B35D]">
-
+                <span class="text-[#7F6B56] text-[12px] uppercase tracking-[2px] cursor-default select-none">
                     Bahasa Bali
+                </span>
 
-                </a>
-
-                <a href="#" class="text-[#7F6B56] text-[12px] uppercase tracking-[2px] hover:text-[#D9B35D]">
-
+                <span class="text-[#7F6B56] text-[12px] uppercase tracking-[2px] cursor-default select-none">
                     Indonesia
-
-                </a>
-
-
+                </span>
 
             </div>
 

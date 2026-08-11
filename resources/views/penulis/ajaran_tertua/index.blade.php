@@ -1,9 +1,12 @@
 @extends('penulis.layouts.app')
 
 @section('content')
-    <div class="p-8">
-        <!-- Header & Tombol Tambah -->
-        <div class="flex justify-between items-center mb-6">
+<!-- Container Utama: Mengunci tinggi area konten agar halaman tidak memiliki scrollbar luar -->
+<div class="max-w-7xl mx-auto px-4 py-4 flex flex-col h-[calc(100vh-100px)]">
+
+    <!-- HEADER HALAMAN & TOMBOL TAMBAH (DIAM DI TEMPAT / TIDAK DI-SCROLL) -->
+    <div class="flex-none">
+        <div class="flex justify-between items-center mb-6 border-b border-[#EFE3D3] pb-4">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900">Data Ajaran Tertua</h1>
                 <p class="text-sm text-gray-600 mt-1">Daftar Sorotan Ajaran Tertua yang telah Anda kirim.</p>
@@ -22,48 +25,57 @@
                 {{ session('success') }}
             </div>
         @endif
+    </div>
 
-        <!-- Card Container Utama Tabel -->
-        <div class="bg-[#FBF6EE] border border-[#EFE3D3] rounded-2xl shadow-sm overflow-hidden">
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="text-gray-900 text-sm font-bold bg-[#F7EFE5] border-b border-[#EFE3D3]">
-                            <th class="py-4 px-6 w-16 text-center">No</th>
-                            <th class="py-4 px-6">Judul Ajaran</th>
-                            <th class="py-4 px-6">Penulis</th>
-                            <th class="py-4 px-6 text-center">Status</th>
-                            <th class="py-4 px-6 text-center w-32">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-[#EFE3D3] bg-white text-sm">
-                        @forelse($ajaranTertua as $index => $item)
-                            <tr class="hover:bg-[#FFFDF9] transition-colors">
-                                <td class="py-4 px-6 font-semibold text-gray-800 text-center">{{ $index + 1 }}</td>
-                                <td class="py-4 px-6 font-bold text-gray-900">{{ $item->judul }}</td>
-                                <td class="py-4 px-6 text-gray-700 font-medium">{{ $item->user->name ?? 'Penulis' }}</td>
-                                <td class="py-4 px-6 text-center">
-                                    {{-- Badge Status --}}
-                                    @if(($item->status ?? 'pending') == 'pending')
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#FFF8E1] text-[#B78103] border border-[#FFE8A3]">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                            </svg>
-                                            Pending
-                                        </span>
-                                    @elseif(($item->status ?? '') == 'disetujui')
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700 border border-green-200">
-                                            Disetujui
-                                        </span>
-                                    @else
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
-                                            Ditolak
-                                        </span>
-                                    @endif
-                                </td>
-                                <td class="py-4 px-6">
+    <!-- HANYA TABEL YANG BISA DI-SCROLL (AREA INTERNAL SCROLL) -->
+    <div class="flex-1 bg-[#FBF6EE] border border-[#EFE3D3] rounded-2xl shadow-sm overflow-hidden flex flex-col min-h-0">
+        <div id="table-scroll-container" class="overflow-y-auto overflow-x-auto flex-1">
+            <table class="w-full text-left border-collapse">
+                <!-- Header Tabel Terkunci di Atas -->
+                <thead class="sticky top-0 z-10 shadow-sm">
+                    <tr class="text-gray-900 text-sm font-bold bg-[#F7EFE5] border-b border-[#EFE3D3]">
+                        <th class="py-4 px-6 w-16 text-center">No</th>
+                        <th class="py-4 px-6">Judul Ajaran</th>
+                        <th class="py-4 px-6">Penulis</th>
+                        <th class="py-4 px-6 text-center">Status</th>
+                        <th class="py-4 px-6 text-center w-36">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-[#EFE3D3] bg-white text-sm">
+                    @forelse($ajaranTertua as $index => $item)
+                        <tr class="hover:bg-[#FFFDF9] transition-colors">
+                            <td class="py-4 px-6 font-semibold text-gray-800 text-center">{{ $index + 1 }}</td>
+                            <td class="py-4 px-6 font-bold text-gray-900">{{ $item->judul }}</td>
+                            <td class="py-4 px-6 text-gray-700 font-medium">{{ $item->user->name ?? 'Penulis' }}</td>
+                            <td class="py-4 px-6 text-center">
+                                {{-- Badge Status --}}
+                                @if(($item->status ?? 'pending') == 'pending')
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#FFF8E1] text-[#B78103] border border-[#FFE8A3]">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                        Pending
+                                    </span>
+                                @elseif(($item->status ?? '') == 'disetujui')
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700 border border-green-200">
+                                        Disetujui
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
+                                        Ditolak
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                {{-- LOGIKA TERKUNCI JIKA STATUS DISETUJUI --}}
+                                @if(($item->status ?? '') == 'disetujui')
+                                    <div class="text-xs italic text-gray-500 leading-tight">
+                                        <div>Terkunci</div>
+                                        <div>(Disetujui)</div>
+                                    </div>
+                                @else
                                     <div class="flex items-center justify-center gap-2">
-                                        <!-- Tombol Edit Oranye Keemasan (Pensil Garis Tipis Miring / Outline Stroke) -->
+                                        <!-- Tombol Edit -->
                                         <a href="{{ route('penulis.ajaran-tertua.edit', $item->id) }}"
                                             class="w-8 h-8 bg-[#D88E00] hover:bg-[#b57700] text-white rounded-xl flex items-center justify-center transition shadow-sm"
                                             title="Edit">
@@ -72,7 +84,7 @@
                                             </svg>
                                         </a>
 
-                                        <!-- Tombol Hapus Merah -->
+                                        <!-- Tombol Hapus -->
                                         <form action="{{ route('penulis.ajaran-tertua.destroy', $item->id) }}" method="POST"
                                             onsubmit="return confirm('Yakin ingin menghapus ajaran ini?')">
                                             @csrf
@@ -86,18 +98,19 @@
                                             </button>
                                         </form>
                                     </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="py-8 text-center text-gray-500 bg-white">
-                                    Belum ada data Ajaran Tertua yang ditambahkan.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                                @endif
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="py-8 text-center text-gray-500 bg-white">
+                                Belum ada data Ajaran Tertua yang ditambahkan.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
 @endsection

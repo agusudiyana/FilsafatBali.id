@@ -1,4 +1,4 @@
-<div class="bg-white border-b border-gray-100 px-8 py-4 flex justify-between items-center">
+<div class="bg-white border-b border-gray-100 px-8 py-4 flex justify-between items-center sticky top-0 z-40 shadow-sm">
 
     <!-- Judul Halaman / Dashboard -->
     <div>

@@ -44,7 +44,7 @@
 
         <h2 class="text-[66px] leading-[0.95] font-semibold mb-12 text-[#F7F1E8]"
             style="font-family:'Cormorant Garamond',serif;">
-            Ajaran Tetua
+            Ajaran Tetua Bali 
         </h2>
 
         @php

@@ -9,6 +9,7 @@ use App\Models\Cecimpedan;
 use App\Models\Satua;
 use App\Models\Istilah;
 use App\Models\User;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -36,6 +37,58 @@ class AdminController extends Controller
             'totalPenulis',
             'totalPengguna'
         ));
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | MANAJEMEN KELOLA STATISTIK BANNER LANDING PAGE
+    |--------------------------------------------------------------------------
+    */
+
+    public function statistik(): View
+    {
+        // 1. Hitung Data Otomatis dari Database
+        $realAjaran       = AjaranTertua::count() + Artikel::count(); 
+        $realCecimpedan   = Cecimpedan::count();
+        $realSatua        = Satua::count();
+        $realIstilah      = Istilah::count();
+        $realKontributor  = User::where('role', 'penulis')->count();
+        
+        // Hitung Total Data Terverifikasi (Status 'disetujui')
+        $realTerverifikasi = AjaranTertua::where('status', 'disetujui')->count() +
+                             Artikel::where('status', 'disetujui')->count() +
+                             Cecimpedan::where('status', 'disetujui')->count() +
+                             Filsafat::where('status', 'disetujui')->count() +
+                             Satua::where('status', 'disetujui')->count() +
+                             Istilah::where('status', 'disetujui')->count();
+
+        // 2. Ambil Nilai Penyesuaian/Offset dari Tabel Settings
+        $settings = Setting::pluck('value', 'key')->toArray();
+
+        return view('admin.statistik.index', compact(
+            'realAjaran', 
+            'realCecimpedan', 
+            'realSatua', 
+            'realIstilah', 
+            'realKontributor', 
+            'realTerverifikasi', 
+            'settings'
+        ));
+    }
+
+    public function updateStatistik(Request $request): RedirectResponse
+    {
+        $data = $request->except('_token');
+
+        // Simpan/Update Nilai ke Tabel Settings
+        foreach ($data as $key => $value) {
+            Setting::updateOrCreate(
+                ['key' => $key], 
+                ['value' => $value ?? '0']
+            );
+        }
+
+        return redirect()->back()->with('success', 'Angka statistik banner berhasil diperbarui!');
     }
 
     /*

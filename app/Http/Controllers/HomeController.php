@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 use App\Models\Artikel;
 use App\Models\Cecimpedan;
 use App\Models\Satua;
@@ -10,12 +11,13 @@ use App\Models\Istilah;
 use App\Models\AjaranTertua;
 use App\Models\Filsafat;
 use App\Models\User;
+use App\Models\Setting;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        // 1. Ambil data utama yang berstatus 'disetujui'
+        // 1. Ambil data utama yang berstatus 'disetujui' dari database
         $ajarans = AjaranTertua::where('status', 'disetujui')->latest()->get();
         $artikels = Artikel::where('status', 'disetujui')->latest()->get();
         $cecimpedans = Cecimpedan::where('status', 'disetujui')->latest()->get();
@@ -23,18 +25,41 @@ class HomeController extends Controller
         $istilahs = Istilah::where('status', 'disetujui')->latest()->get();
         $filsafats = Filsafat::where('status', 'disetujui')->latest()->get();
 
-        // 2. Hitung total jumlah data untuk Counter Statistik Dinamis
-        $totalAjaran = $ajarans->count();
-        $totalCecimpedan = $cecimpedans->count();
-        $totalSatua = $satuas->count();
-        $totalIstilah = $istilahs->count();
+        // 2. Ambil nilai setting yang diinput manual oleh Admin (aman jika tabel belum ada)
+        $settings = [];
+        if (Schema::hasTable('settings')) {
+            $settings = Setting::pluck('value', 'key')->toArray();
+        }
+
+        // 3. Tentukan Angka Total yang Ditampilkan:
+        // Prioritas 1: Angka manual yang diinput Admin di Form Kelola Statistik
+        // Prioritas 2 (Fallback): Hitungan asli dari database jika admin belum mengisinya
+        $totalAjaran = isset($settings['total_ajaran_tetua']) && $settings['total_ajaran_tetua'] !== '' 
+            ? (int) $settings['total_ajaran_tetua'] 
+            : ($ajarans->count() + $artikels->count());
+
+        $totalCecimpedan = isset($settings['total_cecimpedan']) && $settings['total_cecimpedan'] !== '' 
+            ? (int) $settings['total_cecimpedan'] 
+            : $cecimpedans->count();
+
+        $totalSatua = isset($settings['total_satua_bali']) && $settings['total_satua_bali'] !== '' 
+            ? (int) $settings['total_satua_bali'] 
+            : $satuas->count();
+
+        $totalIstilah = isset($settings['total_istilah_bali']) && $settings['total_istilah_bali'] !== '' 
+            ? (int) $settings['total_istilah_bali'] 
+            : $istilahs->count();
+
         $totalFilsafat = $filsafats->count();
 
-        // 3. Hitung total data terverifikasi
-        $totalTerverifikasi = $totalAjaran + $totalCecimpedan + $totalSatua + $totalIstilah + $totalFilsafat + $artikels->count();
+        $realTerverifikasi = $ajarans->count() + $cecimpedans->count() + $satuas->count() + $istilahs->count() + $filsafats->count() + $artikels->count();
+        $totalTerverifikasi = isset($settings['total_terverifikasi']) && $settings['total_terverifikasi'] !== '' 
+            ? (int) $settings['total_terverifikasi'] 
+            : $realTerverifikasi;
 
-        // 4. Hitung total kontributor (User)
-        $totalKontributor = User::count();
+        $totalKontributor = isset($settings['total_kontributor']) && $settings['total_kontributor'] !== '' 
+            ? (int) $settings['total_kontributor'] 
+            : User::where('role', 'penulis')->count();
 
         return view('home', compact(
             'ajarans',
@@ -67,7 +92,7 @@ class HomeController extends Controller
 
         $results = collect();
 
-        // 1. Cari Satua Bali (Mencakup semua kemungkinan nama kolom)
+        // 1. Cari Satua Bali
         try {
             $satuas = Satua::where(function ($q) use ($query) {
                 $q->where('judul', 'LIKE', "%{$query}%")

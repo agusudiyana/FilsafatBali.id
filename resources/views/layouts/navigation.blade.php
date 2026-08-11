@@ -11,114 +11,134 @@
                 </div>
             </div>
 
-            <!-- Settings Dropdown -->
+            <!-- Settings Dropdown / Auth Check -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button
-                            class="inline-flex items-center gap-2.5 px-3 py-2 border border-[#E5D6BF] text-sm leading-4 font-medium rounded-xl text-[#2B1A0E] bg-[#FAF6F0] hover:border-[#9B3B24] focus:outline-none transition ease-in-out duration-150">
-                            <!-- Avatar Pengguna -->
-                            <div class="w-7 h-7 rounded-full bg-[#EFE4D3] overflow-hidden flex items-center justify-center text-[#9B3B24] font-bold text-xs shrink-0"
-                                style="font-family:'Cormorant Garamond',serif;">
-                                @if (isset(Auth::user()->avatar) && Auth::user()->avatar)
-                                    <img src="{{ asset('storage/' . Auth::user()->avatar) }}"
-                                        alt="{{ Auth::user()->name }}" class="w-full h-full object-cover">
-                                @else
-                                    {{ substr(Auth::user()->name, 0, 1) }}
-                                @endif
+                @auth
+                    <x-dropdown align="right" width="48">
+                        <x-slot name="trigger">
+                            <button
+                                class="inline-flex items-center gap-2.5 px-3 py-2 border border-[#E5D6BF] text-sm leading-4 font-medium rounded-xl text-[#2B1A0E] bg-[#FAF6F0] hover:border-[#9B3B24] focus:outline-none transition ease-in-out duration-150">
+                                <!-- Avatar Pengguna -->
+                                <div class="w-7 h-7 rounded-full bg-[#EFE4D3] overflow-hidden flex items-center justify-center text-[#9B3B24] font-bold text-xs shrink-0"
+                                    style="font-family:'Cormorant Garamond',serif;">
+                                    @if (isset(Auth::user()->avatar) && Auth::user()->avatar)
+                                        <img src="{{ asset('storage/' . Auth::user()->avatar) }}"
+                                            alt="{{ Auth::user()->name }}" class="w-full h-full object-cover">
+                                    @else
+                                        {{ substr(Auth::user()->name, 0, 1) }}
+                                    @endif
+                                </div>
+
+                                <div>{{ Auth::user()->name }}</div>
+
+                                <div class="ms-1">
+                                    <svg class="fill-current h-4 w-4 text-[#7A624A]" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </button>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <div class="px-4 py-2 border-b border-[#F3ECE1]">
+                                <p class="text-[10px] text-gray-400 uppercase tracking-wider">Pengguna</p>
+                                <p class="font-bold text-[#2B1A0E] truncate text-xs">{{ Auth::user()->name }}</p>
                             </div>
 
-                            <div>{{ Auth::user()->name }}</div>
-
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4 text-[#7A624A]" xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-                        <div class="px-4 py-2 border-b border-[#F3ECE1]">
-                            <p class="text-[10px] text-gray-400 uppercase tracking-wider">Pengguna</p>
-                            <p class="font-bold text-[#2B1A0E] truncate text-xs">{{ Auth::user()->name }}</p>
-                        </div>
-
-                        <x-dropdown-link :href="route('profile.edit')">
-                            ⚙️ {{ __('Pengaturan Profil') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault();
-                                                this.closest('form').submit();"
-                                class="text-red-600 hover:bg-red-50">
-                                🚪 {{ __('Keluar') }}
+                            <x-dropdown-link :href="route('profile.edit')">
+                                ⚙️ {{ __('Pengaturan Profil') }}
                             </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
+
+                            <!-- Authentication -->
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+
+                                <x-dropdown-link :href="route('logout')"
+                                    onclick="event.preventDefault();
+                                            this.closest('form').submit();"
+                                    class="text-red-600 hover:bg-red-50">
+                                    🚪 {{ __('Keluar') }}
+                                </x-dropdown-link>
+                            </form>
+                        </x-slot>
+                    </x-dropdown>
+                @else
+                    <!-- Tampilan Tombol Masuk/Daftar Jika Tamu Belum Login -->
+                    <div class="flex items-center gap-3">
+                        <a href="{{ route('login') }}" class="text-xs uppercase tracking-widest font-bold text-[#9B3B24] hover:underline px-3 py-2">
+                            Masuk
+                        </a>
+                        <a href="{{ route('register') }}" class="px-4 py-2 bg-[#9B3B24] text-white rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-[#2B1A0E] transition">
+                            Daftar
+                        </a>
+                    </div>
+                @endauth
             </div>
 
             <!-- Hamburger (Tampilan Mobile) -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open"
-                    class="inline-flex items-center justify-center p-2 rounded-md text-[#7A624A] hover:text-[#9B3B24] hover:bg-[#FAF6F0] focus:outline-none transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
-                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round"
-                            stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
+            @auth
+                <div class="-me-2 flex items-center sm:hidden">
+                    <button @click="open = ! open"
+                        class="inline-flex items-center justify-center p-2 rounded-md text-[#7A624A] hover:text-[#9B3B24] hover:bg-[#FAF6F0] focus:outline-none transition duration-150 ease-in-out">
+                        <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                            <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                            <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            @else
+                <div class="flex items-center sm:hidden gap-2">
+                    <a href="{{ route('login') }}" class="text-xs uppercase tracking-widest font-bold text-[#9B3B24]">Masuk</a>
+                </div>
+            @endauth
         </div>
     </div>
 
     <!-- Responsive Navigation Menu (Mobile) -->
-    <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden bg-[#FAF6F0] border-t border-[#E5D6BF]">
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-[#E5D6BF]">
-            <div class="px-4 flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-[#EFE4D3] border border-[#E5D6BF] overflow-hidden flex items-center justify-center text-[#9B3B24] font-bold text-sm shrink-0"
-                    style="font-family:'Cormorant Garamond',serif;">
-                    @if (isset(Auth::user()->avatar) && Auth::user()->avatar)
-                        <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}"
-                            class="w-full h-full object-cover">
-                    @else
-                        {{ substr(Auth::user()->name, 0, 1) }}
-                    @endif
+    @auth
+        <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden bg-[#FAF6F0] border-t border-[#E5D6BF]">
+            <!-- Responsive Settings Options -->
+            <div class="pt-4 pb-1 border-t border-[#E5D6BF]">
+                <div class="px-4 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-[#EFE4D3] border border-[#E5D6BF] overflow-hidden flex items-center justify-center text-[#9B3B24] font-bold text-sm shrink-0"
+                        style="font-family:'Cormorant Garamond',serif;">
+                        @if (isset(Auth::user()->avatar) && Auth::user()->avatar)
+                            <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}"
+                                class="w-full h-full object-cover">
+                        @else
+                            {{ substr(Auth::user()->name, 0, 1) }}
+                        @endif
+                    </div>
+                    <div>
+                        <div class="font-bold text-base text-[#2B1A0E]">{{ Auth::user()->name }}</div>
+                        <div class="font-medium text-xs text-[#7A624A]">{{ Auth::user()->email }}</div>
+                    </div>
                 </div>
-                <div>
-                    <div class="font-bold text-base text-[#2B1A0E]">{{ Auth::user()->name }}</div>
-                    <div class="font-medium text-xs text-[#7A624A]">{{ Auth::user()->email }}</div>
-                </div>
-            </div>
 
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    ⚙️ {{ __('Pengaturan Profil') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                        onclick="event.preventDefault();
-                                        this.closest('form').submit();"
-                        class="text-red-600">
-                        🚪 {{ __('Keluar') }}
+                <div class="mt-3 space-y-1">
+                    <x-responsive-nav-link :href="route('profile.edit')">
+                        ⚙️ {{ __('Pengaturan Profil') }}
                     </x-responsive-nav-link>
-                </form>
+
+                    <!-- Authentication -->
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+
+                        <x-responsive-nav-link :href="route('logout')"
+                            onclick="event.preventDefault();
+                                    this.closest('form').submit();"
+                            class="text-red-600">
+                            🚪 {{ __('Keluar') }}
+                        </x-responsive-nav-link>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+    @endauth
 </nav>

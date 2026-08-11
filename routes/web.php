@@ -77,6 +77,10 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
 
+        // MANAJEMEN KELOLA STATISTIK BANNER LANDING PAGE
+        Route::get('/statistik', [AdminController::class, 'statistik'])->name('admin.statistik.index');
+        Route::post('/statistik', [AdminController::class, 'updateStatistik'])->name('admin.statistik.update');
+
         // MANAJEMEN USER (Penulis & Pengguna)
         Route::get('/penulis', [AdminController::class, 'kelolaPenulis'])->name('admin.penulis.index');
         Route::get('/pengguna', [AdminController::class, 'kelolaPengguna'])->name('admin.pengguna.index');
