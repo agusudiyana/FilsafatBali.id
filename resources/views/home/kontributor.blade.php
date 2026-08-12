@@ -1,33 +1,34 @@
 <section id="kontributor" class="bg-[#F7F0E7] py-24">
 
-        <div class="max-w-7xl mx-auto px-8">
+    <div class="max-w-7xl mx-auto px-8">
 
-            <!-- Judul -->
-            <div class="text-center">
+        <!-- Judul -->
+        <div class="text-center">
 
-                <p class="uppercase tracking-[6px] text-[#C58A3C] text-xs">
-                    — BERGABUNG BERSAMA
-                </p>
+            <p class="uppercase tracking-[6px] text-[#C58A3C] text-xs">
+                — BERGABUNG BERSAMA
+            </p>
 
-                <h2 style="font-family:'Cormorant Garamond',serif;" class="text-[64px] font-bold text-[#23160E] mt-4">
+            <h2 style="font-family:'Cormorant Garamond',serif;" class="text-[64px] font-bold text-[#23160E] mt-4">
 
-                    Pilih Peran Anda
+                Pilih Peran Anda
 
-                </h2>
+            </h2>
 
-                <p class="mt-4 text-[#6E5C4B] text-lg max-w-2xl mx-auto leading-8">
-                    Setiap anggota komunitas memiliki peran penting dalam menjaga
-                    warisan budaya Bali.
-                </p>
+            <p class="mt-4 text-[#6E5C4B] text-lg max-w-2xl mx-auto leading-8">
+                Setiap anggota komunitas memiliki peran penting dalam menjaga
+                warisan budaya Bali.
+            </p>
 
-            </div>
+        </div>
 
-            <!-- CARD -->
-            <div class="grid lg:grid-cols-3 gap-8 mt-16">
+        <!-- CARD -->
+        <div class="grid lg:grid-cols-3 gap-8 mt-16">
 
-                <!-- ================= PENGGUNA ================= -->
-                <div class="bg-white rounded-xl border border-[#E7D5C2] p-8">
+            <!-- ================= PENGGUNA ================= -->
+            <div class="bg-white rounded-xl border border-[#E7D5C2] p-8 flex flex-col justify-between">
 
+                <div>
                     <div class="flex items-center gap-4">
 
                         <div class="w-12 h-12 rounded-lg bg-[#F4E5D8] flex items-center justify-center">
@@ -58,24 +59,26 @@
                         <li>● Notifikasi artikel terbaru</li>
 
                     </ul>
-
-                    <a href="/register"
-                        class="mt-10 block text-center border border-[#9B3B24] text-[#9B3B24] rounded-md py-3 hover:bg-[#9B3B24] hover:text-white transition">
-
-                        Daftar Gratis
-
-                    </a>
-
                 </div>
 
-                <!-- ================= PENULIS ================= -->
-                <div class="relative bg-white rounded-xl border-2 border-[#C48D2D] shadow-xl p-8">
+                <a href="{{ route('register') }}"
+                    class="mt-10 block text-center border border-[#9B3B24] text-[#9B3B24] rounded-md py-3 hover:bg-[#9B3B24] hover:text-white font-semibold transition">
 
-                    <span
-                        class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#C48D2D] text-white text-[10px] uppercase tracking-[3px] px-4 py-1 rounded-full">
-                        Populer
-                    </span>
+                    Daftar Gratis
 
+                </a>
+
+            </div>
+
+            <!-- ================= PENULIS ================= -->
+            <div class="relative bg-white rounded-xl border-2 border-[#C48D2D] shadow-xl p-8 flex flex-col justify-between">
+
+                <span
+                    class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#C48D2D] text-white text-[10px] uppercase tracking-[3px] px-4 py-1 rounded-full font-bold">
+                    Populer
+                </span>
+
+                <div>
                     <div class="flex items-center gap-4">
 
                         <div class="w-12 h-12 rounded-lg bg-[#F8EBD2] flex items-center justify-center">
@@ -106,19 +109,21 @@
                         <li>● Lencana kontributor</li>
 
                     </ul>
-
-                    <a href="{{ route('login') }}"
-                        class="mt-10 block text-center bg-[#C48D2D] text-white rounded-md py-3 hover:bg-[#B27C20] transition">
-
-                        Jadi Penulis
-
-                    </a>
-
                 </div>
 
-                <!-- ================= ADMIN ================= -->
-                <div class="bg-white rounded-xl border border-[#E7D5C2] p-8">
+                <a href="{{ route('register', ['role' => 'penulis']) }}"
+                    class="mt-10 block text-center bg-[#C48D2D] text-white rounded-md py-3 hover:bg-[#B27C20] font-semibold transition shadow-md">
 
+                    Jadi Penulis
+
+                </a>
+
+            </div>
+
+            <!-- ================= ADMIN ================= -->
+            <div class="bg-white rounded-xl border border-[#E7D5C2] p-8 flex flex-col justify-between">
+
+                <div>
                     <div class="flex items-center gap-4">
 
                         <div class="w-12 h-12 rounded-lg bg-[#E8E8E8] flex items-center justify-center">
@@ -149,18 +154,19 @@
                         <li>● Analitik platform</li>
 
                     </ul>
-
-                    <a href="/login"
-                        class="mt-10 block text-center border border-[#385274] text-[#385274] rounded-md py-3 hover:bg-[#385274] hover:text-white transition">
-
-                        Hubungi Kami
-
-                    </a>
-
                 </div>
+
+                <a href="{{ route('login') }}"
+                    class="mt-10 block text-center border border-[#385274] text-[#385274] rounded-md py-3 hover:bg-[#385274] hover:text-white font-semibold transition">
+
+                    Hubungi Kami
+
+                </a>
 
             </div>
 
         </div>
 
-    </section>
+    </div>
+
+</section>

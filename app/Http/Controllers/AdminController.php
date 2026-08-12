@@ -47,14 +47,12 @@ class AdminController extends Controller
 
     public function statistik(): View
     {
-        // 1. Hitung Data Otomatis dari Database
-        $realAjaran       = AjaranTertua::count() + Artikel::count(); 
-        $realCecimpedan   = Cecimpedan::count();
-        $realSatua        = Satua::count();
-        $realIstilah      = Istilah::count();
-        $realKontributor  = User::where('role', 'penulis')->count();
+        $realAjaran        = AjaranTertua::count() + Artikel::count(); 
+        $realCecimpedan    = Cecimpedan::count();
+        $realSatua         = Satua::count();
+        $realIstilah       = Istilah::count();
+        $realKontributor   = User::where('role', 'penulis')->count();
         
-        // Hitung Total Data Terverifikasi (Status 'disetujui')
         $realTerverifikasi = AjaranTertua::where('status', 'disetujui')->count() +
                              Artikel::where('status', 'disetujui')->count() +
                              Cecimpedan::where('status', 'disetujui')->count() +
@@ -62,7 +60,6 @@ class AdminController extends Controller
                              Satua::where('status', 'disetujui')->count() +
                              Istilah::where('status', 'disetujui')->count();
 
-        // 2. Ambil Nilai Penyesuaian/Offset dari Tabel Settings
         $settings = Setting::pluck('value', 'key')->toArray();
 
         return view('admin.statistik.index', compact(
@@ -80,7 +77,6 @@ class AdminController extends Controller
     {
         $data = $request->except('_token');
 
-        // Simpan/Update Nilai ke Tabel Settings
         foreach ($data as $key => $value) {
             Setting::updateOrCreate(
                 ['key' => $key], 
@@ -99,7 +95,6 @@ class AdminController extends Controller
 
     public function verifikasiAjaran(): View
     {
-        // Murni hanya mengambil data Artikel biasa (Ajaran) yang pending
         $ajaran = Artikel::where('status', 'pending')->latest()->get();
 
         return view('admin.verifikasi.artikel', compact('ajaran'));
@@ -220,7 +215,7 @@ class AdminController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | VERIFIKASI CECIMPEDAN (KHUSUS FITUR MANDIRI)
+    | VERIFIKASI CECIMPEDAN
     |--------------------------------------------------------------------------
     */
 
@@ -258,7 +253,7 @@ class AdminController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | VERIFIKASI SATUA BALI (KHUSUS FITUR MANDIRI)
+    | VERIFIKASI SATUA BALI
     |--------------------------------------------------------------------------
     */
 
@@ -296,7 +291,7 @@ class AdminController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | VERIFIKASI ISTILAH BALI (KHUSUS FITUR MANDIRI)
+    | VERIFIKASI ISTILAH BALI
     |--------------------------------------------------------------------------
     */
 
@@ -350,5 +345,33 @@ class AdminController extends Controller
         $pengguna = User::where('role', 'pengguna')->latest()->paginate(10);
 
         return view('admin.manajemen.pengguna', compact('pengguna'));
+    }
+
+    /**
+     * Menyetujui/memverifikasi akun penulis (is_verified -> 1)
+     */
+    public function setujuiPenulis(int $id): RedirectResponse
+    {
+        $author = User::where('role', 'penulis')->findOrFail($id);
+        
+        $author->update([
+            'is_verified' => 1,
+        ]);
+
+        return redirect()->back()->with('status', "Akun Penulis '{$author->name}' berhasil disetujui (Aktif)!");
+    }
+
+    /**
+     * Menolak pendaftaran penulis (is_verified -> 2)
+     */
+    public function tolakPenulis(int $id): RedirectResponse
+    {
+        $author = User::where('role', 'penulis')->findOrFail($id);
+        
+        $author->update([
+            'is_verified' => 2,
+        ]);
+
+        return redirect()->back()->with('status', "Pendaftaran Penulis '{$author->name}' berhasil ditolak.");
     }
 }

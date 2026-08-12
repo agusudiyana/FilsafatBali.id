@@ -1,104 +1,113 @@
-<div class="bg-white border-b border-gray-100 px-8 py-4 flex justify-between items-center sticky top-0 z-40 shadow-sm">
+<header class="relative bg-[#52130D] border-b border-[#3D0C07] px-8 py-3.5 flex justify-end items-center z-40" x-data="{ open: false }">
 
-    <!-- Judul Halaman / Dashboard -->
-    <div>
-        <h2 class="text-2xl font-bold text-[#1A110A]">
-            Dashboard
-        </h2>
-        <p class="text-gray-500 text-sm">
-            Selamat datang di Panel Admin
-        </p>
+    <!-- 1. ORNAMEN RANTING POHON ELEGAN (SISI KIRI) -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden">
+        <svg class="absolute top-0 left-0 h-full w-[80%] sm:w-[65%] md:w-[55%]" viewBox="0 0 700 100" preserveAspectRatio="none">
+            <g fill="#1A110A" stroke="none">
+                <path d="M0,0 L600,0 C500,8 400,18 310,28 C220,38 120,65 0,100 Z" />
+                <path d="M180,38 C280,32 380,24 480,18 C540,14 610,12 670,2 C600,8 520,12 450,20 C360,28 260,38 160,52 Z" opacity="0.95" />
+                <path d="M90,70 C180,58 270,46 360,38 C430,32 500,28 580,18 C510,24 430,30 350,38 C250,48 150,62 70,80 Z" opacity="0.9" />
+                <path d="M320,28 C340,18 355,22 345,30 C335,28 325,30 320,28 Z" opacity="0.8" />
+                <path d="M480,18 C500,8 515,12 505,20 C495,18 485,20 480,18 Z" opacity="0.8" />
+            </g>
+        </svg>
+
+        <!-- Gradien Pudar Halus -->
+        <div class="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-[#52130D] via-[#52130D]/80 to-transparent"></div>
     </div>
 
-    <!-- Bagian Kanan Header: Tombol Lihat Website & Profile Dropdown -->
-    <div class="flex items-center gap-4">
+    <!-- 2. AKSEN 4 SPEKTRUM PITA TIPIS (TERKUNCI DI PALING BAWAH HEADER) -->
+    <div class="absolute bottom-0 left-0 right-0 w-full pointer-events-none flex flex-col z-20">
+        <div class="h-[1px] w-full bg-[#7A2219]"></div>
+        <div class="h-[1px] w-full bg-[#992B20]"></div>
+        <div class="h-[1px] w-full bg-[#B83E31]"></div>
+        <div class="h-[1.5px] w-full bg-[#D4A64A]"></div>
+    </div>
+
+    <!-- 3. BAGIAN KANAN: TOMBOL LIHAT WEBSITE & PROFIL DROPDOWN -->
+    <div class="relative z-40 flex items-center gap-3.5">
 
         <!-- Tombol Quick Link: Lihat Website Utama -->
-        <a href="{{ url('/') }}" target="_blank" 
-           class="hidden sm:flex items-center gap-2 bg-[#992B20] hover:bg-[#7A2219] text-white text-xs font-bold uppercase tracking-wider px-4 py-2.5 rounded-2xl shadow-sm transition-all duration-200">
-            <!-- Icon Globe / External Link -->
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        <a href="{{ url('/') }}" target="_blank"
+            class="hidden sm:inline-flex items-center gap-2 bg-[#C48D2D] hover:bg-[#A67320] text-white text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-xl shadow-md transition-all duration-200 hover:scale-[1.02]">
+            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
             <span>Lihat Website</span>
         </a>
 
-        <!-- User Profile Dropdown Component -->
-        <div x-data="{ open: false }" class="relative">
-            
-            <!-- Trigger Button -->
-            <button @click="open = !open" 
-                    @click.outside="open = false"
-                    type="button" 
-                    class="flex items-center gap-3 bg-[#F2F4F7] hover:bg-gray-200 px-4 py-2 rounded-2xl transition-all duration-200 focus:outline-none">
-                
-                <!-- Inisial Avatar Bulat Emas -->
-                <div class="w-10 h-10 rounded-full bg-[#D4A64A] text-white font-bold flex items-center justify-center text-lg shadow-sm">
-                    {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
+        <!-- Pemisah Vertikal -->
+        <div class="h-5 w-[1px] bg-[#8B2D24] hidden sm:block"></div>
+
+        <!-- Profil User Dropdown -->
+        <div class="relative">
+            <button @click="open = !open" @click.outside="open = false" type="button"
+                class="flex items-center gap-3 focus:outline-none bg-[#F7F0E7] hover:bg-[#EFE3CC] border border-[#E6D5B8] px-3.5 py-1.5 rounded-xl shadow-md transition-all duration-200 cursor-pointer relative z-50">
+
+                <div class="w-8 h-8 rounded-lg bg-[#52130D] text-[#D4A64A] flex items-center justify-center font-bold text-sm shadow-sm">
+                    {{ strtoupper(substr(Auth::user()->name ?? 'P', 0, 1)) }}
                 </div>
 
-                <!-- Nama User -->
-                <span class="font-semibold text-gray-800 text-base">
-                    {{ Auth::user()->name ?? 'Admin' }}
-                </span>
+                <div class="text-left hidden sm:block">
+                    <h3 class="font-bold text-[#1A110A] text-sm">
+                        {{ Auth::user()->name ?? 'Penulis' }}
+                    </h3>
+                </div>
 
-                <!-- Icon Panah (Chevron) -->
-                <svg class="w-4 h-4 text-gray-600 transition-transform duration-200" 
-                     :class="{ 'rotate-180': open }"
-                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                <svg class="w-3.5 h-3.5 text-[#52130D] transition-transform duration-200" :class="{ 'rotate-180': open }"
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
             </button>
 
-            <!-- Dropdown Menu Box -->
+            <!-- Dropdown Menu Box (Dihilangkan Celah mt-2 & Ditutup rapat tanpa garis putih di atasnya) -->
             <div x-show="open" 
-                 x-transition:enter="transition ease-out duration-200"
-                 x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
-                 x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-                 x-transition:leave="transition ease-in duration-150"
-                 x-transition:leave-start="opacity-100 scale-100 translate-y-0"
-                 x-transition:leave-end="opacity-0 scale-95 -translate-y-2"
-                 class="absolute right-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50 p-4"
-                 style="display: none;">
-                
-                <!-- Section Status Email -->
-                <div class="pb-3 border-b border-gray-100">
-                    <p class="text-xs text-gray-400 font-normal">Masuk sebagai</p>
-                    <p class="text-sm font-semibold text-gray-900 truncate mt-0.5">
-                        {{ Auth::user()->email ?? 'admin@filsafatbali.id' }}
+                x-transition:enter="transition ease-out duration-150"
+                x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
+                x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                x-transition:leave="transition ease-in duration-100"
+                x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+                x-transition:leave-end="opacity-0 scale-95 -translate-y-1"
+                class="absolute right-0 top-full mt-1.5 w-60 bg-white border border-[#E6D5B8] rounded-xl shadow-2xl p-3 z-50 outline-none"
+                style="display: none;">
+
+                <div class="pb-2.5 border-b border-gray-100 px-1">
+                    <p class="text-[11px] text-gray-400 font-normal">Masuk sebagai</p>
+                    <p class="text-xs font-semibold text-[#1A110A] truncate mt-0.5">
+                        {{ Auth::user()->email ?? 'penulis@filsafatbali.id' }}
                     </p>
                 </div>
 
-                <!-- Shortcut Menu di Dalam Dropdown -->
-                <div class="py-2 border-b border-gray-100">
-                    <a href="{{ url('/') }}" target="_blank" 
-                       class="flex items-center gap-3 text-sm font-semibold text-gray-700 hover:text-[#992B20] transition-colors py-1.5">
-                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                <div class="py-1.5 border-b border-gray-100">
+                    <a href="{{ url('/') }}" target="_blank"
+                        class="flex items-center gap-2.5 text-xs font-medium text-gray-700 hover:text-[#992B20] transition-colors px-1 py-1.5 rounded-lg hover:bg-gray-50">
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                         </svg>
-                        Kunjungi Website
+                        <span>Kunjungi Website</span>
                     </a>
                 </div>
 
-                <!-- Action Logout -->
-                <div class="pt-3">
+                <div class="pt-1.5">
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" 
-                                class="w-full flex items-center gap-3 text-sm font-semibold text-gray-700 hover:text-red-600 transition-colors py-1">
-                            <!-- Icon Door Logout -->
-                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        <button type="submit"
+                            class="w-full flex items-center gap-2.5 text-xs font-medium text-gray-700 hover:text-red-600 transition-colors px-1 py-1.5 rounded-lg hover:bg-red-50/50 cursor-pointer">
+                            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                                </path>
                             </svg>
-                            Logout
+                            <span>Logout</span>
                         </button>
                     </form>
                 </div>
 
             </div>
-
         </div>
 
     </div>
 
-</div>
+</header>

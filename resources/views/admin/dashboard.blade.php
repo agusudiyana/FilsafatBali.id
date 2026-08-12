@@ -24,7 +24,7 @@
     </div>
 
     <!-- Grid Statistik Utama (5 Kolom) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 mb-8">
 
         <!-- 1. Total Ajaran -->
         <div
@@ -43,9 +43,9 @@
                 </div>
             </div>
             <h2 class="text-3xl lg:text-4xl font-extrabold text-[#992B20] tracking-tight">
-                {{ number_format($totalAjaran) }}
+                {{ number_format($totalAjaran ?? 0) }}
             </h2>
-            <p class="text-xs text-gray-4 text-gray-400 mt-2">Artikel & Kumpulan ajaran</p>
+            <p class="text-xs text-gray-400 mt-2">Artikel & Kumpulan ajaran</p>
         </div>
 
         <!-- 2. Menunggu Verifikasi -->
@@ -64,7 +64,7 @@
                 </div>
             </div>
             <h2 class="text-3xl lg:text-4xl font-extrabold text-[#C48D2D] tracking-tight">
-                {{ number_format($pending) }}
+                {{ number_format($pending ?? 0) }}
             </h2>
             <p class="text-xs text-gray-400 mt-2">Perlu peninjauan admin</p>
         </div>
@@ -85,12 +85,12 @@
                 </div>
             </div>
             <h2 class="text-3xl lg:text-4xl font-extrabold text-emerald-600 tracking-tight">
-                {{ number_format($disetujui) }}
+                {{ number_format($disetujui ?? 0) }}
             </h2>
             <p class="text-xs text-gray-400 mt-2">Terpublikasi di platform</p>
         </div>
 
-        <!-- 4. Total Penulis (Baru) -->
+        <!-- 4. Total Penulis -->
         <div
             class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-md relative overflow-hidden group">
             <div class="absolute top-0 left-0 right-0 h-1 bg-amber-700"></div>
@@ -107,7 +107,7 @@
                 </div>
             </div>
             <h2 class="text-3xl lg:text-4xl font-extrabold text-amber-800 tracking-tight">
-                {{ number_format($totalPenulis) }}
+                {{ number_format($totalPenulis ?? 0) }}
             </h2>
             <p class="text-xs text-gray-400 mt-2">Kontributor aktif</p>
         </div>
@@ -129,9 +129,116 @@
                 </div>
             </div>
             <h2 class="text-3xl lg:text-4xl font-extrabold text-[#1A110A] tracking-tight">
-                {{ number_format($totalPengguna) }}
+                {{ number_format($totalPengguna ?? 0) }}
             </h2>
             <p class="text-xs text-gray-400 mt-2">Akun terdaftar</p>
+        </div>
+
+    </div>
+
+    <!-- Pintasan Aksi Cepat & Manajemen Komunitas -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Pintasan Verifikasi / Akses Cepat -->
+        <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <h3 class="text-lg font-bold text-[#1A110A] mb-4 flex items-center gap-2">
+                <i data-feather="zap" class="w-5 h-5 text-[#C48D2D]"></i>
+                Aksi & Verifikasi Cepat
+            </h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <a href="{{ route('admin.verifikasi.artikel') }}" class="p-3.5 rounded-xl border border-gray-100 bg-[#FBF9F5] hover:bg-[#F3E7D0]/40 transition-colors flex items-center gap-3">
+                    <div class="p-2 rounded-lg bg-[#2C221E] text-white">
+                        <i data-feather="file-text" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-bold text-gray-800">Artikel</span>
+                        <span class="text-[10px] text-gray-500">Verifikasi kiriman</span>
+                    </div>
+                </a>
+
+                <a href="{{ route('admin.verifikasi.filsafat') }}" class="p-3.5 rounded-xl border border-gray-100 bg-[#FBF9F5] hover:bg-[#F3E7D0]/40 transition-colors flex items-center gap-3">
+                    <div class="p-2 rounded-lg bg-[#2C221E] text-white">
+                        <i data-feather="sun" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-bold text-gray-800">Filsafat</span>
+                        <span class="text-[10px] text-gray-500">Verifikasi filsafat</span>
+                    </div>
+                </a>
+
+                <a href="{{ route('admin.verifikasi.ajaran-tertua') }}" class="p-3.5 rounded-xl border border-gray-100 bg-[#FBF9F5] hover:bg-[#F3E7D0]/40 transition-colors flex items-center gap-3">
+                    <div class="p-2 rounded-lg bg-[#2C221E] text-white">
+                        <i data-feather="book-open" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-bold text-gray-800">Ajaran Tetua</span>
+                        <span class="text-[10px] text-gray-500">Verifikasi ajaran</span>
+                    </div>
+                </a>
+
+                <a href="{{ route('admin.verifikasi.cecimpedan') }}" class="p-3.5 rounded-xl border border-gray-100 bg-[#FBF9F5] hover:bg-[#F3E7D0]/40 transition-colors flex items-center gap-3">
+                    <div class="p-2 rounded-lg bg-[#2C221E] text-white">
+                        <i data-feather="help-circle" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-bold text-gray-800">Cecimpedan</span>
+                        <span class="text-[10px] text-gray-500">Tinjau cecimpedan</span>
+                    </div>
+                </a>
+
+                <a href="{{ route('admin.verifikasi.satua') }}" class="p-3.5 rounded-xl border border-gray-100 bg-[#FBF9F5] hover:bg-[#F3E7D0]/40 transition-colors flex items-center gap-3">
+                    <div class="p-2 rounded-lg bg-[#2C221E] text-white">
+                        <i data-feather="layers" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-bold text-gray-800">Satua Bali</span>
+                        <span class="text-[10px] text-gray-500">Tinjau cerita</span>
+                    </div>
+                </a>
+
+                <a href="{{ route('admin.verifikasi.istilah') }}" class="p-3.5 rounded-xl border border-gray-100 bg-[#FBF9F5] hover:bg-[#F3E7D0]/40 transition-colors flex items-center gap-3">
+                    <div class="p-2 rounded-lg bg-[#2C221E] text-white">
+                        <i data-feather="tag" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-bold text-gray-800">Istilah Bali</span>
+                        <span class="text-[10px] text-gray-500">Tinjau istilah</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Ringkasan Kelola Pengguna & Penulis -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between">
+            <div>
+                <h3 class="text-lg font-bold text-[#1A110A] mb-2 flex items-center gap-2">
+                    <i data-feather="users" class="w-5 h-5 text-[#992B20]"></i>
+                    Pengelolaan Komunitas
+                </h3>
+                <p class="text-xs text-gray-500 mb-4">Akses cepat manajemen hak akses dan kontributor platform.</p>
+            </div>
+            
+            <div class="space-y-3">
+                <a href="{{ route('admin.penulis.index') }}" class="flex items-center justify-between p-3 rounded-xl border border-gray-100 hover:border-[#C48D2D] transition-colors group">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-amber-50 text-amber-800 rounded-lg group-hover:bg-[#C48D2D] group-hover:text-white transition-colors">
+                            <i data-feather="user-check" class="w-4 h-4"></i>
+                        </div>
+                        <span class="text-xs font-bold text-gray-700">Manajemen Penulis</span>
+                    </div>
+                    <i data-feather="chevron-right" class="w-4 h-4 text-gray-400 group-hover:translate-x-1 transition-transform"></i>
+                </a>
+
+                <a href="{{ route('admin.pengguna.index') }}" class="flex items-center justify-between p-3 rounded-xl border border-gray-100 hover:border-[#C48D2D] transition-colors group">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-stone-100 text-gray-800 rounded-lg group-hover:bg-[#1A110A] group-hover:text-white transition-colors">
+                            <i data-feather="users" class="w-4 h-4"></i>
+                        </div>
+                        <span class="text-xs font-bold text-gray-700">Manajemen Pengguna</span>
+                    </div>
+                    <i data-feather="chevron-right" class="w-4 h-4 text-gray-400 group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
         </div>
 
     </div>

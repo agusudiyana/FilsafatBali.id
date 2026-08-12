@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full">
 
 <head>
     <meta charset="UTF-8">
@@ -35,23 +35,25 @@
     </style>
 </head>
 
-<body class="bg-[#F7F0E7] min-h-screen text-[#1A110A] font-sans antialiased">
+<body class="bg-[#F7F0E7] h-full text-[#1A110A] font-sans antialiased overflow-hidden">
 
-    <div class="flex min-h-screen">
+    <div class="flex h-screen w-screen overflow-hidden">
 
-        <!-- Sidebar Admin (Fixed di Kiri) -->
-        @include('admin.partials.sidebar')
+        <!-- Sidebar Admin (Lebar Fixed w-64 di Kiri) -->
+        <aside class="w-64 flex-shrink-0 h-full bg-[#1A110A] z-50">
+            @include('admin.partials.sidebar')
+        </aside>
 
-        <!-- Area Kanan Konten -->
-        <div class="flex-1 ml-64 min-w-0 min-h-screen flex flex-col">
+        <!-- Area Kanan Konten (Fleksibel & Terkunci Murni) -->
+        <div class="flex-1 min-w-0 flex flex-col h-full overflow-hidden relative">
 
-            <!-- Navbar Admin Fixed (Terkunci di Atas) -->
-            <header class="fixed top-0 right-0 left-64 z-40 bg-white border-b border-gray-100 shadow-sm">
+            <!-- Navbar Admin (Flex-none: Terkunci di Atas Tanpa Fixed Melayang) -->
+            <header class="w-full flex-none z-40 relative">
                 @include('admin.partials.navbar')
             </header>
 
-            <!-- Main Content Area (Diberi pt-24 agar konten tidak tertutup Navbar) -->
-            <main class="p-8 pt-24 flex-1 overflow-y-auto">
+            <!-- Main Content Area (Scroll Hanya Berjalan di Dalam Area Ini) -->
+            <main class="flex-1 overflow-y-auto p-8 relative z-10">
                 @yield('content')
             </main>
 

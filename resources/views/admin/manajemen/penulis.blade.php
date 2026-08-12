@@ -9,6 +9,19 @@
         <p class="text-sm text-gray-500">Kelola dan pantau seluruh akun terdaftar dengan peran Penulis.</p>
     </div>
 
+    <!-- Alert Notifikasi Flash Message -->
+    @if (session('status'))
+        <div class="mb-4 p-3.5 bg-emerald-50 border-l-4 border-emerald-500 text-emerald-800 text-sm rounded-r-lg shadow-sm">
+            {{ session('status') }}
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="mb-4 p-3.5 bg-rose-50 border-l-4 border-rose-500 text-rose-800 text-sm rounded-r-lg shadow-sm">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <!-- Ringkasan Statistik -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4">
@@ -45,8 +58,9 @@
                         <th class="p-4 w-16 text-center">No</th>
                         <th class="p-4 w-auto">Penulis</th>
                         <th class="p-4 w-64">Email</th>
-                        <th class="p-4 w-32">Status</th>
-                        <th class="p-4 w-44">Terdaftar Sejak</th>
+                        <th class="p-4 w-36">Status</th>
+                        <th class="p-4 w-40">Terdaftar Sejak</th>
+                        <th class="p-4 w-28 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100" id="writerTableBody">
@@ -62,16 +76,67 @@
                                 </div>
                             </td>
                             <td class="p-4 text-sm text-gray-600 truncate">{{ $item->email }}</td>
+                            
+                            {{-- STATUS BERDASARKAN ANGKAL KOLOM IS_VERIFIED (1=AKTIF, 2=DITOLAK, 0=PENDING) --}}
                             <td class="p-4">
-                                <span class="px-2.5 py-1 text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full inline-block">
-                                    Aktif
-                                </span>
+                                @if($item->is_verified == 1)
+                                    <span class="px-2.5 py-1 text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full inline-flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                        Aktif
+                                    </span>
+                                @elseif($item->is_verified == 2)
+                                    <span class="px-2.5 py-1 text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200 rounded-full inline-flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                        Ditolak
+                                    </span>
+                                @else
+                                    <span class="px-2.5 py-1 text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200 rounded-full inline-flex items-center gap-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                        Pending
+                                    </span>
+                                @endif
                             </td>
-                            <td class="p-4 text-sm text-gray-500">{{ $item->created_at->format('d M Y') }}</td>
+
+                            <td class="p-4 text-sm text-gray-500">{{ $item->created_at ? $item->created_at->format('d M Y') : '-' }}</td>
+                            
+                            {{-- AKSI SETUJUI DAN TOLAK --}}
+                            <td class="p-4 text-center">
+                                <div class="flex items-center justify-center gap-1.5">
+                                    <!-- Tombol Setujui (Centang Hijau) -->
+                                    <form action="{{ route('admin.penulis.setujui', $item->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" 
+                                                onclick="return confirm('Apakah Anda yakin ingin menyetujui Penulis ini?')"
+                                                title="Setujui Penulis (Aktif)"
+                                                class="p-1.5 {{ $item->is_verified == 1 ? 'bg-emerald-100 text-emerald-400 cursor-not-allowed' : 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm' }} rounded-lg transition-colors"
+                                                {{ $item->is_verified == 1 ? 'disabled' : '' }}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </button>
+                                    </form>
+
+                                    <!-- Tombol Tolak (Silang Merah) -->
+                                    <form action="{{ route('admin.penulis.tolak', $item->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" 
+                                                onclick="return confirm('Apakah Anda yakin ingin menolak Penulis ini?')"
+                                                title="Tolak Penulis"
+                                                class="p-1.5 {{ $item->is_verified == 2 ? 'bg-rose-100 text-rose-400 cursor-not-allowed' : 'bg-rose-500 hover:bg-rose-600 text-white shadow-sm' }} rounded-lg transition-colors"
+                                                {{ $item->is_verified == 2 ? 'disabled' : '' }}>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="p-8 text-center text-gray-400 text-sm">
+                            <td colspan="6" class="p-8 text-center text-gray-400 text-sm">
                                 Belum ada data penulis terdaftar.
                             </td>
                         </tr>
@@ -79,7 +144,7 @@
 
                     <!-- Pesan saat pencarian tidak cocok -->
                     <tr id="noResultsRow" class="hidden">
-                        <td colspan="5" class="p-8 text-center text-gray-400 text-sm">
+                        <td colspan="6" class="p-8 text-center text-gray-400 text-sm">
                             Penulis dengan awalan nama tersebut tidak ditemukan.
                         </td>
                     </tr>
@@ -110,7 +175,6 @@
                 writerRows.forEach(row => {
                     const nameText = row.querySelector('.writer-name').textContent.trim().toLowerCase();
 
-                    // Logika startsWith() untuk mencocokkan huruf depannya saja
                     if (keyword === '' || nameText.startsWith(keyword)) {
                         row.classList.remove('hidden');
                         visibleCount++;
@@ -119,7 +183,6 @@
                     }
                 });
 
-                // Menampilkan/menyembunyikan pesan jika tidak ada hasil pencarian
                 if (writerRows.length > 0 && visibleCount === 0) {
                     noResultsRow.classList.remove('hidden');
                 } else {

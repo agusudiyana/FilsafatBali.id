@@ -27,13 +27,11 @@
             <a href="#jenis-filsafat"
                 class="text-[#B28B51] hover:!text-[#8D2B1D] transition-colors duration-200 py-1 whitespace-nowrap">Filsafat</a>
             <a href="#ajaran"
-                class="text-[#B28B51] hover:!text-[#8D2B1D] transition-colors duration-200 py-1 whitespace-nowrap">Ajaran
-                Tetua</a>
+                class="text-[#B28B51] hover:!text-[#8D2B1D] transition-colors duration-200 py-1 whitespace-nowrap">Ajaran Tetua</a>
             <a href="#cecimpedan"
                 class="text-[#B28B51] hover:!text-[#8D2B1D] transition-colors duration-200 py-1 whitespace-nowrap">Cecimpedan</a>
             <a href="#sectionSatua"
-                class="text-[#B28B51] hover:!text-[#8D2B1D] transition-colors duration-200 py-1 whitespace-nowrap">Satua
-                & Istilah</a>
+                class="text-[#B28B51] hover:!text-[#8D2B1D] transition-colors duration-200 py-1 whitespace-nowrap">Satua & Istilah</a>
             <a href="#kontributor"
                 class="text-[#B28B51] hover:!text-[#8D2B1D] transition-colors duration-200 py-1 whitespace-nowrap">Kontributor</a>
         </div>
@@ -56,14 +54,14 @@
                         @endif
                     </div>
 
-                    <!-- TEKS NAMA USER (Warna Dinamis + Font Ditingkatkan) -->
+                    <!-- TEKS NAMA USER -->
                     <span id="navUsername" 
                         class="hidden sm:inline-block text-[14px] font-medium text-[#E2B75B] tracking-wide capitalize transition-colors duration-300"
                         style="font-family: 'Inter', sans-serif;">
                         {{ auth()->user()->name }}
                     </span>
 
-                    <!-- Chevron Arrow (Warna Dinamis) -->
+                    <!-- Chevron Arrow -->
                     <svg id="navUserChevron" xmlns="http://www.w3.org/2000/svg"
                         class="w-4 h-4 text-[#E2B75B] transition-all duration-300 group-hover/user:translate-y-0.5"
                         fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -71,7 +69,7 @@
                     </svg>
                 </button>
 
-                <!-- DROPDOWN MENU DINAMIS -->
+                <!-- DROPDOWN MENU USER DINAMIS -->
                 <div id="userDropdown"
                     class="hidden absolute right-0 top-full mt-3 w-60 bg-[#FAF5ED] border border-[#E5D6BF] rounded-2xl shadow-2xl overflow-hidden text-left transition-all duration-200 transform opacity-0 scale-95"
                     style="z-index: 9999;" onclick="event.stopPropagation()">
@@ -91,7 +89,6 @@
                         <!-- 1. JIKA ADMIN -->
                         @if (auth()->user()->role === 'admin' || auth()->user()->is_admin || auth()->user()->email === 'admin@filsafatbali.id')
                             <a href="{{ Route::has('admin.dashboard') ? route('admin.dashboard') : (Route::has('dashboard') ? route('dashboard') : url('/admin')) }}"
-                                onclick="window.location.href='{{ Route::has('admin.dashboard') ? route('admin.dashboard') : (Route::has('dashboard') ? route('dashboard') : url('/admin')) }}';"
                                 class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-[#23160E] hover:bg-[#8D2B1D] hover:text-white transition-all group/item cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                     class="w-4 h-4 text-[#8D2B1D] group-hover/item:text-white transition-colors"
@@ -105,7 +102,6 @@
                             <!-- 2. JIKA PENULIS -->
                         @elseif(auth()->user()->role === 'penulis')
                             <a href="{{ Route::has('penulis.dashboard') ? route('penulis.dashboard') : url('/penulis') }}"
-                                onclick="window.location.href='{{ Route::has('penulis.dashboard') ? route('penulis.dashboard') : url('/penulis') }}';"
                                 class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-[#23160E] hover:bg-[#8D2B1D] hover:text-white transition-all group/item cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                     class="w-4 h-4 text-[#8D2B1D] group-hover/item:text-white transition-colors"
@@ -119,7 +115,6 @@
                             <!-- 3. JIKA PENGGUNA BIASA -->
                         @else
                             <a href="{{ route('pengguna.dashboard') }}"
-                                onclick="window.location.href='{{ route('pengguna.dashboard') }}';"
                                 class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-[#23160E] hover:bg-[#8D2B1D] hover:text-white transition-all group/item cursor-pointer">
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                     class="w-4 h-4 text-[#8D2B1D] group-hover/item:text-white transition-colors"
@@ -150,6 +145,7 @@
                     </div>
                 </div>
             @else
+                <!-- TOMBOL MASUK -->
                 <a id="navBtnMasuk" href="{{ route('login') }}"
                     class="group/btn border border-[#23160E]/30 text-[#23160E] bg-transparent px-3.5 py-1.5 rounded-lg text-[11px] font-bold tracking-wide flex items-center gap-1.5 hover:border-[#8D2B1D] hover:text-[#8D2B1D] transition-all duration-200">
                     <svg xmlns="http://www.w3.org/2000/svg"
@@ -161,6 +157,7 @@
                     <span>Masuk</span>
                 </a>
 
+                <!-- TOMBOL DAFTAR BIASA (LANGSUNG MENGARAH KE PILIHAN ROLE) -->
                 @if (Route::has('register'))
                     <a id="navBtnDaftar" href="{{ route('register') }}"
                         class="bg-[#8D2B1D] text-white px-3.5 py-1.5 rounded-lg text-[11px] font-bold tracking-wide flex items-center gap-1.5 hover:bg-[#A93226] transition-all shadow-md">
@@ -179,7 +176,7 @@
 </nav>
 
 <!-- ========================================== -->
-<!-- SCRIPT JS FIX DROPDOWN & SCROLL            -->
+<!-- SCRIPT JS FIX DROPDOWN USER & SCROLL       -->
 <!-- ========================================== -->
 <script>
     function toggleUserDropdown(e) {
@@ -232,7 +229,6 @@
         var navUserChevron = document.getElementById("navUserChevron");
 
         if (window.scrollY > 30) {
-            // SAAT DI-SCROLL KE BAWAH (Navbar Terang / Krem / Putih)
             navbar.classList.remove("bg-transparent");
             navbar.style.backgroundColor = "#F7F0E7";
             navbar.style.boxShadow = "0 4px 15px rgba(0,0,0,.10)";
@@ -245,12 +241,10 @@
             if (navLogo) navLogo.style.color = "#8D2B1D";
             if (navSubLogo) navSubLogo.style.color = "#C8A45A";
 
-            // Ubah Warna Teks Nama & Panah ke Cokelat Gelap
             if (navUsername) navUsername.style.color = "#23160E";
             if (navUserChevron) navUserChevron.style.color = "#23160E";
 
         } else {
-            // SAAT DI PALING ATAS (Navbar Transparan)
             navbar.classList.add("bg-transparent");
             navbar.style.backgroundColor = "transparent";
             navbar.style.boxShadow = "none";
@@ -263,7 +257,6 @@
             if (navLogo) navLogo.style.color = "#A73D1F";
             if (navSubLogo) navSubLogo.style.color = "#C8A45A";
 
-            // Ubah Warna Teks Nama & Panah Kembali ke Kuning Emas Keemasan
             if (navUsername) navUsername.style.color = "#E2B75B";
             if (navUserChevron) navUserChevron.style.color = "#E2B75B";
         }

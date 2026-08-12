@@ -1,14 +1,23 @@
 <div class="w-64 bg-[#1A110A] text-white h-screen fixed top-0 left-0 z-50 overflow-y-auto border-r border-[#3A2A1A] flex flex-col justify-between">
 
     <div>
-        <!-- Header Sidebar -->
+        <!-- Header Sidebar dengan Logo yang Lebih Besar & Jelas -->
         <div class="p-5 border-b border-[#3A2A1A]">
-            <h1 class="text-xl font-bold text-[#D4A64A]" style="font-family: 'Cormorant Garamond', serif;">
-                FilsafatBali
-            </h1>
-            <p class="text-[11px] text-[#C7A56A] mt-0.5 font-medium tracking-wide">
-                Panel Penulis
-            </p>
+            <div class="flex items-center gap-3.5">
+                <!-- Wrapper Bingkai Terang Logo (Diperbesar ke w-16 h-16) -->
+                <div class="w-16 h-16 rounded-2xl bg-[#FBF5ED] border border-[#D4A64A]/60 flex items-center justify-center p-1 shadow-md shrink-0">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo Filsafat" class="w-full h-full object-contain filter drop-shadow-sm">
+                </div>
+                
+                <div>
+                    <h1 class="text-xl font-bold text-[#D4A64A] leading-tight" style="font-family: 'Cormorant Garamond', serif;">
+                        FilsafatBali
+                    </h1>
+                    <p class="text-[11px] text-[#C7A56A] font-medium tracking-wide">
+                        Panel Admin
+                    </p>
+                </div>
+            </div>
         </div>
 
         <!-- Navigasi Menu (Compact Mode) -->

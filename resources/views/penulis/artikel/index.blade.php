@@ -4,7 +4,7 @@
     <!-- Container Utama: Mengunci tinggi area konten agar halaman tidak memiliki scrollbar luar -->
     <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col h-[calc(100vh-100px)]">
         
-        <!-- HEADER HALAMAN & TAB KATEGORI (STIKER / DIAM DI TEMPAT) -->
+        <!-- HEADER HALAMAN & TAB KATEGORI (DIAM DI TEMPAT) -->
         <div class="flex-none">
             
             <!-- Header Halaman -->
@@ -26,26 +26,26 @@
                 </a>
             </div>
 
-            <!-- Filter Kategori (Semua Kategori Menggunakan Handler Filter yang Sama) -->
-            <div class="flex flex-wrap gap-2 mb-4 border-b border-gray-200/60 pb-3" id="category-tabs">
+            <!-- TAB FILTER KATEGORI LENGKAP DENGAN GARIS BAWAH (border-b border-[#E6D5B8]) -->
+            <div class="flex flex-wrap items-center gap-2 pb-4 mb-4 border-b border-[#E6D5B8] w-full" id="category-tabs">
                 <button onclick="filterCategory('semua', this)" 
                     class="tab-btn px-4 py-2 text-sm font-semibold text-white bg-[#2C221E] rounded-lg shadow-sm transition">
                     Semua
                 </button>
                 <button onclick="filterCategory('Ajaran Tertua', this)" 
-                    class="tab-btn px-4 py-2 text-sm font-medium text-[#6B635B] hover:text-[#2C221E] hover:bg-gray-100 rounded-lg transition">
+                    class="tab-btn px-4 py-2 text-sm font-medium text-[#6B635B] hover:text-[#2C221E] hover:bg-[#E6D5B8]/40 rounded-lg transition">
                     Ajaran Tertua
                 </button>
                 <button onclick="filterCategory('Cecimpedan', this)" 
-                    class="tab-btn px-4 py-2 text-sm font-medium text-[#6B635B] hover:text-[#2C221E] hover:bg-gray-100 rounded-lg transition">
+                    class="tab-btn px-4 py-2 text-sm font-medium text-[#6B635B] hover:text-[#2C221E] hover:bg-[#E6D5B8]/40 rounded-lg transition">
                     Cecimpedan
                 </button>
                 <button onclick="filterCategory('Satua Bali', this)" 
-                    class="tab-btn px-4 py-2 text-sm font-medium text-[#6B635B] hover:text-[#2C221E] hover:bg-gray-100 rounded-lg transition">
+                    class="tab-btn px-4 py-2 text-sm font-medium text-[#6B635B] hover:text-[#2C221E] hover:bg-[#E6D5B8]/40 rounded-lg transition">
                     Satua Bali
                 </button>
                 <button onclick="filterCategory('Istilah Bali', this)" 
-                    class="tab-btn px-4 py-2 text-sm font-medium text-[#6B635B] hover:text-[#2C221E] hover:bg-gray-100 rounded-lg transition">
+                    class="tab-btn px-4 py-2 text-sm font-medium text-[#6B635B] hover:text-[#2C221E] hover:bg-[#E6D5B8]/40 rounded-lg transition">
                     Istilah Bali
                 </button>
             </div>
@@ -59,7 +59,7 @@
 
         </div>
 
-        <!-- HANYA TABEL YANG BISA DI-SCROLL (Berlaku untuk SEMUA Kategori) -->
+        <!-- HANYA TABEL YANG BISA DI-SCROLL -->
         <div class="flex-1 bg-white rounded-2xl shadow-sm border border-[#E6D5B8]/60 overflow-hidden flex flex-col min-h-0">
             <div id="table-scroll-container" class="overflow-y-auto overflow-x-auto flex-1">
                 <table class="w-full text-left border-collapse">
@@ -75,7 +75,7 @@
                         </tr>
                     </thead>
                     
-                    <tbody class="divide-y divide-gray-100 text-sm">
+                    <tbody class="divide-y divide-[#E6D5B8]/40 text-sm">
                         @forelse($artikels as $a)
                             @php
                                 $kategoriNama = $a->kategori ?? 'Ajaran Tertua';
@@ -108,7 +108,6 @@
                                     @endif
                                 </td>
                                 
-                                <!-- KOLOM AKSI: Menyembunyikan Tombol Edit/Hapus Jika Status 'disetujui' -->
                                 <td class="p-4 text-center">
                                     @if($a->status == 'disetujui')
                                         <span class="text-xs text-gray-400 italic font-semibold block leading-tight">
@@ -151,7 +150,7 @@
                         <tr id="no-filtered-data" class="hidden">
                             <td colspan="5" class="text-center py-12 text-gray-400">
                                 <div class="flex flex-col items-center justify-center gap-2">
-                                    <i data-[#data-feather]="search" class="w-10 h-10 stroke-1 text-gray-300"></i>
+                                    <i data-feather="search" class="w-10 h-10 stroke-1 text-gray-300"></i>
                                     <span class="text-base font-medium text-gray-500">Tidak ada artikel dalam kategori ini.</span>
                                 </div>
                             </td>
@@ -175,7 +174,7 @@
             // 1. Reset styling semua tombol filter
             const buttons = document.querySelectorAll('.tab-btn');
             buttons.forEach(btn => {
-                btn.className = "tab-btn px-4 py-2 text-sm font-medium text-[#6B635B] hover:text-[#2C221E] hover:bg-gray-100 rounded-lg transition";
+                btn.className = "tab-btn px-4 py-2 text-sm font-medium text-[#6B635B] hover:text-[#2C221E] hover:bg-[#E6D5B8]/40 rounded-lg transition";
             });
 
             // 2. Beri styling aktif pada tombol yang sedang diklik
@@ -188,8 +187,7 @@
             rows.forEach(row => {
                 const rowCategory = row.getAttribute('data-category');
                 
-                // Pengecekan kategori secara tepat
-                if (category === 'semua' || rowCategory.trim().toLowerCase() === category.trim().toLowerCase()) {
+                if (category === 'semua' || (rowCategory && rowCategory.trim().toLowerCase() === category.trim().toLowerCase())) {
                     row.classList.remove('hidden');
                     visibleCount++;
                 } else {

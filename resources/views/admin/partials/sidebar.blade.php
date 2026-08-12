@@ -1,14 +1,23 @@
 <div class="w-64 bg-[#1A110A] text-white h-screen fixed top-0 left-0 z-50 overflow-y-auto border-r border-[#3A2A1A] flex flex-col justify-between">
 
     <div>
-        <!-- Header Sidebar -->
+        <!-- Header Sidebar dengan Logo Besar Terang (Seragam dengan Penulis) -->
         <div class="p-5 border-b border-[#3A2A1A]">
-            <h1 class="text-xl font-bold text-[#D4A64A]" style="font-family: 'Cormorant Garamond', serif;">
-                FilsafatBali
-            </h1>
-            <p class="text-[11px] text-[#C7A56A] mt-0.5 font-medium tracking-wide">
-                Admin Panel
-            </p>
+            <div class="flex items-center gap-3.5">
+                <!-- Wrapper Bingkai Terang Logo (Ukuran w-16 h-16 agar pas dan menonjol) -->
+                <div class="w-16 h-16 rounded-2xl bg-[#FBF5ED] border border-[#D4A64A]/60 flex items-center justify-center p-1 shadow-md shrink-0">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo Filsafat" class="w-full h-full object-contain filter drop-shadow-sm">
+                </div>
+                
+                <div>
+                    <h1 class="text-xl font-bold text-[#D4A64A] leading-tight" style="font-family: 'Cormorant Garamond', serif;">
+                        FilsafatBali
+                    </h1>
+                    <p class="text-[11px] text-[#C7A56A] font-medium tracking-wide">
+                        Admin Panel
+                    </p>
+                </div>
+            </div>
         </div>
 
         <!-- Navigasi Menu (Compact Mode) -->
@@ -36,7 +45,7 @@
             <!-- Verifikasi Filsafat -->
             <a href="{{ route('admin.verifikasi.filsafat') }}" 
                class="flex items-center gap-2.5 px-5 py-2 text-xs font-medium transition-colors {{ request()->routeIs('admin.verifikasi.filsafat*') ? 'bg-[#C48D2D] text-white' : 'text-[#EFE3CC] hover:bg-[#C48D2D]/20 hover:text-[#D4A64A]' }}">
-                <i data-feather="compass" class="w-4 h-4 text-[#C7A56A]"></i>
+                <i data-feather="sun" class="w-4 h-4 text-[#C7A56A]"></i>
                 <span>Filsafat</span>
             </a>
 
@@ -64,7 +73,7 @@
             <!-- Istilah Bali -->
             <a href="{{ route('admin.verifikasi.istilah') }}" 
                class="flex items-center gap-2.5 px-5 py-2 text-xs font-medium transition-colors {{ request()->routeIs('admin.verifikasi.istilah*') ? 'bg-[#C48D2D] text-white' : 'text-[#EFE3CC] hover:bg-[#C48D2D]/20 hover:text-[#D4A64A]' }}">
-                <i data-feather="bookmark" class="w-4 h-4 text-[#C7A56A]"></i>
+                <i data-feather="tag" class="w-4 h-4 text-[#C7A56A]"></i>
                 <span>Istilah Bali</span>
             </a>
 
@@ -76,7 +85,7 @@
             <!-- Penulis -->
             <a href="{{ route('admin.penulis.index') }}" 
                class="flex items-center gap-2.5 px-5 py-2 text-xs font-medium transition-colors {{ request()->routeIs('admin.penulis.*') || request()->routeIs('admin.kelola.penulis') ? 'bg-[#C48D2D] text-white' : 'text-[#EFE3CC] hover:bg-[#C48D2D]/20 hover:text-[#D4A64A]' }}">
-                <i data-feather="edit-3" class="w-4 h-4 text-[#C7A56A]"></i>
+                <i data-feather="user-check" class="w-4 h-4 text-[#C7A56A]"></i>
                 <span>Penulis</span>
             </a>
 

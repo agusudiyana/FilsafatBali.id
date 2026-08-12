@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Admin\AuthorVerificationController; // Import Controller Verifikasi
 use App\Http\Controllers\PenulisController;
 use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\ProfileController;
@@ -64,7 +65,7 @@ Route::middleware(['auth'])->group(function () {
             return redirect()->route('penulis.dashboard');
         }
 
-        // Pengguna biasa diarahkan ke dashboard pengguna (Bukan lagi ke home)
+        // Pengguna biasa diarahkan ke dashboard pengguna
         return redirect()->route('pengguna.dashboard');
     })->name('dashboard');
 
@@ -85,9 +86,17 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/penulis', [AdminController::class, 'kelolaPenulis'])->name('admin.penulis.index');
         Route::get('/pengguna', [AdminController::class, 'kelolaPengguna'])->name('admin.pengguna.index');
         
+        // AKSI SETUJUI & TOLAK PENULIS
+        Route::patch('/penulis/{id}/setujui', [AdminController::class, 'setujuiPenulis'])->name('admin.penulis.setujui');
+        Route::delete('/penulis/{id}/tolak', [AdminController::class, 'tolakPenulis'])->name('admin.penulis.tolak');
+
         // Alias tambahan untuk fleksibilitas panggilan route sidebar
         Route::get('/manajemen/penulis', [AdminController::class, 'kelolaPenulis'])->name('admin.kelola.penulis');
         Route::get('/manajemen/pengguna', [AdminController::class, 'kelolaPengguna'])->name('admin.kelola.pengguna');
+
+        // VERIFIKASI AKUN PENULIS BARU
+        Route::get('/verifikasi/penulis', [AuthorVerificationController::class, 'index'])->name('admin.verifikasi.penulis');
+        Route::patch('/verifikasi/penulis/{id}', [AuthorVerificationController::class, 'verify'])->name('admin.verifikasi.penulis.setujui');
 
         // VERIFIKASI ARTIKEL
         Route::get('/verifikasi/artikel', [AdminController::class, 'verifikasiAjaran'])->name('admin.verifikasi.artikel');
@@ -99,7 +108,7 @@ Route::middleware(['auth'])->group(function () {
         Route::match(['post', 'put'], '/verifikasi/artikel/{id}/setujui', [AdminController::class, 'setujuiAjaran'])->name('admin.verifikasi.artikel.setujui');
         Route::match(['post', 'put'], '/verifikasi/artikel/{id}/tolak', [AdminController::class, 'tolakAjaran'])->name('admin.verifikasi.artikel.tolak');
 
-        // VERIFIKASI AJARAN TERTUA (ADMIN)
+        // VERIFIKASI AJARAN TERTUA
         Route::get('/verifikasi/ajaran-tertua', [AdminController::class, 'verifikasiAjaranTertua'])->name('admin.verifikasi.ajaran-tertua');
         Route::get('/verifikasi/detail-ajaran-tertua/{id}', [AdminController::class, 'detailAjaranTertua'])->name('admin.verifikasi.detail-ajaran-tertua');
         Route::match(['post', 'put', 'patch'], '/verifikasi/detail-ajaran-tertua/{id}/status', [AdminController::class, 'updateStatusAjaranTertua'])->name('admin.verifikasi.update-status-ajaran-tertua');
@@ -192,12 +201,11 @@ Route::middleware(['auth'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | PENGGUNA ROUTES (DIUBAH UNTUK MENAMPILKAN DASHBOARD PENGGUNA)
+    | PENGGUNA ROUTES
     |--------------------------------------------------------------------------
     */
     Route::prefix('pengguna')->middleware('role:pengguna')->group(function () {
 
-        // Memuat view dashboard pengguna
         Route::get('/dashboard', function () {
             return view('dashboard');
         })->name('pengguna.dashboard');

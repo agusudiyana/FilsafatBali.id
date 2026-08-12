@@ -53,7 +53,7 @@ class PenulisController extends Controller
             Satua::where('user_id', $userId)->whereIn('status', ['ditolak', 'revisi'])->count() +
             Istilah::where('user_id', $userId)->whereIn('status', ['ditolak', 'revisi'])->count();
 
-        // 2. Ambil karya dari setiap model, petakan atribut agar konsisten, lalu gabungkan
+        // 2. Ambil karya dari setiap model
         $artikels = Artikel::where('user_id', $userId)->get()->map(function ($item) {
             $item->tipe = 'Artikel';
             $item->judul = $item->judul ?? $item->title ?? '-';
@@ -89,7 +89,6 @@ class PenulisController extends Controller
             return $item;
         });
 
-        // Combine all collections, order by created_at descending, and take the top 5
         $recentItems = $artikels->concat($filsafats)
             ->concat($cecimpedans)
             ->concat($satuas)
@@ -149,7 +148,6 @@ class PenulisController extends Controller
         ]);
 
         $gambar = null;
-
         if ($request->hasFile('gambar')) {
             $gambar = $request->file('gambar')->store('artikel', 'public');
         }
@@ -165,8 +163,7 @@ class PenulisController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        return redirect()
-            ->route('penulis.artikel.index')
+        return redirect()->route('penulis.artikel.index')
             ->with('success', 'Artikel berhasil dikirim dan menunggu verifikasi admin.');
     }
 
@@ -194,7 +191,6 @@ class PenulisController extends Controller
         ]);
 
         $gambar = $artikel->gambar;
-
         if ($request->hasFile('gambar')) {
             if ($artikel->gambar && Storage::disk('public')->exists($artikel->gambar)) {
                 Storage::disk('public')->delete($artikel->gambar);
@@ -211,8 +207,7 @@ class PenulisController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect()
-            ->route('penulis.artikel.index')
+        return redirect()->route('penulis.artikel.index')
             ->with('success', 'Data artikel berhasil diperbarui dan menunggu verifikasi admin.');
     }
 
@@ -228,9 +223,180 @@ class PenulisController extends Controller
 
         $artikel->delete();
 
-        return redirect()
-            ->route('penulis.artikel.index')
+        return redirect()->route('penulis.artikel.index')
             ->with('success', 'Data artikel berhasil dihapus.');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | MANAJEMEN FILSAFAT BALI
+    |--------------------------------------------------------------------------
+    */
+
+    public function filsafatIndex()
+    {
+        $filsafats = Filsafat::where('user_id', auth()->id())->latest()->get();
+        return view('penulis.filsafat.index', compact('filsafats'));
+    }
+
+    public function filsafatCreate()
+    {
+        return view('penulis.filsafat.create');
+    }
+
+    public function filsafatStore(Request $request)
+    {
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'kategori' => 'nullable|string|max:255',
+            'isi' => 'required|string',
+            'makna' => 'nullable|string',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        $gambar = null;
+        if ($request->hasFile('gambar')) {
+            $gambar = $request->file('gambar')->store('filsafat', 'public');
+        }
+
+        Filsafat::create([
+            'user_id' => auth()->id(),
+            'judul' => $request->judul,
+            'kategori' => $request->kategori ?? 'Filsafat Bali',
+            'isi' => $request->isi,
+            'makna' => $request->makna,
+            'gambar' => $gambar,
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('penulis.filsafat.index')
+            ->with('success', 'Karya Filsafat Bali berhasil disimpan dan menunggu verifikasi.');
+    }
+
+    public function filsafatEdit($id)
+    {
+        $filsafat = Filsafat::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+        return view('penulis.filsafat.edit', compact('filsafat'));
+    }
+
+    public function filsafatUpdate(Request $request, $id)
+    {
+        $filsafat = Filsafat::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'kategori' => 'nullable|string|max:255',
+            'isi' => 'required|string',
+            'makna' => 'nullable|string',
+            'gambar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        $gambar = $filsafat->gambar;
+        if ($request->hasFile('gambar')) {
+            if ($filsafat->gambar && Storage::disk('public')->exists($filsafat->gambar)) {
+                Storage::disk('public')->delete($filsafat->gambar);
+            }
+            $gambar = $request->file('gambar')->store('filsafat', 'public');
+        }
+
+        $filsafat->update([
+            'judul' => $request->judul,
+            'kategori' => $request->kategori ?? 'Filsafat Bali',
+            'isi' => $request->isi,
+            'makna' => $request->makna,
+            'gambar' => $gambar,
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('penulis.filsafat.index')
+            ->with('success', 'Karya Filsafat Bali berhasil diperbarui.');
+    }
+
+    public function filsafatDestroy($id)
+    {
+        $filsafat = Filsafat::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+
+        if ($filsafat->gambar && Storage::disk('public')->exists($filsafat->gambar)) {
+            Storage::disk('public')->delete($filsafat->gambar);
+        }
+
+        $filsafat->delete();
+
+        return redirect()->route('penulis.filsafat.index')
+            ->with('success', 'Karya Filsafat Bali berhasil dihapus.');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | MANAJEMEN CECIMPEDAN
+    |--------------------------------------------------------------------------
+    */
+
+    public function cecimpedanIndex()
+    {
+        $cecimpedans = Cecimpedan::where('user_id', auth()->id())->latest()->get();
+        return view('penulis.cecimpedan.index', compact('cecimpedans'));
+    }
+
+    public function cecimpedanCreate()
+    {
+        return view('penulis.cecimpedan.create');
+    }
+
+    public function cecimpedanStore(Request $request)
+    {
+        $request->validate([
+            'teks' => 'required|string',
+            'jawaban' => 'required|string|max:255',
+            'penjelasan' => 'nullable|string',
+        ]);
+
+        Cecimpedan::create([
+            'user_id' => auth()->id(),
+            'teks' => $request->teks,
+            'jawaban' => $request->jawaban,
+            'penjelasan' => $request->penjelasan,
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('penulis.cecimpedan.index')
+            ->with('success', 'Cecimpedan berhasil disimpan dan menunggu verifikasi.');
+    }
+
+    public function cecimpedanEdit($id)
+    {
+        $cecimpedan = Cecimpedan::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+        return view('penulis.cecimpedan.edit', compact('cecimpedan'));
+    }
+
+    public function cecimpedanUpdate(Request $request, $id)
+    {
+        $cecimpedan = Cecimpedan::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+
+        $request->validate([
+            'teks' => 'required|string',
+            'jawaban' => 'required|string|max:255',
+            'penjelasan' => 'nullable|string',
+        ]);
+
+        $cecimpedan->update([
+            'teks' => $request->teks,
+            'jawaban' => $request->jawaban,
+            'penjelasan' => $request->penjelasan,
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('penulis.cecimpedan.index')
+            ->with('success', 'Cecimpedan berhasil diperbarui.');
+    }
+
+    public function cecimpedanDestroy($id)
+    {
+        $cecimpedan = Cecimpedan::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+        $cecimpedan->delete();
+
+        return redirect()->route('penulis.cecimpedan.index')
+            ->with('success', 'Cecimpedan berhasil dihapus.');
     }
 
     /*
@@ -255,7 +421,6 @@ class PenulisController extends Controller
         $request->validate([
             'judul'      => 'required|string|max:255',
             'sub_judul'  => 'nullable|string|max:255',
-            'subtitle'   => 'nullable|string|max:255',
             'asal'       => 'nullable|string|max:255',
             'gambar'     => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'ringkasan'  => 'nullable|string',
@@ -282,26 +447,23 @@ class PenulisController extends Controller
             'status'    => 'pending',
         ]);
 
-        return redirect()
-            ->route('penulis.satua.index')
+        return redirect()->route('penulis.satua.index')
             ->with('success', 'Karya Satua Bali berhasil disimpan dan menunggu verifikasi.');
     }
 
     public function satuaEdit($id)
     {
-        $satua = Satua::findOrFail($id);
-
+        $satua = Satua::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
         return view('penulis.satua.edit', compact('satua'));
     }
 
     public function satuaUpdate(Request $request, $id)
     {
-        $satua = Satua::findOrFail($id);
+        $satua = Satua::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
 
         $request->validate([
             'judul'      => 'required|string|max:255',
             'sub_judul'  => 'nullable|string|max:255',
-            'subtitle'   => 'nullable|string|max:255',
             'asal'       => 'nullable|string|max:255',
             'gambar'     => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'ringkasan'  => 'nullable|string',
@@ -330,14 +492,13 @@ class PenulisController extends Controller
             'status'    => 'pending',
         ]);
 
-        return redirect()
-            ->route('penulis.satua.index')
+        return redirect()->route('penulis.satua.index')
             ->with('success', 'Karya Satua Bali berhasil diperbarui.');
     }
 
     public function satuaDestroy($id)
     {
-        $satua = Satua::findOrFail($id);
+        $satua = Satua::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
 
         if ($satua->gambar && Storage::disk('public')->exists($satua->gambar)) {
             Storage::disk('public')->delete($satua->gambar);
@@ -345,9 +506,85 @@ class PenulisController extends Controller
 
         $satua->delete();
 
-        return redirect()
-            ->route('penulis.satua.index')
+        return redirect()->route('penulis.satua.index')
             ->with('success', 'Karya Satua Bali berhasil dihapus.');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | MANAJEMEN ISTILAH BALI
+    |--------------------------------------------------------------------------
+    */
+
+    public function istilahIndex()
+    {
+        $istilahs = Istilah::where('user_id', auth()->id())->latest()->get();
+        return view('penulis.istilah.index', compact('istilahs'));
+    }
+
+    public function istilahCreate()
+    {
+        return view('penulis.istilah.create');
+    }
+
+    public function istilahStore(Request $request)
+    {
+        $request->validate([
+            'istilah' => 'required|string|max:255',
+            'kategori' => 'nullable|string|max:255',
+            'arti' => 'required|string',
+            'contoh_kalimat' => 'nullable|string',
+        ]);
+
+        Istilah::create([
+            'user_id' => auth()->id(),
+            'istilah' => $request->istilah,
+            'kategori' => $request->kategori ?? 'Istilah Bali',
+            'arti' => $request->arti,
+            'contoh_kalimat' => $request->contoh_kalimat,
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('penulis.istilah.index')
+            ->with('success', 'Istilah Bali berhasil disimpan dan menunggu verifikasi.');
+    }
+
+    public function istilahEdit($id)
+    {
+        $istilah = Istilah::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+        return view('penulis.istilah.edit', compact('istilah'));
+    }
+
+    public function istilahUpdate(Request $request, $id)
+    {
+        $istilah = Istilah::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+
+        $request->validate([
+            'istilah' => 'required|string|max:255',
+            'kategori' => 'nullable|string|max:255',
+            'arti' => 'required|string',
+            'contoh_kalimat' => 'nullable|string',
+        ]);
+
+        $istilah->update([
+            'istilah' => $request->istilah,
+            'kategori' => $request->kategori ?? 'Istilah Bali',
+            'arti' => $request->arti,
+            'contoh_kalimat' => $request->contoh_kalimat,
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('penulis.istilah.index')
+            ->with('success', 'Istilah Bali berhasil diperbarui.');
+    }
+
+    public function istilahDestroy($id)
+    {
+        $istilah = Istilah::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+        $istilah->delete();
+
+        return redirect()->route('penulis.istilah.index')
+            ->with('success', 'Istilah Bali berhasil dihapus.');
     }
 
     /*
