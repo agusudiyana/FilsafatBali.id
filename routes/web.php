@@ -13,6 +13,7 @@ use App\Http\Controllers\CecimpedanController;
 use App\Http\Controllers\IstilahController;
 use App\Http\Controllers\FilsafatController;
 use App\Http\Controllers\AjaranTertuaController;
+use App\Http\Controllers\Auth\SocialiteController; // Import Controller Google Socialite
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,15 @@ Route::get('/syarat-ketentuan', function () {
 Route::get('/hubungi-kami', function () {
     return view('hubungi-kami');
 })->name('hubungi.kami');
+
+/*
+|--------------------------------------------------------------------------
+| ROUTE AUTENTIKASI GOOGLE (PUBLIC)
+|--------------------------------------------------------------------------
+*/
+Route::get('/auth/google', [SocialiteController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('/auth/google/redirect', [SocialiteController::class, 'redirectToGoogle'])->name('auth.google'); // Alias nama route auth.google
+Route::get('/auth/google/callback', [SocialiteController::class, 'handleGoogleCallback']);
 
 /*
 |--------------------------------------------------------------------------

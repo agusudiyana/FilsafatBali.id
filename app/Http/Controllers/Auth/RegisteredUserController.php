@@ -18,16 +18,11 @@ use Illuminate\View\View;
 class RegisteredUserController extends Controller
 {
     /**
-     * Display the registration view or role selection view.
+     * Display the registration view.
      */
-    public function create(Request $request): View
+    public function create(): View
     {
-        // Jika URL belum memiliki query parameter 'role', tampilkan halaman pilihan kartu (Role Selection)
-        if (!$request->has('role')) {
-            return view('auth.select-role');
-        }
-
-        // Jika role sudah ada (?role=penulis atau ?role=pengguna), tampilkan form pendaftaran
+        // Memanggil tampilan register utama
         return view('auth.register');
     }
 
@@ -44,7 +39,7 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => $role === 'penulis' ? ['nullable'] : ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => $role === 'penulis' ? ['nullable'] : ['required', Rules\Password::defaults()],
             'role'     => ['required', 'in:pengguna,penulis'],
         ]);
 
@@ -66,14 +61,13 @@ class RegisteredUserController extends Controller
                 \Log::error('Gagal mengirim email password ke Penulis: ' . $e->getMessage());
             }
 
-            // LANGSUNG DILEMPAR KE LOGIN (TANPA AUTH::LOGIN)
             return redirect()->route('login')->with(
                 'status', 
                 'Pendaftaran Penulis berhasil! Password telah dikirimkan ke email Anda. Silakan tunggu verifikasi Admin sebelum dapat login.'
             );
         }
 
-        // 3. ALUR PENDAFTARAN PENGGUNA BIASA
+        // 3. ALUR PENDAFTARAN PENGGUNA BIASA (PENGUNJUNG)
         $user = User::create([
             'name'        => $request->name,
             'email'       => $request->email,
@@ -84,7 +78,6 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        // DILEMPAR JUGA KE HALAMAN LOGIN (TIDAK DIBUAT AUTOMATIC LOGIN)
         return redirect()->route('login')->with(
             'status', 
             'Pendaftaran berhasil! Silakan masuk menggunakan akun Anda.'

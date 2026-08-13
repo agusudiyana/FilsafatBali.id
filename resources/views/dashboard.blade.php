@@ -88,33 +88,6 @@
                         </div>
                     </a>
 
-
-                    <!-- 3. KARTU PENGATURAN PROFIL -->
-                    <a href="{{ route('profile.edit') }}" 
-                       class="group bg-white rounded-2xl p-6 border border-[#E5D6BF] shadow-sm hover:shadow-xl hover:border-[#8D2B1D] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between block cursor-pointer">
-                        <div>
-                            <div class="w-12 h-12 rounded-xl bg-[#FAF6F0] border border-[#E5D6BF] text-[#8D2B1D] flex items-center justify-center mb-5 group-hover:bg-[#8D2B1D] group-hover:text-white transition-colors duration-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
-                            </div>
-                            <h4 style="font-family:'Cormorant Garamond', serif;" class="text-2xl font-bold text-[#2B1A0E] group-hover:text-[#8D2B1D] transition-colors">
-                                Pengaturan Profil
-                            </h4>
-                            <p class="text-xs text-[#675A4D] leading-relaxed mt-2">
-                                Perbarui kata sandi, foto profil, dan informasi identitas akun keanggotaan Anda.
-                            </p>
-                        </div>
-                        <div class="mt-6 pt-4 border-t border-[#FAF6F0] flex items-center justify-between">
-                            <span class="text-xs font-bold text-[#8D2B1D] group-hover:translate-x-1 transition-transform inline-flex items-center gap-2">
-                                Kelola Profil Akun
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                </svg>
-                            </span>
-                        </div>
-                    </a>
-
                 </div>
             </div>
 
