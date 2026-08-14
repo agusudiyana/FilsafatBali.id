@@ -27,17 +27,31 @@
                     class="w-full pl-9 pr-4 py-2.5 bg-white border border-[#E6D5B8] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#C48D2D] focus:border-[#C48D2D] text-[#2C221E] placeholder-gray-400 shadow-sm transition">
             </div>
 
-            <!-- Dropdown Filter Kategori -->
-            <div class="w-full sm:w-56">
-                <select id="categoryFilter"
-                    class="w-full px-4 py-2.5 bg-white border border-[#E6D5B8] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#C48D2D] focus:border-[#C48D2D] text-[#2C221E] shadow-sm transition cursor-pointer">
-                    <option value="all">Semua Kategori</option>
-                    <option value="Artikel">Artikel</option>
-                    <option value="Filsafat">Filsafat</option>
-                    <option value="Cecimpedan">Cecimpedan</option>
-                    <option value="Satua Bali">Satua Bali</option>
-                    <option value="Istilah Bali">Istilah Bali</option>
-                </select>
+            <!-- Group Filter Dropdowns -->
+            <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                <!-- Dropdown Filter Kategori -->
+                <div class="w-full sm:w-48">
+                    <select id="categoryFilter"
+                        class="w-full px-4 py-2.5 bg-white border border-[#E6D5B8] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#C48D2D] focus:border-[#C48D2D] text-[#2C221E] shadow-sm transition cursor-pointer">
+                        <option value="all">Semua Kategori</option>
+                        <option value="Artikel">Artikel</option>
+                        <option value="Filsafat">Filsafat</option>
+                        <option value="Cecimpedan">Cecimpedan</option>
+                        <option value="Satua Bali">Satua Bali</option>
+                        <option value="Istilah Bali">Istilah Bali</option>
+                    </select>
+                </div>
+
+                <!-- Dropdown Filter Status -->
+                <div class="w-full sm:w-44">
+                    <select id="statusFilter"
+                        class="w-full px-4 py-2.5 bg-white border border-[#E6D5B8] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#C48D2D] focus:border-[#C48D2D] text-[#2C221E] shadow-sm transition cursor-pointer">
+                        <option value="all">Semua Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="disetujui">Disetujui</option>
+                        <option value="ditolak">Ditolak</option>
+                    </select>
+                </div>
             </div>
         </div>
 
@@ -62,8 +76,8 @@
                         {{-- Loop Data Artikel --}}
                         @if(isset($artikel))
                             @foreach($artikel as $item)
-                                <tr class="data-row hover:bg-[#FBF9F5]/60 transition" data-category="Artikel">
-                                    <td class="p-4 font-medium text-gray-500 text-center">{{ $no++ }}</td>
+                                <tr class="data-row hover:bg-[#FBF9F5]/60 transition" data-category="Artikel" data-status="{{ strtolower($item->status ?? 'pending') }}">
+                                    <td class="p-4 font-medium text-gray-500 text-center number-cell">{{ $no++ }}</td>
                                     <td class="p-4">
                                         <span class="bg-[#F3E7D0] text-[#2C221E] px-3 py-1 rounded-full text-xs font-medium inline-block">
                                             Artikel
@@ -94,8 +108,8 @@
                         {{-- Loop Data Filsafat --}}
                         @if(isset($filsafat))
                             @foreach($filsafat as $item)
-                                <tr class="data-row hover:bg-[#FBF9F5]/60 transition" data-category="Filsafat">
-                                    <td class="p-4 font-medium text-gray-500 text-center">{{ $no++ }}</td>
+                                <tr class="data-row hover:bg-[#FBF9F5]/60 transition" data-category="Filsafat" data-status="{{ strtolower($item->status ?? 'pending') }}">
+                                    <td class="p-4 font-medium text-gray-500 text-center number-cell">{{ $no++ }}</td>
                                     <td class="p-4">
                                         <span class="bg-[#F3E7D0] text-[#2C221E] px-3 py-1 rounded-full text-xs font-medium inline-block">
                                             Filsafat
@@ -126,8 +140,8 @@
                         {{-- Loop Data Cecimpedan --}}
                         @if(isset($cecimpedan))
                             @foreach($cecimpedan as $item)
-                                <tr class="data-row hover:bg-[#FBF9F5]/60 transition" data-category="Cecimpedan">
-                                    <td class="p-4 font-medium text-gray-500 text-center">{{ $no++ }}</td>
+                                <tr class="data-row hover:bg-[#FBF9F5]/60 transition" data-category="Cecimpedan" data-status="{{ strtolower($item->status ?? 'pending') }}">
+                                    <td class="p-4 font-medium text-gray-500 text-center number-cell">{{ $no++ }}</td>
                                     <td class="p-4">
                                         <span class="bg-[#F3E7D0] text-[#2C221E] px-3 py-1 rounded-full text-xs font-medium inline-block">
                                             Cecimpedan
@@ -158,8 +172,8 @@
                         {{-- Loop Data Satua --}}
                         @if(isset($satua))
                             @foreach($satua as $item)
-                                <tr class="data-row hover:bg-[#FBF9F5]/60 transition" data-category="Satua Bali">
-                                    <td class="p-4 font-medium text-gray-500 text-center">{{ $no++ }}</td>
+                                <tr class="data-row hover:bg-[#FBF9F5]/60 transition" data-category="Satua Bali" data-status="{{ strtolower($item->status ?? 'pending') }}">
+                                    <td class="p-4 font-medium text-gray-500 text-center number-cell">{{ $no++ }}</td>
                                     <td class="p-4">
                                         <span class="bg-[#F3E7D0] text-[#2C221E] px-3 py-1 rounded-full text-xs font-medium inline-block">
                                             Satua Bali
@@ -190,8 +204,8 @@
                         {{-- Loop Data Istilah --}}
                         @if(isset($istilah))
                             @foreach($istilah as $item)
-                                <tr class="data-row hover:bg-[#FBF9F5]/60 transition" data-category="Istilah Bali">
-                                    <td class="p-4 font-medium text-gray-500 text-center">{{ $no++ }}</td>
+                                <tr class="data-row hover:bg-[#FBF9F5]/60 transition" data-category="Istilah Bali" data-status="{{ strtolower($item->status ?? 'pending') }}">
+                                    <td class="p-4 font-medium text-gray-500 text-center number-cell">{{ $no++ }}</td>
                                     <td class="p-4">
                                         <span class="bg-[#F3E7D0] text-[#2C221E] px-3 py-1 rounded-full text-xs font-medium inline-block">
                                             Istilah Bali
@@ -225,7 +239,7 @@
                                 <div class="flex flex-col items-center justify-center gap-2">
                                     <i data-feather="search" class="w-8 h-8 stroke-1 text-gray-300"></i>
                                     <span class="text-base font-medium text-gray-500">Tidak ada riwayat yang sesuai.</span>
-                                    <p class="text-xs text-gray-400">Coba kata kunci lain yang sesuai huruf awalannya.</p>
+                                    <p class="text-xs text-gray-400">Coba ubah kata kunci atau kombinasi filter Anda.</p>
                                 </div>
                             </td>
                         </tr>
@@ -261,31 +275,36 @@
             // Elemen Filter
             const searchInput = document.getElementById('searchInput');
             const categoryFilter = document.getElementById('categoryFilter');
+            const statusFilter = document.getElementById('statusFilter');
             const rows = document.querySelectorAll('.data-row');
             const noResultsRow = document.getElementById('noResultsRow');
 
             function filterTable() {
                 const searchValue = searchInput.value.toLowerCase().trim();
                 const selectedCategory = categoryFilter.value;
+                const selectedStatus = statusFilter.value.toLowerCase();
                 let visibleCount = 0;
 
                 rows.forEach(row => {
                     const titleText = row.querySelector('.title-cell').textContent.trim().toLowerCase();
                     const categoryText = row.getAttribute('data-category');
+                    const statusText = row.getAttribute('data-status');
 
-                    // Menggunakan startsWith() agar hanya mencocokkan huruf depannya saja
+                    // Filter Logic
                     const matchesSearch = searchValue === '' || titleText.startsWith(searchValue);
                     const matchesCategory = (selectedCategory === 'all') || (categoryText === selectedCategory);
+                    const matchesStatus = (selectedStatus === 'all') || (statusText === selectedStatus);
 
-                    if (matchesSearch && matchesCategory) {
+                    if (matchesSearch && matchesCategory && matchesStatus) {
                         row.classList.remove('hidden');
                         visibleCount++;
+                        row.querySelector('.number-cell').textContent = visibleCount;
                     } else {
                         row.classList.add('hidden');
                     }
                 });
 
-                // Tampilkan baris "Tidak ditemukan" jika hasil pencarian kosong
+                // Tampilkan baris "Tidak ditemukan" jika hasil filter kosong
                 if (rows.length > 0 && visibleCount === 0) {
                     noResultsRow.classList.remove('hidden');
                 } else {
@@ -296,6 +315,7 @@
             // Event Listeners
             if (searchInput) searchInput.addEventListener('input', filterTable);
             if (categoryFilter) categoryFilter.addEventListener('change', filterTable);
+            if (statusFilter) statusFilter.addEventListener('change', filterTable);
         });
     </script>
 @endsection

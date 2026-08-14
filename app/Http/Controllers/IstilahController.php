@@ -8,11 +8,19 @@ use Illuminate\Support\Facades\Storage;
 
 class IstilahController extends Controller
 {
-    public function index()
+    /**
+     * Menampilkan daftar istilah milik penulis yang sedang login (dilengkapi filter status).
+     */
+    public function index(Request $request)
     {
-        $istilahs = Istilah::where('user_id', auth()->id())
-            ->latest()
-            ->get();
+        $query = Istilah::where('user_id', auth()->id());
+
+        // Filter berdasarkan status jika dikirim melalui URL Query
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $istilahs = $query->latest()->get();
 
         return view('penulis.istilah.index', compact('istilahs'));
     }

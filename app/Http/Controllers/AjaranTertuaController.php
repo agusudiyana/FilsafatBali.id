@@ -9,9 +9,20 @@ use Illuminate\Support\Facades\Storage;
 
 class AjaranTertuaController extends Controller
 {
-    public function index()
+    /**
+     * Menampilkan daftar Ajaran Tertua milik penulis (dilengkapi filter status).
+     */
+    public function index(Request $request)
     {
-        $ajaranTertua = AjaranTertua::where('user_id', Auth::id())->latest()->get();
+        $query = AjaranTertua::where('user_id', Auth::id());
+
+        // Filter berdasarkan status jika dipilih di dropdown
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $ajaranTertua = $query->latest()->get();
+
         return view('penulis.ajaran_tertua.index', compact('ajaranTertua'));
     }
 
@@ -30,6 +41,7 @@ class AjaranTertuaController extends Controller
 
         $data = $request->all();
         $data['user_id'] = Auth::id();
+        $data['status'] = 'pending'; // Default status saat baru ditambah
 
         // Unggah Gambar jika ada
         if ($request->hasFile('gambar')) {
@@ -38,7 +50,8 @@ class AjaranTertuaController extends Controller
 
         AjaranTertua::create($data);
 
-        return redirect()->route('penulis.ajaran-tertua.index')->with('success', 'Ajaran Tertua berhasil disimpan!');
+        return redirect()->route('penulis.ajaran-tertua.index')
+            ->with('success', 'Ajaran Tertua berhasil disimpan dan menunggu verifikasi admin!');
     }
 
     public function edit($id)
@@ -57,6 +70,7 @@ class AjaranTertuaController extends Controller
 
         $ajaranTertua = AjaranTertua::where('user_id', Auth::id())->findOrFail($id);
         $data = $request->all();
+        $data['status'] = 'pending'; // Reset status ke pending saat diperbarui
 
         // Update Gambar jika mengunggah file baru
         if ($request->hasFile('gambar')) {
@@ -68,7 +82,8 @@ class AjaranTertuaController extends Controller
 
         $ajaranTertua->update($data);
 
-        return redirect()->route('penulis.ajaran-tertua.index')->with('success', 'Ajaran Tertua berhasil diperbarui!');
+        return redirect()->route('penulis.ajaran-tertua.index')
+            ->with('success', 'Ajaran Tertua berhasil diperbarui dan menunggu verifikasi admin!');
     }
 
     public function destroy($id)
@@ -81,6 +96,7 @@ class AjaranTertuaController extends Controller
 
         $ajaranTertua->delete();
 
-        return redirect()->route('penulis.ajaran-tertua.index')->with('success', 'Ajaran Tertua berhasil dihapus!');
+        return redirect()->route('penulis.ajaran-tertua.index')
+            ->with('success', 'Ajaran Tertua berhasil dihapus!');
     }
 }

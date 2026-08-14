@@ -204,10 +204,14 @@
                                 class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition duration-300">
                             </div>
 
+                            <!-- TOMBOL BACA ARTIKEL TRANSPARAN + ICON -->
                             <div
                                 class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300 transform group-hover:scale-100 scale-95 z-10">
                                 <span
-                                    class="bg-[#FAF5ED] text-[#2B1A12] border border-[#D6C5AE] text-[11px] font-bold tracking-[2px] uppercase px-5 py-2.5 rounded-lg shadow-lg">
+                                    class="bg-[#FAF5ED]/90 backdrop-blur-sm text-[#992B20] border border-[#D6C5AE] text-[11px] font-bold tracking-[2px] uppercase px-5 py-2.5 rounded-lg shadow-lg flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 stroke-[#992B20]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
                                     BACA ARTIKEL
                                 </span>
                             </div>
@@ -237,10 +241,10 @@
                         </div>
                     </div>
 
-                    <!-- Footer Kartu -->
+                    <!-- Footer Kartu (Hanya Menampilkan Tanggal Saja) -->
                     <div
                         class="px-6 pb-6 pt-2 flex items-center justify-between text-[13px] text-[#8C7A65] border-t border-[#F3EBE0]">
-                        <span>{{ $tanggal }} &nbsp;•&nbsp; 5 Menit</span>
+                        <span>{{ $tanggal }}</span>
 
                         <!-- COVER ICON SIMPAN KOTAK -->
                         <button type="button" 
@@ -394,7 +398,7 @@
         // Tembak Data ke Elemen Overlay Modal
         if (document.getElementById('artTitle')) document.getElementById('artTitle').innerText = judulText;
         if (document.getElementById('artPenulis')) document.getElementById('artPenulis').innerText = penulisText;
-        if (document.getElementById('artMeta')) document.getElementById('artMeta').innerText = tanggalText + (tanggalText ? ' • BALINESIA' : 'BALINESIA');
+        if (document.getElementById('artMeta')) document.getElementById('artMeta').innerText = tanggalText;
         if (document.getElementById('artIsi')) document.getElementById('artIsi').innerHTML = isiHtml;
         if (document.getElementById('artAvatar')) document.getElementById('artAvatar').innerText = (penulisText ? penulisText.charAt(0) : 'A').toUpperCase();
 

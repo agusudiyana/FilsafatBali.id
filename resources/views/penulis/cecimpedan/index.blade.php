@@ -6,19 +6,33 @@
     
     <!-- HEADER HALAMAN (DIAM DI TEMPAT / TIDAK DI-SCROLL) -->
     <div class="flex-none">
-        <div class="flex justify-between items-start mb-6 border-b border-[#E2D5C3] pb-4">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 border-b border-[#E2D5C3] pb-4">
             <div>
                 <h1 class="text-3xl font-bold text-[#1A110A]">Data Cecimpedan</h1>
                 <p class="text-sm text-[#7A6B5D] mt-1">Daftar Cecimpedan yang telah Anda kirim.</p>
             </div>
-            <a href="{{ route('penulis.cecimpedan.create') }}" 
-               style="background-color: #C38E2A; color: #ffffff;"
-               class="inline-flex items-center gap-2 px-5 py-2.5 font-semibold rounded-xl shadow-sm transition hover:opacity-90">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                Tambah Cecimpedan
-            </a>
+
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <!-- Dropdown Filter Status (Konsisten dengan tema Filsafat & Ajaran Tertua) -->
+                <form method="GET" action="{{ route('penulis.cecimpedan.index') }}" class="flex items-center">
+                    <select name="status" onchange="this.form.submit()" class="text-xs font-semibold py-2.5 pl-3.5 pr-8 border border-[#E2D5C3] bg-[#F8EFE3] text-[#1A110A] rounded-xl focus:border-[#C38E2A] focus:ring-[#C38E2A]/20 cursor-pointer outline-none shadow-sm transition">
+                        <option value="">Semua Status</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="disetujui" {{ request('status') == 'disetujui' ? 'selected' : '' }}>Disetujui</option>
+                        <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                    </select>
+                </form>
+
+                <!-- Tombol Tambah Cecimpedan -->
+                <a href="{{ route('penulis.cecimpedan.create') }}" 
+                   style="background-color: #C38E2A; color: #ffffff;"
+                   class="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold rounded-xl shadow-sm transition hover:opacity-90 shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Tambah Cecimpedan
+                </a>
+            </div>
         </div>
 
         <!-- Alert Notifikasi Hijau Soft -->
@@ -128,7 +142,7 @@
                     @empty
                         <tr>
                             <td colspan="5" class="py-8 text-center text-[#8C7B6C]">
-                                Belum ada data Cecimpedan.
+                                Belum ada data Cecimpedan yang sesuai dengan filter.
                             </td>
                         </tr>
                     @endforelse

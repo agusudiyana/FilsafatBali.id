@@ -9,13 +9,18 @@ use Illuminate\Support\Facades\Storage;
 class SatuaController extends Controller
 {
     /**
-     * Menampilkan daftar satua milik penulis yang sedang login.
+     * Menampilkan daftar satua milik penulis yang sedang login (dengan filter status).
      */
-    public function index()
+    public function index(Request $request)
     {
-        $satuas = Satua::where('user_id', auth()->id())
-            ->latest()
-            ->get();
+        $query = Satua::where('user_id', auth()->id());
+
+        // Filter status jika parameter status diisi di URL query
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $satuas = $query->latest()->get();
 
         return view('penulis.satua.index', compact('satuas'));
     }
@@ -66,7 +71,6 @@ class SatuaController extends Controller
      */
     public function edit(Satua $satua)
     {
-        // Pastikan hanya pemilik yang bisa mengakses
         $this->authorizeOwner($satua);
 
         if ($satua->status === 'disetujui') {
@@ -83,7 +87,6 @@ class SatuaController extends Controller
      */
     public function update(Request $request, Satua $satua)
     {
-        // Pastikan hanya pemilik yang bisa memperbarui
         $this->authorizeOwner($satua);
 
         if ($satua->status === 'disetujui') {
@@ -101,7 +104,6 @@ class SatuaController extends Controller
         ]);
 
         if ($request->hasFile('gambar')) {
-            // Hapus gambar lama jika ada
             if ($satua->gambar && Storage::disk('public')->exists($satua->gambar)) {
                 Storage::disk('public')->delete($satua->gambar);
             }
@@ -114,7 +116,7 @@ class SatuaController extends Controller
             'tokoh'  => $validated['tokoh'] ?? null,
             'asal'   => $validated['asal'] ?? null,
             'gambar' => $validated['gambar'] ?? $satua->gambar,
-            'status' => 'pending', // Reset status ke pending agar diverifikasi ulang
+            'status' => 'pending',
         ]);
 
         return redirect()
@@ -127,7 +129,6 @@ class SatuaController extends Controller
      */
     public function destroy(Satua $satua)
     {
-        // Pastikan hanya pemilik yang bisa menghapus
         $this->authorizeOwner($satua);
 
         if ($satua->status === 'disetujui') {
@@ -147,9 +148,6 @@ class SatuaController extends Controller
             ->with('success', 'Data Satua berhasil dihapus.');
     }
 
-    /**
-     * Helper internal untuk pengecekan hak milik data.
-     */
     private function authorizeOwner(Satua $satua): void
     {
         if ($satua->user_id !== auth()->id()) {

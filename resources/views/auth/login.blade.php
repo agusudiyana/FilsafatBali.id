@@ -45,7 +45,7 @@
 
         <!-- Password dengan Fitur Toggle Mata Pas Posisi -->
         <div class="mt-3.5">
-            <x-input-label for="password" :value="__('Password')" />
+            <x-input-label for="password" value="Kata Sandi" />
             
             <div class="relative mt-1">
                 <x-text-input id="password" class="block w-full text-sm pr-10" type="password" name="password" required autocomplete="current-password" />
@@ -69,9 +69,9 @@
 
         <!-- Remember Me -->
         <div class="block mt-3.5">
-            <label for="remember_me" class="inline-flex items-center">
+            <label for="remember_me" class="inline-flex items-center cursor-pointer">
                 <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-[#8D2B1D] shadow-sm focus:ring-[#8D2B1D]" name="remember">
-                <span class="ms-2 text-xs text-gray-600">{{ __('Remember me') }}</span>
+                <span class="ms-2 text-xs text-gray-600">Ingat saya</span>
             </label>
         </div>
 
@@ -79,15 +79,15 @@
         <div class="mt-3 text-right">
             @if (Route::has('password.request'))
                 <a class="underline text-xs text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#8D2B1D]" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
+                    Lupa kata sandi Anda?
                 </a>
             @endif
         </div>
 
-        <!-- Tombol LOG IN Merah di Tengah -->
+        <!-- Tombol MASUK Merah di Tengah -->
         <div class="mt-4">
             <button type="submit" class="w-full flex justify-center items-center bg-[#8D2B1D] hover:bg-[#732216] text-white text-xs font-bold py-2.5 px-4 rounded-xl shadow-sm transition duration-150 ease-in-out cursor-pointer uppercase tracking-wider">
-                {{ __('LOG IN') }}
+                MASUK
             </button>
         </div>
     </form>

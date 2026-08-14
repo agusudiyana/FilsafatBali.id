@@ -46,14 +46,14 @@
             <!-- 1. FIELD NAMA LENGKAP -->
             <div>
                 <x-input-label for="name" :value="__('Nama Lengkap')" class="text-xs font-semibold text-[#23160E]" />
-                <x-text-input id="name" class="block mt-1 w-full text-xs py-2.5 px-3.5 border-[#EADCC9] bg-[#FAF5ED]/50 focus:bg-white focus:border-[#C8A45A] focus:ring-[#C8A45A]/20 rounded-xl transition-all" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="Masukkan nama lengkap Anda" />
+                <x-text-input id="name" class="block mt-1 w-full text-xs py-2.5 px-3.5 border-[#EADCC9] bg-[#FAF5ED]/50 focus:bg-white focus:border-[#C8A45A] focus:ring-[#C8A45A]/20 rounded-xl transition-all" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" placeholder="Masukkan nama lengkap Anda" oninvalid="this.setCustomValidity('Harap isi bidang ini.')" oninput="this.setCustomValidity('')" />
                 <x-input-error :messages="$errors->get('name')" class="mt-1 text-[11px]" />
             </div>
 
             <!-- 2. FIELD ALAMAT EMAIL -->
             <div>
                 <x-input-label for="email" :value="__('Alamat Email')" class="text-xs font-semibold text-[#23160E]" />
-                <x-text-input id="email" class="block mt-1 w-full text-xs py-2.5 px-3.5 border-[#EADCC9] bg-[#FAF5ED]/50 focus:bg-white focus:border-[#C8A45A] focus:ring-[#C8A45A]/20 rounded-xl transition-all" type="email" name="email" :value="old('email')" required autocomplete="username" placeholder="nama@email.com" />
+                <x-text-input id="email" class="block mt-1 w-full text-xs py-2.5 px-3.5 border-[#EADCC9] bg-[#FAF5ED]/50 focus:bg-white focus:border-[#C8A45A] focus:ring-[#C8A45A]/20 rounded-xl transition-all" type="email" name="email" :value="old('email')" required autocomplete="username" placeholder="nama@email.com" oninvalid="this.setCustomValidity('Harap isi bidang ini dengan alamat email yang valid.')" oninput="this.setCustomValidity('')" />
                 <x-input-error :messages="$errors->get('email')" class="mt-1 text-[11px]" />
             </div>
 
@@ -65,7 +65,7 @@
                 <div>
                     <x-input-label for="password" :value="__('Kata Sandi')" class="text-xs font-semibold text-[#23160E]" />
                     <div class="relative mt-1 flex items-center">
-                        <x-text-input id="password" class="block w-full text-xs py-2.5 pl-3.5 pr-10 border-[#EADCC9] bg-[#FAF5ED]/50 focus:bg-white focus:border-[#C8A45A] focus:ring-[#C8A45A]/20 rounded-xl transition-all" type="password" name="password" ::required="role === 'pengguna'" autocomplete="new-password" placeholder="••••••••" />
+                        <x-text-input id="password" class="block w-full text-xs py-2.5 pl-3.5 pr-10 border-[#EADCC9] bg-[#FAF5ED]/50 focus:bg-white focus:border-[#C8A45A] focus:ring-[#C8A45A]/20 rounded-xl transition-all" type="password" name="password" ::required="role === 'pengguna'" autocomplete="new-password" placeholder="••••••••" oninvalid="this.setCustomValidity('Harap isi bidang ini.')" oninput="this.setCustomValidity('')" />
                         <button type="button" onclick="togglePassVisibility('password', 'eyeIcon', 'eyeOffIcon')" class="absolute right-3 flex items-center text-[#8C7A65] hover:text-[#8D2B1D] focus:outline-none cursor-pointer">
                             <svg id="eyeIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                             <svg id="eyeOffIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a10.018 10.018 0 014.122-.963c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m-2.181 1.258A3.001 3.001 0 0112 15a2.996 2.996 0 01-2.828-2M3 3l18 18"/></svg>
@@ -100,7 +100,7 @@
             </div>
         </form>
 
-        <!-- BAGIAN GOOGLE SOCIALITE (Tampil Simetris di Bawah Form Pengguna) -->
+        <!-- BAGIAN GOOGLE SOCIALITE -->
         <div x-show="role === 'pengguna'" x-transition class="mt-4 space-y-3">
             <!-- Garis Pembatas "atau daftar dengan" -->
             <div class="relative flex items-center justify-center my-2">

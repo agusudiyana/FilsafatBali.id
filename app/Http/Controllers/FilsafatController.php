@@ -9,13 +9,18 @@ use Illuminate\Support\Facades\Auth;
 class FilsafatController extends Controller
 {
     /**
-     * Menampilkan daftar filsafat milik penulis yang sedang login.
+     * Menampilkan daftar filsafat milik penulis yang sedang login (dilengkapi filter status).
      */
-    public function index()
+    public function index(Request $request)
     {
-        $filsafat = Filsafat::where('user_id', Auth::id())
-            ->latest()
-            ->paginate(10);
+        $query = Filsafat::where('user_id', Auth::id());
+
+        // Filter berdasarkan status jika ada parameter 'status' yang dikirim
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $filsafat = $query->latest()->paginate(10)->withQueryString();
 
         return view('penulis.filsafat.index', compact('filsafat'));
     }

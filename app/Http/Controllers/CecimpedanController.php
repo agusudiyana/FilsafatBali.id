@@ -8,11 +8,19 @@ use Illuminate\Support\Facades\Storage;
 
 class CecimpedanController extends Controller
 {
-    public function index()
+    /**
+     * Menampilkan daftar Cecimpedan milik penulis (dilengkapi filter status).
+     */
+    public function index(Request $request)
     {
-        $cecimpedans = Cecimpedan::where('user_id', auth()->id())
-            ->latest()
-            ->get();
+        $query = Cecimpedan::where('user_id', auth()->id());
+
+        // Filter berdasarkan status jika ada parameter status dari query URL
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $cecimpedans = $query->latest()->get();
 
         return view('penulis.cecimpedan.index', compact('cecimpedans'));
     }

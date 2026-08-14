@@ -8,10 +8,17 @@ use Illuminate\Http\Request;
 
 class ArtikelController extends Controller
 {
-    // Menampilkan daftar ajaran
-    public function index()
+    // Menampilkan daftar ajaran (dilengkapi filter status)
+    public function index(Request $request)
     {
-        $ajarans = Ajaran::latest()->get();
+        $query = Ajaran::query();
+
+        // Filter berdasarkan status jika ada parameter 'status' yang dikirim dari dropdown
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $ajarans = $query->latest()->get();
 
         return view('admin.ajaran.index', compact('ajarans'));
     }

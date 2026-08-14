@@ -6,18 +6,32 @@
 
     <!-- HEADER HALAMAN & TOMBOL TAMBAH (DIAM DI TEMPAT / TIDAK DI-SCROLL) -->
     <div class="flex-none">
-        <div class="flex justify-between items-center mb-6 border-b border-[#EFE3D3] pb-4">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4 border-b border-[#EFE3D3] pb-4">
             <div>
                 <h1 class="text-3xl font-bold text-gray-900">Data Ajaran Tertua</h1>
                 <p class="text-sm text-gray-600 mt-1">Daftar Sorotan Ajaran Tertua yang telah Anda kirim.</p>
             </div>
-            <a href="{{ route('penulis.ajaran-tertua.create') }}"
-                class="inline-flex items-center gap-2 bg-[#C48D2D] hover:bg-[#b07d26] text-white font-medium px-5 py-2.5 rounded-xl shadow-sm transition duration-150">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                Tambah Ajaran Tertua
-            </a>
+
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <!-- Dropdown Filter Status (Konsisten dengan tema Filsafat) -->
+                <form method="GET" action="{{ route('penulis.ajaran-tertua.index') }}" class="flex items-center">
+                    <select name="status" onchange="this.form.submit()" class="text-xs font-semibold py-2.5 pl-3.5 pr-8 border border-[#E2D5C3] bg-[#F8EFE3] text-[#1A110A] rounded-xl focus:border-[#C38E2A] focus:ring-[#C38E2A]/20 cursor-pointer outline-none shadow-sm transition">
+                        <option value="">Semua Status</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="disetujui" {{ request('status') == 'disetujui' ? 'selected' : '' }}>Disetujui</option>
+                        <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                    </select>
+                </form>
+
+                <!-- Tombol Tambah Ajaran Tertua -->
+                <a href="{{ route('penulis.ajaran-tertua.create') }}"
+                    class="inline-flex items-center gap-2 bg-[#C48D2D] hover:bg-[#b07d26] text-white font-medium px-5 py-2.5 rounded-xl shadow-sm transition duration-150 shrink-0 text-xs">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>Tambah Ajaran Tertua</span>
+                </a>
+            </div>
         </div>
 
         @if (session('success'))
@@ -50,18 +64,24 @@
                             <td class="py-4 px-6 text-center">
                                 {{-- Badge Status --}}
                                 @if(($item->status ?? 'pending') == 'pending')
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#FFF8E1] text-[#B78103] border border-[#FFE8A3]">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#FEF9C3] text-[#A16207]">
+                                        <svg class="w-3.5 h-3.5 text-[#A16207]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                         </svg>
                                         Pending
                                     </span>
                                 @elseif(($item->status ?? '') == 'disetujui')
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-700 border border-green-200">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#DCFCE7] text-[#15803D]">
+                                        <svg class="w-3.5 h-3.5 text-[#15803D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                        </svg>
                                         Disetujui
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#FEE2E2] text-[#B91C1C]">
+                                        <svg class="w-3.5 h-3.5 text-[#B91C1C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
                                         Ditolak
                                     </span>
                                 @endif
@@ -104,7 +124,7 @@
                     @empty
                         <tr>
                             <td colspan="5" class="py-8 text-center text-gray-500 bg-white">
-                                Belum ada data Ajaran Tertua yang ditambahkan.
+                                Belum ada data Ajaran Tertua yang sesuai dengan filter.
                             </td>
                         </tr>
                     @endforelse

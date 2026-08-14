@@ -335,7 +335,7 @@ class AdminController extends Controller
 
     public function kelolaPenulis(): View
     {
-        $penulis = User::where('role', 'penulis')->latest()->paginate(10);
+        $penulis = User::where('role', 'penulis')->latest()->get();
 
         return view('admin.manajemen.penulis', compact('penulis'));
     }

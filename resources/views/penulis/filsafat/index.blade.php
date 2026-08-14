@@ -12,14 +12,27 @@
                 <p class="text-sm text-[#7A6B5D] mt-1">Daftar Wawasan Filsafat yang telah Anda kirim.</p>
             </div>
             
-            <a href="{{ route('penulis.filsafat.create') }}" 
-               style="background-color: #C38E2A; color: #ffffff;"
-               class="inline-flex items-center gap-2 px-5 py-2.5 font-semibold rounded-xl shadow-sm transition hover:opacity-90">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                Tambah Filsafat
-            </a>
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <!-- Dropdown Filter Status dengan Padding Kanan Pas (pr-8) -->
+                <form method="GET" action="{{ route('penulis.filsafat.index') }}" class="flex items-center">
+                    <select name="status" onchange="this.form.submit()" class="text-xs font-semibold py-2.5 pl-3.5 pr-8 border border-[#E2D5C3] bg-[#F8EFE3] text-[#1A110A] rounded-xl focus:border-[#C38E2A] focus:ring-[#C38E2A]/20 cursor-pointer outline-none shadow-sm transition">
+                        <option value="">Semua Status</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="disetujui" {{ request('status') == 'disetujui' ? 'selected' : '' }}>Disetujui</option>
+                        <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                    </select>
+                </form>
+
+                <!-- Tombol Tambah Filsafat -->
+                <a href="{{ route('penulis.filsafat.create') }}" 
+                   style="background-color: #C38E2A; color: #ffffff;"
+                   class="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold rounded-xl shadow-sm transition hover:opacity-90 shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Tambah Filsafat
+                </a>
+            </div>
         </div>
 
         <!-- Alert Notifikasi Hijau Soft -->
@@ -131,7 +144,7 @@
                     @empty
                         <tr>
                             <td colspan="5" class="py-8 text-center text-[#8C7B6C]">
-                                Belum ada data filsafat yang ditambahkan.
+                                Belum ada data filsafat yang sesuai dengan filter.
                             </td>
                         </tr>
                     @endforelse
