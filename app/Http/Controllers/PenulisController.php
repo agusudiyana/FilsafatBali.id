@@ -7,6 +7,7 @@ use App\Models\Filsafat;
 use App\Models\Cecimpedan;
 use App\Models\Satua;
 use App\Models\Istilah;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 

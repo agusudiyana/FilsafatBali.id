@@ -2,93 +2,148 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <!-- ========================================== -->
-<!-- SECTION HERO                               -->
+<!-- SECTION HERO (FIX DROPDOWN OVERLAP Z-INDEX)-->
 <!-- ========================================== -->
-<section id="filsafat" class="relative min-h-screen flex items-start justify-center">
+<section id="filsafat" class="relative z-30 min-h-screen flex items-start justify-center overflow-visible">
 
-    <!-- Background Image -->
-    <img src="{{ asset('images/hero.png') }}" alt="Hero Background" class="absolute inset-0 w-full h-full object-cover">
+    <!-- Swiper Background Container -->
+    <div class="swiper heroSwiper absolute inset-0 w-full h-full -z-10">
+        <div class="swiper-wrapper">
+            <!-- Slide 1 (hero.png) -->
+            <div class="swiper-slide relative overflow-hidden">
+                <img src="{{ asset('images/hero.png') }}" alt="Hero Background 1" class="w-full h-full object-cover hero-kenburns">
+            </div>
+            <!-- Slide 2 (hero1.png) -->
+            <div class="swiper-slide relative overflow-hidden">
+                <img src="{{ asset('images/hero1.png') }}" alt="Hero Background 2" class="w-full h-full object-cover hero-kenburns">
+            </div>
+        </div>
+    </div>
 
-    <!-- Overlay Gelap -->
-    <div class="absolute inset-0 bg-black/55"></div>
+    <!-- Overlay Gelap Utama -->
+    <div class="absolute inset-0 bg-black/55 pointer-events-none z-0"></div>
 
-    <!-- Gradient Transition Bottom -->
-    <div class="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-[#F5F0E8] to-transparent"></div>
+    <!-- Gradient Transition Bottom (Hitam Transparan) -->
+    <div class="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none z-0"></div>
 
     <!-- Konten Utama Hero -->
     <div class="relative z-10 text-center max-w-4xl mx-auto px-6 pt-40">
 
-        <!-- Subtitle Header -->
-        <div class="max-w-lg mx-auto mb-10">
-            <p class="uppercase tracking-[8px] text-[#E2B75B] text-[9px] font-medium text-center whitespace-nowrap">
+        <!-- Subtitle Header (DIKUNCI KE WARNA KUNING #E2B75B) -->
+        <div class="anim-hero-tag max-w-lg mx-auto mb-10">
+            <p id="heroTagline" class="uppercase tracking-[8px] text-[9px] font-medium text-center whitespace-nowrap !text-[#E2B75B]" style="color: #E2B75B !important;">
                 Arsip Digital Filsafat & Budaya Bali
             </p>
         </div>
 
         <!-- Judul Utama Hero -->
-        <h1 style="font-family:'Cormorant Garamond',serif;" class="font-bold leading-[0.9]">
+        <h1 style="font-family:'Cormorant Garamond',serif;" class="anim-hero-title font-bold leading-[0.9]">
             <span class="block text-white text-[58px]">
                 Menjaga Warisan,
             </span>
-            <span class="block text-[#E2B75B] text-[66px] mt-1">
+            <span id="heroTitleAccent" class="block text-[66px] mt-1 transition-colors duration-500 text-[#E2B75B]">
                 Menerangi Masa Depan
             </span>
         </h1>
 
         <!-- Deskripsi Singkat -->
-        <p class="mt-8 max-w-2xl mx-auto text-center text-[17px] md:text-[18px] font-normal leading-[36px] text-[#F3F1EC]"
+        <p class="anim-hero-sub mt-8 max-w-2xl mx-auto text-center text-[17px] md:text-[18px] font-normal leading-[36px] text-[#F3F1EC]"
             style="font-family:'Inter', sans-serif;">
             Platform digital untuk mengakses, mempelajari, dan
             <br>
             melestarikan kearifan lokal Bali.
         </p>
 
-        <!-- KOTAK PENCARIAN (SEARCH CONTAINER) -->
-        <div class="mt-8 max-w-2xl mx-auto relative z-[9999]">
+        <!-- KOTAK PENCARIAN (STACKING CONTEXT UTAMA) -->
+        <div class="anim-hero-search mt-8 max-w-2xl mx-auto relative z-50">
 
             <!-- Field Input Search -->
             <div id="searchBoxContainer"
                 class="bg-[#FAF5ED] rounded-xl px-5 h-[54px] flex items-center shadow-2xl transition-all duration-200 w-full shrink-0 ring-2 ring-transparent">
 
-                <!-- Icon Kaca Pembesar -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#8C7A65] mr-3 shrink-0" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                         d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
 
-                <!-- Input Teks Live Search -->
                 <input id="searchInput" type="text" placeholder="Cari ajaran, istilah, satua, filsafat..."
                     class="bg-transparent flex-1 w-full outline-none text-[16px] text-[#2B1A0E] placeholder-[#A0907E] font-medium h-full"
                     onfocus="aktifkanBorderMerah()" oninput="liveSearch(this.value)">
 
-                <!-- Tombol Clear Teks (X) -->
                 <button id="btnClearSearch" type="button" onclick="clearSearch()"
                     class="hidden text-[#8C7A65] hover:text-[#8D2B1D] font-bold text-lg px-2 shrink-0 transition cursor-pointer">
                     ✕
                 </button>
             </div>
 
-            <!-- DROPDOWN HASIL PENCARIAN LIVE DARI DATABASE -->
+            <!-- DROPDOWN HASIL PENCARIAN -->
             <div id="hasilCari"
-                class="hidden absolute left-0 top-full mt-2 w-full bg-[#FAF5ED] rounded-xl border border-[#E5D6BF] shadow-2xl overflow-y-auto max-h-[320px] divide-y divide-[#EADCC9] z-[99999] text-left">
+                class="hidden absolute left-0 top-full mt-2 w-full bg-[#FAF5ED] rounded-xl border border-[#E5D6BF] shadow-2xl overflow-y-auto max-h-[280px] divide-y divide-[#EADCC9] z-[100] text-left">
             </div>
 
         </div>
 
-        <!-- KEYWORD CHIPS / RIWAYAT PENCARIAN DINAMIS (PAS 1 BARIS / MAX 5 CHIPS) -->
-        <div id="keywordBox" class="mt-5 flex justify-center items-center flex-nowrap gap-2 md:gap-3 max-w-3xl mx-auto px-2 overflow-hidden">
-            <!-- Diisi otomatis oleh JavaScript renderKeywordChips() -->
+        <!-- KEYWORD CHIPS -->
+        <div id="keywordBox" class="anim-hero-chips mt-5 flex justify-center items-center flex-nowrap gap-2 md:gap-3 max-w-3xl mx-auto px-2 overflow-hidden">
         </div>
 
     </div>
 
 </section>
 
+
 <!-- ========================================== -->
-<!-- CSS STYLES UNTUK ANIMASI & TAB MERAH       -->
+<!-- CSS STYLES UNTUK ANIMASI                  -->
 <!-- ========================================== -->
 <style>
+    /* Swiper Ken Burns Zoom Effect */
+    .heroSwiper .swiper-slide-active .hero-kenburns {
+        animation: kenburnsZoom 6s ease-out forwards;
+    }
+
+    @keyframes kenburnsZoom {
+        from { transform: scale(1); }
+        to { transform: scale(1.08); }
+    }
+
+    /* Animasi Teks Masuk Slide-Up & Fade-In */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(28px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .anim-hero-tag {
+        animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .anim-hero-title {
+        opacity: 0;
+        animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+    }
+
+    .anim-hero-sub {
+        opacity: 0;
+        animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+    }
+
+    .anim-hero-search {
+        opacity: 0;
+        animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards;
+    }
+
+    .anim-hero-chips {
+        opacity: 0;
+        animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+    }
+
+    /* Tab & Card Styling */
     #artikel button[id^="btn-"],
     .filter-tab-btn,
     .tab-btn {
@@ -161,11 +216,238 @@
     }
 </style>
 
+
 <!-- ========================================== -->
-<!-- SCRIPT JAVASCRIPT GABUNGAN PRESISI & UTUH  -->
+<!-- SCRIPT JAVASCRIPT GABUNGAN PRESISI         -->
 <!-- ========================================== -->
 <script>
     const USER_LOGGED_IN = @json(auth()->check());
+    window.currentHeroAccentColor = '#E2B75B';
+
+    // FUNGSI MENGUBAH WARNA AKSEN HERO (TAGLINE ARSIP DIGITAL DIKUNCI DI KUNING #E2B75B)
+    function updateAccentColors(slideIndex) {
+        const tag = document.getElementById('heroTagline');
+        const title = document.getElementById('heroTitleAccent');
+
+        // Tagline selalu dikunci kuning emas
+        if (tag) tag.style.color = '#E2B75B';
+        
+        // Judul aksen slide 0 = Emas (#E2B75B) | Slide 1 = Hijau (#4ADE80)
+        if (title) title.style.color = slideIndex === 0 ? '#E2B75B' : '#4ADE80';
+
+        // NAVBAR DIKUNCI: Tetap selalu menggunakan warna Emas/Kuning
+        window.currentHeroAccentColor = '#E2B75B';
+
+        if (typeof updateNavbarOnScroll === 'function') {
+            updateNavbarOnScroll();
+        }
+    }
+
+    // FUNGSI UPDATE NAVBAR PADA SCROLL
+    function updateNavbarOnScroll() {
+        var navbar = document.getElementById("navbar");
+        if (!navbar) return;
+
+        var navLogo = document.getElementById("navLogo");
+        var dynamicElements = document.querySelectorAll(".nav-dynamic-color");
+
+        if (window.scrollY > 30) {
+            navbar.classList.remove("bg-transparent");
+            navbar.style.backgroundColor = "#F7F0E7";
+            navbar.style.boxShadow = "0 4px 15px rgba(0,0,0,.10)";
+            navbar.style.paddingTop = "8px";
+            navbar.style.paddingBottom = "8px";
+
+            dynamicElements.forEach(function(el) {
+                if (el.tagName === 'A') {
+                    el.style.color = "#6B4A2B";
+                } else {
+                    el.style.color = "#23160E";
+                }
+            });
+
+            if (navLogo) navLogo.style.color = "#8D2B1D";
+
+        } else {
+            navbar.classList.add("bg-transparent");
+            navbar.style.backgroundColor = "transparent";
+            navbar.style.boxShadow = "none";
+            navbar.style.paddingTop = "16px";
+            navbar.style.paddingBottom = "16px";
+
+            // DIKUNCI MATI: Warna teks dynamic di navbar tetap Kuning (#E2B75B)
+            dynamicElements.forEach(function(el) {
+                el.style.color = "#E2B75B";
+            });
+
+            if (navLogo) navLogo.style.color = "#A73D1F";
+        }
+    }
+
+    function toggleUserDropdown(e) {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        var dropdown = document.getElementById("userDropdown");
+        if (!dropdown) return;
+
+        if (dropdown.classList.contains("hidden")) {
+            dropdown.classList.remove("hidden");
+            setTimeout(function() {
+                dropdown.classList.remove("opacity-0", "scale-95");
+                dropdown.classList.add("opacity-100", "scale-100");
+            }, 10);
+        } else {
+            dropdown.classList.remove("opacity-100", "scale-100");
+            dropdown.classList.add("opacity-0", "scale-95");
+            setTimeout(function() {
+                dropdown.classList.add("hidden");
+            }, 200);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Init Swiper JS
+        const heroSwiper = new Swiper('.heroSwiper', {
+            loop: true,
+            effect: 'fade',
+            fadeEffect: { crossFade: true },
+            speed: 1000,
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+            on: {
+                init: function () {
+                    updateAccentColors(this.realIndex);
+                },
+                slideChange: function () {
+                    updateAccentColors(this.realIndex);
+                }
+            }
+        });
+
+        renderKeywordChips();
+
+        if (typeof feather !== 'undefined') {
+            feather.replace();
+        }
+
+        const overlayDetail = document.getElementById("overlay");
+        if (overlayDetail) overlayDetail.onclick = closeDetail;
+
+        const overlayAjaran = document.getElementById("overlayAjaran");
+        if (overlayAjaran) {
+            overlayAjaran.addEventListener("click", function(e) {
+                if (e.target === this) closeAjaran();
+            });
+        }
+
+        // PENANGANAN OTOMATIS SAAT USER KLIK NOTIFIKASI ("BACA SEKARANG")
+        const urlParams = new URLSearchParams(window.location.search);
+        const shouldOpenOverlay = urlParams.get('open_overlay');
+        const articleId = urlParams.get('article_id');
+        const articleTitle = urlParams.get('title');
+
+        if (shouldOpenOverlay === 'true' && (articleId || articleTitle)) {
+            const targetId = articleId || '';
+            const targetTitle = articleTitle ? decodeURIComponent(articleTitle) : '';
+            pilihHasilSearch(targetId, targetTitle, 'artikel');
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        const searchInput = document.getElementById("searchInput");
+        if (searchInput) {
+            searchInput.addEventListener("keypress", function(e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    const val = searchInput.value.trim();
+                    if (val !== "") {
+                        simpanKeRiwayat(val);
+                        liveSearch(val);
+                    }
+                }
+            });
+
+            const sampleKeywords = [
+                "ajaran, istilah, satua, filsafat...",
+                "\"Tri Hita Karana\"...",
+                "\"Desa Kala Patra\"...",
+                "\"Ngaben\"...",
+                "\"I Belog\"...",
+                "\"Rwa Bhineda\"..."
+            ];
+
+            let wordIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+
+            function startTypeEffect() {
+                if (document.activeElement === searchInput || searchInput.value !== "") {
+                    setTimeout(startTypeEffect, 1000);
+                    return;
+                }
+
+                const currentWord = sampleKeywords[wordIndex];
+                
+                if (isDeleting) {
+                    searchInput.placeholder = "Cari " + currentWord.substring(0, charIndex - 1);
+                    charIndex--;
+                } else {
+                    searchInput.placeholder = "Cari " + currentWord.substring(0, charIndex + 1);
+                    charIndex++;
+                }
+
+                let speed = isDeleting ? 40 : 80;
+
+                if (!isDeleting && charIndex === currentWord.length) {
+                    speed = 2200;
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    wordIndex = (wordIndex + 1) % sampleKeywords.length;
+                    speed = 400;
+                }
+
+                setTimeout(startTypeEffect, speed);
+            }
+
+            startTypeEffect();
+        }
+    });
+
+    window.addEventListener("scroll", updateNavbarOnScroll);
+
+    document.addEventListener("click", function(e) {
+        var dropdown = document.getElementById("userDropdown");
+        var btn = document.getElementById("userProfileBtn");
+
+        if (dropdown && !dropdown.classList.contains("hidden")) {
+            if (btn && btn.contains(e.target)) return;
+
+            dropdown.classList.remove("opacity-100", "scale-100");
+            dropdown.classList.add("opacity-0", "scale-95");
+            setTimeout(function() {
+                dropdown.classList.add("hidden");
+            }, 200);
+        }
+
+        const searchInput = document.getElementById("searchInput");
+        const hasilCari = document.getElementById("hasilCari");
+        const keywordBox = document.getElementById("keywordBox");
+        const boxContainer = document.getElementById("searchBoxContainer");
+
+        if (
+            boxContainer && !boxContainer.contains(e.target) &&
+            (!hasilCari || !hasilCari.contains(e.target)) &&
+            (!keywordBox || !keywordBox.contains(e.target))
+        ) {
+            if (hasilCari) hasilCari.classList.add("hidden");
+            hilangkanBorderMerah();
+        }
+    });
 
     var DEFAULT_KEYWORDS = [
         "TRI HITA KARANA", 
@@ -233,11 +515,7 @@
         });
     }
 
-    // ==========================================
-    // ARRAY DATABASE PENCARIAN
-    // ==========================================
     const databaseSearch = [
-        // 1. TABEL ajaran_tertua
         @if(isset($ajarans))
             @foreach($ajarans as $aj)
                 @php
@@ -268,7 +546,6 @@
             @endforeach
         @endif
 
-        // 2. TABEL SATUAS (LANGSUNG DILENGKAPI TEKS DARI MODEL)
         @if(isset($satuas))
             @foreach($satuas as $s)
                 @php
@@ -292,7 +569,6 @@
             @endforeach
         @endif
 
-        // 3. TABEL istilahs
         @if(isset($istilahs))
             @foreach($istilahs as $i)
                 {
@@ -311,7 +587,6 @@
             @endforeach
         @endif
 
-        // 4. Tabel artikels
         @if(isset($artikels))
             @foreach($artikels as $a)
                 @php
@@ -343,7 +618,6 @@
             @endforeach
         @endif
 
-        // 5. Tabel cecimpedans
         @if(isset($cecimpedans))
             @foreach($cecimpedans as $c)
                 {
@@ -357,7 +631,6 @@
             @endforeach
         @endif
 
-        // 6. TABEL filsafats
         @if(isset($filsafats))
             @foreach($filsafats as $f)
                 {
@@ -378,38 +651,6 @@
         @endif
     ];
 
-    document.addEventListener("DOMContentLoaded", function() {
-        renderKeywordChips();
-
-        if (typeof feather !== 'undefined') {
-            feather.replace();
-        }
-
-        const overlayDetail = document.getElementById("overlay");
-        if (overlayDetail) overlayDetail.onclick = closeDetail;
-
-        const overlayAjaran = document.getElementById("overlayAjaran");
-        if (overlayAjaran) {
-            overlayAjaran.addEventListener("click", function(e) {
-                if (e.target === this) closeAjaran();
-            });
-        }
-
-        const searchInput = document.getElementById("searchInput");
-        if (searchInput) {
-            searchInput.addEventListener("keypress", function(e) {
-                if (e.key === "Enter") {
-                    e.preventDefault();
-                    const val = searchInput.value.trim();
-                    if (val !== "") {
-                        simpanKeRiwayat(val);
-                        liveSearch(val);
-                    }
-                }
-            });
-        }
-    });
-
     function aktifkanBorderMerah() {
         const boxContainer = document.getElementById("searchBoxContainer");
         if (boxContainer) {
@@ -428,21 +669,14 @@
 
     function getCategoryBadgeColor(kategori) {
         const kat = kategori.toUpperCase();
-        if (kat.includes('AJARAN')) {
-            return 'bg-[#A33B20] text-white';
-        } else if (kat.includes('SATUA')) {
-            return 'bg-[#2D6C3F] text-white';
-        } else if (kat.includes('ISTILAH')) {
-            return 'bg-[#3C6E71] text-white';
-        } else if (kat.includes('CECIMPEDAN')) {
-            return 'bg-[#C7962B] text-white';
-        } else if (kat.includes('FILSAFAT')) {
-            return 'bg-[#5C4033] text-white';
-        }
+        if (kat.includes('AJARAN')) return 'bg-[#A33B20] text-white';
+        if (kat.includes('SATUA')) return 'bg-[#2D6C3F] text-white';
+        if (kat.includes('ISTILAH')) return 'bg-[#3C6E71] text-white';
+        if (kat.includes('CECIMPEDAN')) return 'bg-[#C7962B] text-white';
+        if (kat.includes('FILSAFAT')) return 'bg-[#5C4033] text-white';
         return 'bg-[#8D2B1D] text-white';
     }
 
-    // LIVE SEARCH KHUSUS HURUF/KATA DEPAN (startsWith)
     function liveSearch(keyword) {
         const hasilCari = document.getElementById("hasilCari");
         const btnClear = document.getElementById("btnClearSearch");
@@ -531,7 +765,6 @@
         }
     }
 
-    // FUNGSI PENCARIAN & BUKA DRAWER SATUA DENGAN PAKSA-BACA DARI DOM
     function bukaDetailMateri(id, encodedJudul, targetType) {
         pilihHasilSearch(id, decodeURIComponent(encodedJudul), targetType);
     }
@@ -552,10 +785,8 @@
 
         const targetType = dataObj ? dataObj.target_type : (kategori || '').toLowerCase().trim();
 
-        // A. KHUSUS AJARAN TETUA
         if (targetType === "ajaran" || targetType.includes("ajaran")) {
             scrollToElement("ajaran", "containerAjaranHero");
-            
             setTimeout(() => {
                 if (typeof openAjaran === 'function') {
                     if (dataObj && dataObj.raw_id !== undefined) {
@@ -566,7 +797,6 @@
                 }
             }, 200);
 
-        // B. SATUA BALI (LANGSUNG MEMBACA DARI KARTU DI DOM HALAMAN)
         } else if (targetType.includes("satua")) {
             if (typeof showSatua === 'function') showSatua();
             scrollToElement("sectionSatua");
@@ -583,11 +813,8 @@
                     }
                 });
 
-                // JIKA KARTU ADA DI HALAMAN, PAKSA BUKA LEWAT openSatuaCard SAMPAI ISI DIBACA
                 if (matchedCard && typeof openSatuaCard === 'function') {
                     openSatuaCard(matchedCard);
-
-                    // PENANGANAN KHUSUS JIKA TEKS DI KARTU TERGANTUNG SCRIPT LAIN
                     setTimeout(() => {
                         const satuaIsiEl = document.getElementById("satuaIsi");
                         if (satuaIsiEl && (satuaIsiEl.innerText === "" || satuaIsiEl.innerText === "-")) {
@@ -616,7 +843,6 @@
                 }
             }, 250);
 
-        // C. ISTILAH BALI
         } else if (targetType.includes("istilah")) {
             if (typeof showIstilah === 'function') showIstilah();
             scrollToElement("sectionIstilah");
@@ -635,20 +861,16 @@
                 }
             }, 200);
 
-        // D. CECIMPEDAN
         } else if (targetType.includes("cecimpedan")) {
             scrollToElement("cecimpedan", "sectionCecimpedan");
-            
             setTimeout(() => {
                 if (typeof window.openCecimpedanById === 'function') {
                     window.openCecimpedanById(dataObj ? dataObj.raw_id : '', judul);
                 }
             }, 200);
 
-        // E. FILSAFAT BALI / DUNIA
         } else if (targetType.includes("filsafat")) {
             scrollToElement("sectionFilsafat", "jenis-filsafat");
-            
             setTimeout(() => {
                 if (dataObj && dataObj.raw_id !== undefined) {
                     openFilsafat(dataObj.raw_id);
@@ -662,10 +884,8 @@
                 }
             }, 300);
 
-        // F. ARTIKEL UMUM
         } else {
             scrollToElement("artikel");
-
             setTimeout(() => {
                 if (dataObj) {
                     if (document.getElementById('artTitle')) document.getElementById('artTitle').innerText = dataObj.judul || judul;
@@ -725,20 +945,4 @@
         if (overlay) overlay.classList.add("hidden");
         if (panel) panel.classList.add("translate-x-full");
     }
-
-    document.addEventListener("click", function(e) {
-        const searchInput = document.getElementById("searchInput");
-        const hasilCari = document.getElementById("hasilCari");
-        const keywordBox = document.getElementById("keywordBox");
-        const boxContainer = document.getElementById("searchBoxContainer");
-
-        if (
-            boxContainer && !boxContainer.contains(e.target) &&
-            (!hasilCari || !hasilCari.contains(e.target)) &&
-            (!keywordBox || !keywordBox.contains(e.target))
-        ) {
-            if (hasilCari) hasilCari.classList.add("hidden");
-            hilangkanBorderMerah();
-        }
-    });
 </script>

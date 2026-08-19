@@ -314,6 +314,50 @@
 
         if (typeof changeSlide === 'function') changeSlide(1);
         if (typeof startAutoSlide === 'function') startAutoSlide();
+
+        // ==========================================
+        // FITUR OTOMATIS BUKA POP-UP / MODAL DARI NOTIFIKASI
+        // ==========================================
+        const urlParams = new URLSearchParams(window.location.search);
+        const openModalId = urlParams.get('open_modal');
+        const modalType   = urlParams.get('type');
+
+        if (openModalId) {
+            setTimeout(function() {
+                // 1. KATEGORI ARTIKEL / AJARAN
+                if (modalType === 'artikel' || modalType === 'ajaran') {
+                    scrollToTarget("artikel");
+                    openDetailArtikel(openModalId);
+                } 
+                // 2. KATEGORI SATUA BALI
+                else if (modalType === 'satua') {
+                    if (typeof showSatua === 'function') showSatua();
+                    scrollToTarget("sectionSatua");
+                    const cardSatua = document.querySelector(`#sectionSatua [data-id="${openModalId}"]`) || 
+                                      document.querySelector(`#sectionSatua [data-nama]`);
+                    if (cardSatua && typeof openSatuaCard === 'function') {
+                        openSatuaCard(cardSatua);
+                    }
+                } 
+                // 3. KATEGORI CECIMPEDAN
+                else if (modalType === 'cecimpedan') {
+                    scrollToTarget("cecimpedan");
+                    if (typeof toggleCard === 'function') toggleCard(1);
+                } 
+                // 4. KATEGORI ISTILAH BALI
+                else if (modalType === 'istilah') {
+                    if (typeof showIstilah === 'function') showIstilah();
+                    scrollToTarget("sectionIstilah");
+                    const itemIstilah = document.querySelector("#listIstilahContainer .item-istilah");
+                    if (itemIstilah) itemIstilah.click();
+                }
+                // 5. KATEGORI FILSAFAT
+                else if (modalType === 'filsafat') {
+                    scrollToTarget("filsafat");
+                    if (typeof openFilsafat === 'function') openFilsafat("barat");
+                }
+            }, 600);
+        }
     });
 
     // ==========================================

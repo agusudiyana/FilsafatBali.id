@@ -222,8 +222,12 @@
                                 {{ strtoupper($kategoriText) }}
                             </span>
 
+                            <!-- BADGE TERVERIFIKASI DENGAN IKON CENTANG -->
                             <span
-                                class="absolute top-4 right-4 bg-white/90 text-[#B8863B] text-[10px] tracking-[1px] font-bold px-3 py-1 rounded-full z-10 shadow-sm">
+                                class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-[#B8863B] text-[10px] tracking-[1px] font-bold px-3 py-1.5 rounded-full z-10 shadow-sm flex items-center gap-1.5 border border-[#B8863B]/20">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 fill-[#B8863B]" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
                                 Terverifikasi
                             </span>
                         </div>
@@ -307,8 +311,8 @@
         <div id="artIsi" class="text-[#4A3E35] leading-relaxed space-y-4 text-base"></div>
 
         <div id="boxKesimpulan" class="mt-8 p-5 bg-[#EFE4D3] border-l-4 border-[#992B20] rounded-r-lg">
-            <h4 class="font-bold text-[#2B1A12] text-sm uppercase tracking-wider mb-1">Kesimpulan / Filosofi</h4>
-            <p id="artKesimpulan" class="text-sm text-[#675A4D] italic"></p>
+            <h4 class="font-bold text-[#2B1A12] text-sm uppercase tracking-wider mb-1">Kesimpulan</h4>
+            <div id="artKesimpulan" class="text-sm text-[#675A4D] italic leading-relaxed"></div>
         </div>
     </div>
 </div>
@@ -317,6 +321,14 @@
     // Status Login User
     const IS_USER_LOGGED_IN = @json(auth()->check());
     const LOGIN_URL = "{{ route('login') }}";
+
+    // Helper Dekode HTML Entities agar tag &lt;p&gt; / &lt;em&gt; dirender murni sebagai HTML
+    function decodeHTMLEntities(text) {
+        if (!text) return '';
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = text;
+        return textarea.value;
+    }
 
     // Handle Klik Bookmark
     function handleBookmark(event, btnElement, title, type) {
@@ -399,8 +411,15 @@
         if (document.getElementById('artTitle')) document.getElementById('artTitle').innerText = judulText;
         if (document.getElementById('artPenulis')) document.getElementById('artPenulis').innerText = penulisText;
         if (document.getElementById('artMeta')) document.getElementById('artMeta').innerText = tanggalText;
-        if (document.getElementById('artIsi')) document.getElementById('artIsi').innerHTML = isiHtml;
-        if (document.getElementById('artAvatar')) document.getElementById('artAvatar').innerText = (penulisText ? penulisText.charAt(0) : 'A').toUpperCase();
+        
+        // Dekode HTML untuk Isi & Kesimpulan
+        if (document.getElementById('artIsi')) {
+            document.getElementById('artIsi').innerHTML = decodeHTMLEntities(isiHtml);
+        }
+        
+        if (document.getElementById('artAvatar')) {
+            document.getElementById('artAvatar').innerText = (penulisText ? penulisText.charAt(0) : 'A').toUpperCase();
+        }
 
         const badge = document.getElementById('artKategoriBadge');
         if (badge) {
@@ -412,10 +431,13 @@
         if (img) img.src = gambarSrc;
 
         const kesimpulanBox = document.getElementById('boxKesimpulan');
-        if (kesimpulanBox) {
-            if (kesimpulanText && kesimpulanText.trim() !== '') {
+        const artKesimpulanEl = document.getElementById('artKesimpulan');
+        
+        if (kesimpulanBox && artKesimpulanEl) {
+            const cleanKesimpulan = decodeHTMLEntities(kesimpulanText).trim();
+            if (cleanKesimpulan !== '') {
                 kesimpulanBox.classList.remove('hidden');
-                document.getElementById('artKesimpulan').innerText = kesimpulanText;
+                artKesimpulanEl.innerHTML = cleanKesimpulan;
             } else {
                 kesimpulanBox.classList.add('hidden');
             }
@@ -507,10 +529,12 @@
             });
         });
 
-        // AUTO-OPEN MODAL DARI ARSIP
+        // AUTO-OPEN MODAL DARI ARSIP ATAU NOTIFIKASI
         const urlParams = new URLSearchParams(window.location.search);
         const itemToOpen = urlParams.get('open');
+        const openModalId = urlParams.get('open_modal');
 
+        // Handler 1: Buka berdasarkan Judul (dari Arsip)
         if (itemToOpen && window.location.hash === '#artikel') {
             const decodedTitle = decodeURIComponent(itemToOpen).trim().toLowerCase();
 
@@ -521,6 +545,24 @@
                         openModalForCard(card);
                     }
                 });
+            }, 400);
+        }
+
+        // Handler 2: Buka berdasarkan ID (dari Notifikasi)
+        if (openModalId) {
+            setTimeout(() => {
+                const cards = document.querySelectorAll('.card-artikel');
+                let targetCard = null;
+
+                cards.forEach(card => {
+                    if (card.dataset.id == openModalId) {
+                        targetCard = card;
+                    }
+                });
+
+                if (targetCard) {
+                    openModalForCard(targetCard);
+                }
             }, 400);
         }
     });

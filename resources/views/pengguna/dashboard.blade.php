@@ -14,9 +14,9 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
             
             <!-- SAMBUTAN & INFORMASI USER -->
-            <div class="bg-white border border-[#E5D6BF] p-8 rounded-2xl shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="bg-white border border-[#E5D6BF] p-8 rounded-2xl shadow-sm flex items-center justify-between gap-6">
                 <div class="flex items-center gap-5">
-                    <div class="w-16 h-16 rounded-full bg-[#8D2B1D] text-white flex items-center justify-center font-bold text-2xl border-2 border-[#C8A45A] shrink-0">
+                    <div class="w-16 h-16 rounded-full bg-[#8D2B1D] text-white flex items-center justify-center font-bold text-2xl border-2 border-[#C8A45A] shrink-0 overflow-hidden">
                         @if(auth()->user()->foto ?? false)
                             <img src="{{ asset('storage/' . auth()->user()->foto) }}" alt="{{ auth()->user()->name }}" class="w-full h-full object-cover rounded-full">
                         @else
@@ -28,30 +28,26 @@
                             Rahajeng Rauh, {{ auth()->user()->name }}!
                         </h1>
                         <p class="text-[#675A4D] text-sm mt-1">
-                            Selamat datang di Ruang Pengguna Arsipan Budaya FilsafatBali.id. Kelola koleksi arsip tersimpan dan materi unduhan Anda di sini.
+                            Selamat datang di Ruang Pengguna Arsipan Budaya FilsafatBali.id. Kelola koleksi arsip tersimpan dan cek pembaruan notifikasi Anda di sini.
                         </p>
                     </div>
                 </div>
-                
-                <form method="POST" action="{{ route('logout') }}" class="shrink-0">
-                    @csrf
-                    <button type="submit" class="px-5 py-2.5 rounded-xl border border-[#8D2B1D] text-[#8D2B1D] hover:bg-[#8D2B1D] hover:text-white text-xs font-semibold tracking-wider uppercase transition">
-                        Keluar / Logout
-                    </button>
-                </form>
             </div>
 
-            <!-- KARTU NAVIGASI UTAMA (MENU AKSI PENGGUNA) -->
+            <!-- KARTU NAVIGASI UTAMA -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
                 <!-- KARTU 1: ARSIP TERSIMPAN -->
                 <div class="bg-white border border-[#E5D6BF] p-6 rounded-2xl shadow-sm hover:border-[#8D2B1D] transition flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between mb-4">
-                            <div class="w-12 h-12 rounded-xl bg-[#EFE4D3] text-[#8D2B1D] flex items-center justify-center text-2xl font-bold">
-                                📚
+                            <div class="w-12 h-12 rounded-xl bg-[#EFE4D3] text-[#8D2B1D] flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[#8D2B1D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                                </svg>
                             </div>
                             <span class="text-xs font-semibold bg-[#FAF6F0] text-[#8D2B1D] px-3 py-1 rounded-full border border-[#E5D6BF]">
-                                {{ isset($bookmarks) ? count($bookmarks) : (isset($arsips) ? count($arsips) : 0) }} Item
+                                {{ isset($bookmarks) ? count($bookmarks) : 0 }} Item
                             </span>
                         </div>
                         <h3 style="font-family:'Cormorant Garamond',serif;" class="text-2xl font-bold text-[#2B1A0E]">
@@ -63,72 +59,57 @@
                     </div>
                     <div class="mt-6 pt-4 border-t border-[#E5D6BF]">
                         @if(Route::has('pengguna.arsip.index'))
-                            <a href="{{ route('pengguna.arsip.index') }}" class="inline-flex items-center text-sm font-semibold text-[#8D2B1D] hover:text-[#732216]">
-                                Buka Koleksi Tersimpan &rarr;
+                            <a href="{{ route('pengguna.arsip.index') }}" class="group w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#8D2B1D] text-white text-xs font-semibold rounded-xl hover:bg-[#732216] transition shadow-sm cursor-pointer">
+                                <span>Buka Koleksi Tersimpan</span>
+                                <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
                             </a>
                         @else
-                            <a href="{{ url('/') }}#jenis-filsafat" class="inline-flex items-center text-sm font-semibold text-[#8D2B1D] hover:text-[#732216]">
-                                Jelajahi Beranda &rarr;
+                            <a href="{{ url('/') }}#jenis-filsafat" class="group w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#8D2B1D] text-white text-xs font-semibold rounded-xl hover:bg-[#732216] transition shadow-sm cursor-pointer">
+                                <span>Jelajahi Beranda</span>
+                                <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
                             </a>
                         @endif
                     </div>
                 </div>
 
-               
-            <!-- PRATINJAU DOKUMEN / ARSIP TERAKHIR -->
-            <div class="bg-white border border-[#E5D6BF] p-8 rounded-2xl shadow-sm">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 style="font-family:'Cormorant Garamond',serif;" class="text-2xl font-bold text-[#2B1A0E]">
-                        Arsip Kebudayaan Terbaru
-                    </h3>
-                    @if(Route::has('pengguna.arsip.index'))
-                        <a href="{{ route('pengguna.arsip.index') }}" class="text-xs font-semibold text-[#8D2B1D] hover:underline">
-                            Lihat Semua
+                <!-- KARTU 2: PUSAT NOTIFIKASI -->
+                <div class="bg-white border border-[#E5D6BF] p-6 rounded-2xl shadow-sm hover:border-[#8D2B1D] transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <!-- IKON LONCENG DENGAN INDIKATOR TITIK MERAH -->
+                            <div class="relative w-12 h-12 rounded-xl bg-[#EFE4D3] text-[#8D2B1D] flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[#8D2B1D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                </svg>
+                                
+                                <!-- TITIK MERAH: MUNCUL HANYA JIKA ADA UNREAD NOTIFIKASI -->
+                                @if(isset($unreadCount) && $unreadCount > 0)
+                                    <span class="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#8D2B1D] opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#8D2B1D] border-2 border-white"></span>
+                                    </span>
+                                @endif
+                            </div>
+
+                            <span class="text-xs font-semibold bg-[#FAF6F0] text-[#8D2B1D] px-3 py-1 rounded-full border border-[#E5D6BF]">
+                                {{ isset($unreadCount) ? $unreadCount : 0 }} Belum Dibaca
+                            </span>
+                        </div>
+                        <h3 style="font-family:'Cormorant Garamond',serif;" class="text-2xl font-bold text-[#2B1A0E]">
+                            Pusat Notifikasi
+                        </h3>
+                        <p class="text-sm text-[#675A4D] mt-2">
+                            Pantau pembaruan artikel, ajaran baru, serta pengumuman kearifan lokal Bali langsung di sini.
+                        </p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-[#E5D6BF]">
+                        <a href="{{ route('pengguna.notifikasi.index') }}" class="group w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#8D2B1D] text-white text-xs font-semibold rounded-xl hover:bg-[#732216] transition shadow-sm cursor-pointer">
+                            <span>Lihat Semua Notifikasi</span>
+                            <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
                         </a>
-                    @endif
+                    </div>
                 </div>
 
-                @php
-                    $previewItems = isset($bookmarks) ? $bookmarks : (isset($arsips) ? $arsips : []);
-                @endphp
-
-                @if(count($previewItems) > 0)
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        @foreach(array_slice(is_array($previewItems) ? $previewItems : $previewItems->toArray(), 0, 3) as $arsip)
-                            @php
-                                $title = is_array($arsip) ? ($arsip['judul'] ?? $arsip['item_title'] ?? 'Tanpa Judul') : ($arsip->item_title ?? $arsip->judul ?? 'Tanpa Judul');
-                                $category = is_array($arsip) ? ($arsip['kategori'] ?? $arsip['item_type'] ?? 'Arsip') : ($arsip->item_type ?? $arsip->kategori ?? 'Arsip');
-                                $deskripsi = is_array($arsip) ? ($arsip['deskripsi'] ?? 'Naskah kebudayaan dan filsafat Bali.') : ($arsip->deskripsi ?? 'Naskah kebudayaan dan filsafat Bali.');
-                                $url = is_array($arsip) ? ($arsip['url'] ?? $arsip['item_url'] ?? '#') : ($arsip->item_url ?? '#');
-                            @endphp
-
-                            <div class="bg-[#FAF6F0] border border-[#E5D6BF] p-5 rounded-xl shadow-sm flex flex-col justify-between">
-                                <div>
-                                    <span class="bg-[#EFE4D3] text-[#8D2B1D] text-[10px] font-bold uppercase px-2.5 py-1 rounded-md">
-                                        {{ $category }}
-                                    </span>
-                                    <h4 style="font-family:'Cormorant Garamond',serif;" class="text-lg font-bold text-[#2B1A0E] mt-2 mb-1">
-                                        {{ $title }}
-                                    </h4>
-                                    <p class="text-xs text-[#675A4D] line-clamp-2 mb-4">
-                                        {{ $deskripsi }}
-                                    </p>
-                                </div>
-                                <a href="{{ $url }}" class="text-xs font-bold text-[#8D2B1D] hover:underline">
-                                    Baca Selengkapnya &rarr;
-                                </a>
-                            </div>
-                        @endforeach
-                    </div>
-                @else
-                    <div class="text-center py-8 border border-dashed border-[#E5D6BF] rounded-xl">
-                        <div class="text-3xl mb-2">📖</div>
-                        <p class="text-sm text-[#675A4D]">Belum ada arsip yang disimpannya.</p>
-                        <a href="{{ url('/') }}#jenis-filsafat" class="mt-3 inline-block px-5 py-2 bg-[#8D2B1D] text-white text-xs font-semibold rounded-xl hover:bg-[#732216] transition">
-                            Jelajahi Wawasan Filsafat
-                        </a>
-                    </div>
-                @endif
             </div>
 
         </div>

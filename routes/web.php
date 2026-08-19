@@ -216,20 +216,31 @@ Route::middleware(['auth'])->group(function () {
     */
     Route::prefix('pengguna')->middleware('role:pengguna')->group(function () {
 
-        Route::get('/dashboard', function () {
-            return view('dashboard');
-        })->name('pengguna.dashboard');
+        // DASHBOARD PENGGUNA
+        Route::get('/dashboard', [PenggunaController::class, 'dashboardIndex'])->name('pengguna.dashboard');
 
+        // HALAMAN DEDICATED PUSAT NOTIFIKASI
+        Route::get('/notifikasi', [PenggunaController::class, 'notifikasiIndex'])->name('pengguna.notifikasi.index');
+
+        // AKSI NOTIFIKASI
+        Route::get('/notifikasi/{id}/buka', [PenggunaController::class, 'bacaDanBuka'])->name('notifikasi.buka');
+        Route::post('/notifikasi/{id}/baca', [PenggunaController::class, 'markNotifAsRead'])->name('notifikasi.baca');
+        Route::post('/notifikasi/baca-semua', [PenggunaController::class, 'markAllNotifAsRead'])->name('notifikasi.bacaSemua');
+
+        // ARSIP / KOLEKSI
         Route::get('/arsip', [PenggunaController::class, 'arsipIndex'])->name('pengguna.arsip.index');
         Route::post('/arsip', [PenggunaController::class, 'storeArsip'])->name('pengguna.arsip.store');
         Route::delete('/arsip/{id}', [PenggunaController::class, 'destroyArsip'])->name('pengguna.arsip.destroy');
 
+        // FAVORIT
         Route::get('/favorit', [PenggunaController::class, 'favoritIndex'])->name('pengguna.favorit.index');
         Route::post('/favorit/toggle/{id}', [PenggunaController::class, 'toggleFavorit'])->name('pengguna.favorit.toggle');
 
+        // KOMUNITAS / DISKUSI
         Route::get('/komunitas', [PenggunaController::class, 'komunitasIndex'])->name('pengguna.komunitas.index');
         Route::post('/komunitas/kirim', [PenggunaController::class, 'storeDiskusi'])->name('pengguna.komunitas.store');
 
+        // UNDUHAN
         Route::get('/unduhan', [PenggunaController::class, 'unduhanIndex'])->name('pengguna.unduhan.index');
     });
 

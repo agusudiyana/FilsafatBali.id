@@ -11,6 +11,90 @@ class PenggunaController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
+    | 0. DASHBOARD PENGGUNA & NOTIFIKASI
+    |--------------------------------------------------------------------------
+    */
+    public function dashboardIndex()
+    {
+        $user = Auth::user();
+
+        // 1. Ambil data arsip/bookmark tersimpan milik pengguna yang sedang login
+        $bookmarks = Bookmark::where('user_id', $user->id)->latest()->get();
+
+        // 2. Ambil daftar notifikasi user (paginasi 10 per halaman)
+        $notifikasis = $user->notifications()->paginate(10);
+
+        // 3. Hitung total notifikasi yang belum dibaca
+        $unreadCount = $user->unreadNotifications->count();
+
+        // Kirim $bookmarks, $notifikasis, dan $unreadCount ke view
+        return view('pengguna.dashboard', compact('bookmarks', 'notifikasis', 'unreadCount'));
+    }
+
+    // Menampilkan Halaman Dedicated / Khusus Pusat Notifikasi
+    public function notifikasiIndex()
+    {
+        $user = Auth::user();
+
+        // Ambil notifikasi dengan paginasi 15 per halaman
+        $notifikasis = $user->notifications()->paginate(15);
+        $unreadCount = $user->unreadNotifications->count();
+
+        return view('pengguna.notifikasi.index', compact('notifikasis', 'unreadCount'));
+    }
+
+    // OTOMATIS TANDAI DIBACA & REDIRECT UNTUK MEMBUKA OVERLAY ARTIKEL SESUAI JUDUL
+    public function bacaDanBuka($id)
+    {
+        $notif = Auth::user()->notifications()->where('id', $id)->first();
+
+        // Default pengalihan ke seksi artikel
+        $targetUrl = url('/#artikel');
+
+        if ($notif) {
+            $data = $notif->data ?? [];
+
+            // Prioritaskan mengambil judul artikel/materi, lalu fallback ke ID jika ada
+            $judul = $data['judul'] ?? $data['title'] ?? null;
+            $itemId = $data['item_id'] ?? $data['id'] ?? null;
+
+            if ($judul) {
+                // Redirect menggunakan parameter 'open' (berdasarkan Judul) untuk mentrigger modal overlay
+                $targetUrl = url('/?open=' . urlencode($judul) . '#artikel');
+            } elseif ($itemId) {
+                // Fallback jika hanya membawa ID
+                $targetUrl = url('/?open_modal=' . $itemId . '&type=artikel#artikel');
+            }
+
+            // Tandai sudah dibaca agar titik merah indikator langsung hilang
+            $notif->markAsRead();
+        }
+
+        return redirect()->to($targetUrl);
+    }
+
+    // Tandai satu notifikasi tertentu sebagai sudah dibaca (via tombol centang)
+    public function markNotifAsRead($id)
+    {
+        $notif = Auth::user()->notifications()->where('id', $id)->first();
+
+        if ($notif) {
+            $notif->markAsRead();
+        }
+
+        return redirect()->back();
+    }
+
+    // Tandai SEMUA notifikasi sebagai sudah dibaca
+    public function markAllNotifAsRead()
+    {
+        Auth::user()->unreadNotifications->markAsRead();
+
+        return redirect()->back()->with('success', 'Semua notifikasi ditandai sudah dibaca.');
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | 1. KOLEKSI ARSIP / SIMPANAN (SUPPORT AJAX TOGGLE & JSON)
     |--------------------------------------------------------------------------
     */
@@ -75,30 +159,5 @@ class PenggunaController extends Controller
     {
         Bookmark::where('id', $id)->where('user_id', Auth::id())->delete();
         return back()->with('success', 'Artikel berhasil dihapus dari simpanan.');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | 2. FORUM DISKUSI KOMUNITAS
-    |--------------------------------------------------------------------------
-    */
-    public function komunitasIndex()
-    {
-        $discussions = Discussion::with('user')->latest()->get();
-        return view('pengguna.komunitas.index', compact('discussions'));
-    }
-
-    public function storeDiskusi(Request $request)
-    {
-        $request->validate([
-            'comment' => 'required|string|max:1000'
-        ]);
-
-        Discussion::create([
-            'user_id' => Auth::id(),
-            'comment' => $request->comment,
-        ]);
-
-        return back()->with('success', 'Diskusi berhasil dikirim ke forum!');
     }
 }

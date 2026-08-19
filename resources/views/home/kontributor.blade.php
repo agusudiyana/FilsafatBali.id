@@ -52,10 +52,8 @@
 
                     <ul class="mt-8 space-y-4 text-[#6B4A2B]">
 
-                        <li>● Akses seluruh koleksi arsip</li>
+                        <li>● Membaca artikel</li>
                         <li>● Simpan artikel favorit</li>
-                        <li>● Ikuti diskusi komunitas</li>
-                        <li>● Unduh konten pilihan</li>
                         <li>● Notifikasi artikel terbaru</li>
 
                     </ul>
@@ -106,7 +104,6 @@
                         <li>● Tambah Ajaran Tetua</li>
                         <li>● Tambah Satua Bali</li>
                         <li>● Tambah Istilah Bali</li>
-                        <li>● Lencana kontributor</li>
 
                     </ul>
                 </div>
@@ -151,8 +148,6 @@
                         <li>● Verifikasi konten</li>
                         <li>● Kelola pengguna</li>
                         <li>● Kelola kategori</li>
-                        <li>● Analitik platform</li>
-
                     </ul>
                 </div>
 

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Ajaran;
 use App\Models\Artikel;
+use App\Models\User;
+use App\Notifications\ArtikelBaruNotification;
 use Illuminate\Http\Request;
 
 class ArtikelController extends Controller
@@ -29,7 +31,7 @@ class ArtikelController extends Controller
         return view('admin.ajaran.create');
     }
 
-    // Menyimpan data baru
+    // Menyimpan data baru & Mengirim Notifikasi
     public function store(Request $request)
     {
         $request->validate([
@@ -38,7 +40,7 @@ class ArtikelController extends Controller
             'isi' => 'required',
         ]);
 
-        Ajaran::create([
+        $ajaran = Ajaran::create([
             'judul' => $request->judul,
             'kategori' => $request->kategori ?? 'Ajaran Tertua',
             'penulis' => $request->penulis,
@@ -51,8 +53,14 @@ class ArtikelController extends Controller
             'user_id' => auth()->id(),
         ]);
 
+        // KIRIM NOTIFIKASI KE SEMUA USER DENGAN ROLE 'pengguna'
+        $users = User::where('role', 'pengguna')->get();
+        foreach ($users as $user) {
+            $user->notify(new ArtikelBaruNotification($ajaran));
+        }
+
         return redirect()->route('ajaran.index')
-            ->with('success', 'Data berhasil ditambahkan.');
+            ->with('success', 'Data berhasil ditambahkan dan notifikasi terkirim!');
     }
 
     // Menampilkan form edit
@@ -105,6 +113,14 @@ class ArtikelController extends Controller
         if (in_array($status, ['disetujui', 'ditolak', 'pending'])) {
             $ajaran->status = $status;
             $ajaran->save();
+
+            // KIRIM NOTIFIKASI JIKA STATUS DIUBAH MENJADI 'disetujui'
+            if ($status === 'disetujui') {
+                $users = User::where('role', 'pengguna')->get();
+                foreach ($users as $user) {
+                    $user->notify(new ArtikelBaruNotification($ajaran));
+                }
+            }
 
             return redirect()->back()
                 ->with('success', 'Status artikel berhasil diperbarui menjadi ' . ucfirst($status));

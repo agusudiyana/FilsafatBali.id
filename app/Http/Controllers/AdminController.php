@@ -10,9 +10,11 @@ use App\Models\Satua;
 use App\Models\Istilah;
 use App\Models\User;
 use App\Models\Setting;
+use App\Notifications\ArtikelBaruNotification;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Notification;
 
 class AdminController extends Controller
 {
@@ -112,6 +114,12 @@ class AdminController extends Controller
         $ajaran = Artikel::findOrFail($id);
         $ajaran->update(['status' => 'disetujui']);
 
+        // KIRIM NOTIFIKASI KE PENGGUNA
+        $penggunas = User::where('role', 'pengguna')->get();
+        if ($penggunas->count() > 0) {
+            Notification::send($penggunas, new ArtikelBaruNotification($ajaran));
+        }
+
         return redirect()->back()->with('success', 'Artikel berhasil disetujui.');
     }
 
@@ -155,6 +163,13 @@ class AdminController extends Controller
         $ajaran = AjaranTertua::findOrFail($id);
         $ajaran->update(['status' => $request->status]);
 
+        if ($request->status === 'disetujui') {
+            $penggunas = User::where('role', 'pengguna')->get();
+            if ($penggunas->count() > 0) {
+                Notification::send($penggunas, new ArtikelBaruNotification($ajaran));
+            }
+        }
+
         return redirect()->route('admin.verifikasi.ajaran-tertua')
             ->with('success', 'Status ajaran tertua berhasil diperbarui!');
     }
@@ -163,6 +178,12 @@ class AdminController extends Controller
     {
         $ajaran = AjaranTertua::findOrFail($id);
         $ajaran->update(['status' => 'disetujui']);
+
+        // KIRIM NOTIFIKASI KE PENGGUNA
+        $penggunas = User::where('role', 'pengguna')->get();
+        if ($penggunas->count() > 0) {
+            Notification::send($penggunas, new ArtikelBaruNotification($ajaran));
+        }
 
         return redirect()->back()->with('success', 'Ajaran Tertua berhasil disetujui.');
     }
@@ -202,6 +223,12 @@ class AdminController extends Controller
         $filsafat = Filsafat::findOrFail($id);
         $filsafat->update(['status' => 'disetujui']);
 
+        // KIRIM NOTIFIKASI KE PENGGUNA
+        $penggunas = User::where('role', 'pengguna')->get();
+        if ($penggunas->count() > 0) {
+            Notification::send($penggunas, new ArtikelBaruNotification($filsafat));
+        }
+
         return redirect()->back()->with('success', 'Filsafat berhasil disetujui.');
     }
 
@@ -239,6 +266,12 @@ class AdminController extends Controller
     {
         $cecimpedan = Cecimpedan::findOrFail($id);
         $cecimpedan->update(['status' => 'disetujui']);
+
+        // KIRIM NOTIFIKASI KE PENGGUNA
+        $penggunas = User::where('role', 'pengguna')->get();
+        if ($penggunas->count() > 0) {
+            Notification::send($penggunas, new ArtikelBaruNotification($cecimpedan));
+        }
 
         return redirect()->back()->with('success', 'Cecimpedan berhasil disetujui.');
     }
@@ -278,6 +311,12 @@ class AdminController extends Controller
         $satua = Satua::findOrFail($id);
         $satua->update(['status' => 'disetujui']);
 
+        // KIRIM NOTIFIKASI KE PENGGUNA
+        $penggunas = User::where('role', 'pengguna')->get();
+        if ($penggunas->count() > 0) {
+            Notification::send($penggunas, new ArtikelBaruNotification($satua));
+        }
+
         return redirect()->back()->with('success', 'Satua Bali berhasil disetujui.');
     }
 
@@ -315,6 +354,12 @@ class AdminController extends Controller
     {
         $istilah = Istilah::findOrFail($id);
         $istilah->update(['status' => 'disetujui']);
+
+        // KIRIM NOTIFIKASI KE PENGGUNA
+        $penggunas = User::where('role', 'pengguna')->get();
+        if ($penggunas->count() > 0) {
+            Notification::send($penggunas, new ArtikelBaruNotification($istilah));
+        }
 
         return redirect()->back()->with('success', 'Istilah Bali berhasil disetujui.');
     }
