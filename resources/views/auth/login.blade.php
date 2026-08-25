@@ -39,7 +39,16 @@
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full text-sm" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            <x-text-input id="email" 
+                          class="block mt-1 w-full text-sm" 
+                          type="email" 
+                          name="email" 
+                          :value="old('email')" 
+                          required 
+                          autofocus 
+                          autocomplete="username" 
+                          oninvalid="this.setCustomValidity('Silakan isi bidang ini.')" 
+                          oninput="this.setCustomValidity('')" />
             <x-input-error :messages="$errors->get('email')" class="mt-1 text-xs" />
         </div>
 
@@ -48,7 +57,14 @@
             <x-input-label for="password" value="Kata Sandi" />
             
             <div class="relative mt-1">
-                <x-text-input id="password" class="block w-full text-sm pr-10" type="password" name="password" required autocomplete="current-password" />
+                <x-text-input id="password" 
+                              class="block w-full text-sm pr-10" 
+                              type="password" 
+                              name="password" 
+                              required 
+                              autocomplete="current-password" 
+                              oninvalid="this.setCustomValidity('Silakan isi bidang ini.')" 
+                              oninput="this.setCustomValidity('')" />
                 
                 <!-- Tombol Ikon Mata -->
                 <button type="button" id="togglePassword" class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none cursor-pointer">

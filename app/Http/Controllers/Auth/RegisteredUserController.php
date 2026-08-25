@@ -35,12 +35,22 @@ class RegisteredUserController extends Controller
     {
         $role = $request->input('role', 'pengguna');
 
-        // 1. Validasi Input
+        // 1. Validasi Input dengan Pesan Kustom Bahasa Indonesia
         $request->validate([
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => $role === 'penulis' ? ['nullable'] : ['required', Rules\Password::defaults()],
             'role'     => ['required', 'in:pengguna,penulis'],
+        ], [
+            'name.required'     => 'Nama lengkap wajib diisi.',
+            'name.string'       => 'Nama lengkap harus berupa teks.',
+            'name.max'          => 'Nama lengkap maksimal 255 karakter.',
+            'email.required'    => 'Alamat email wajib diisi.',
+            'email.email'       => 'Format email tidak valid.',
+            'email.unique'      => 'Email ini sudah terdaftar. Silakan gunakan email lain atau masuk ke akun Anda.',
+            'password.required' => 'Kata sandi wajib diisi.',
+            'role.required'     => 'Peran akun wajib dipilih.',
+            'role.in'           => 'Pilihan peran tidak valid.',
         ]);
 
         // 2. ALUR PENDAFTARAN PENULIS

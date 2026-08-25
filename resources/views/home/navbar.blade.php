@@ -22,7 +22,7 @@
             </div>
         </a>
 
-        <!-- MENU NAVIGASI UTAMA (DINAMIS SINKRON DENGAN SLIDESHOW) -->
+        <!-- MENU NAVIGASI UTAMA (SINKRON DENGAN SECTION & SWITCHER) -->
         <div id="menu"
             class="hidden md:flex items-center gap-4 lg:gap-6 font-semibold text-[11px] lg:text-[12px] tracking-[1.5px] uppercase">
             <a href="#jenis-filsafat"
@@ -31,8 +31,11 @@
                 class="nav-dynamic-color text-[#E2B75B] hover:!text-[#8D2B1D] transition-colors duration-500 py-1 whitespace-nowrap">Ajaran Tetua</a>
             <a href="#cecimpedan"
                 class="nav-dynamic-color text-[#E2B75B] hover:!text-[#8D2B1D] transition-colors duration-500 py-1 whitespace-nowrap">Cecimpedan</a>
-            <a href="#sectionSatua"
+            
+            <!-- LINK FIX SATUA & ISTILAH DENGAN HANDLER NAVTOSATUA -->
+            <a href="#sectionSatua" onclick="navToSatua(event)"
                 class="nav-dynamic-color text-[#E2B75B] hover:!text-[#8D2B1D] transition-colors duration-500 py-1 whitespace-nowrap">Satua & Istilah</a>
+            
             <a href="#kontributor"
                 class="nav-dynamic-color text-[#E2B75B] hover:!text-[#8D2B1D] transition-colors duration-500 py-1 whitespace-nowrap">Kontributor</a>
         </div>
@@ -116,7 +119,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-[#8D2B1D] group-hover/item:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                                 </svg>
-                                <span>Keluar / Logout</span>
+                                <span>Logout</span>
                             </button>
                         </form>
                     </div>
@@ -145,3 +148,28 @@
 
     </div>
 </nav>
+
+<!-- ========================================== -->
+<!-- SCRIPT JS HANDLER NAVIGASI SATUA & ISTILAH -->
+<!-- ========================================== -->
+<script>
+    function navToSatua(event) {
+        if (event) event.preventDefault();
+
+        // 1. Memaksa perpindahan dari Tab Istilah kembali ke Tab Satua
+        if (typeof showSatua === 'function') {
+            showSatua();
+        } else {
+            const secSatua = document.getElementById("sectionSatua");
+            const secIstilah = document.getElementById("sectionIstilah");
+            if (secSatua) secSatua.classList.remove("hidden");
+            if (secIstilah) secIstilah.classList.add("hidden");
+        }
+
+        // 2. Melakukan smooth scroll ke elemen #sectionSatua
+        const el = document.getElementById("sectionSatua");
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+</script>

@@ -4,8 +4,11 @@
             <h2 class="font-semibold text-xl text-[#2B1A0E] leading-tight" style="font-family: 'Cormorant Garamond', serif;">
                 {{ __('Dashboard Pengguna') }}
             </h2>
-            <a href="{{ url('/') }}" class="text-sm font-semibold text-[#8D2B1D] hover:underline">
-                &larr; Kembali ke Beranda
+            
+            <!-- TOMBOL BERBENTUK PERSEGI PANJANG (BOX BUTTON) -->
+            <a href="{{ url('/') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#E5D6BF] hover:border-[#8D2B1D] text-[#8D2B1D] text-xs font-semibold rounded-xl shadow-sm hover:shadow transition-all duration-200 group cursor-pointer">
+                <span class="transition-transform duration-200 group-hover:-translate-x-1">&larr;</span>
+                <span>Kembali ke Beranda</span>
             </a>
         </div>
     </x-slot>
@@ -76,13 +79,11 @@
                 <div class="bg-white border border-[#E5D6BF] p-6 rounded-2xl shadow-sm hover:border-[#8D2B1D] transition flex flex-col justify-between">
                     <div>
                         <div class="flex items-center justify-between mb-4">
-                            <!-- IKON LONCENG DENGAN INDIKATOR TITIK MERAH -->
                             <div class="relative w-12 h-12 rounded-xl bg-[#EFE4D3] text-[#8D2B1D] flex items-center justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[#8D2B1D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                                 </svg>
                                 
-                                <!-- TITIK MERAH: MUNCUL HANYA JIKA ADA UNREAD NOTIFIKASI -->
                                 @if(isset($unreadCount) && $unreadCount > 0)
                                     <span class="absolute -top-1 -right-1 flex h-3.5 w-3.5">
                                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#8D2B1D] opacity-75"></span>

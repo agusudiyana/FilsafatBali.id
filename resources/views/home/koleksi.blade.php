@@ -22,7 +22,6 @@
                 <div class="absolute inset-0 bg-gradient-to-t from-[#8B231B]/90 via-[#8B231B]/35 to-transparent">
                 </div>
 
-                <!-- Kontainer Flex Height untuk Menjaga Kesejajaran Teks -->
                 <div class="absolute inset-0 p-6 text-white flex flex-col justify-end">
 
                     <p class="text-[11px] tracking-[4px] uppercase mb-2 font-medium">
@@ -34,14 +33,12 @@
                         Ajaran Tetua
                     </h3>
 
-                    <!-- Tinggi Deskripsi Konsisten (min-h-[84px]) -->
                     <div class="min-h-[84px] flex items-start">
                         <p class="text-sm leading-7 text-white/90 line-clamp-3">
                             Petuah dan filosofi yang diwariskan para tetua Bali dari generasi ke generasi.
                         </p>
                     </div>
 
-                    <!-- Counter Dinamis Database -->
                     <div class="flex justify-between items-center mt-6 pt-2">
                         <span class="text-sm font-semibold">
                             {{ number_format($totalAjaran ?? 0, 0, ',', '.') }} koleksi
@@ -74,14 +71,12 @@
                         Cecimpedan
                     </h3>
 
-                    <!-- Tinggi Deskripsi Konsisten (min-h-[84px]) -->
                     <div class="min-h-[84px] flex items-start">
                         <p class="text-sm leading-7 text-white/90 line-clamp-3">
                             Teka-teki khas Bali yang mengandung makna dan nilai kehidupan.
                         </p>
                     </div>
 
-                    <!-- Counter Dinamis Database -->
                     <div class="flex justify-between items-center mt-6 pt-2">
                         <span class="text-sm font-semibold">
                             {{ number_format($totalCecimpedan ?? 0, 0, ',', '.') }} koleksi
@@ -93,8 +88,8 @@
 
             </a>
 
-            <!-- 3. SATUA BALI -->
-            <a href="#sectionSatua" class="relative h-[470px] rounded-lg overflow-hidden group block">
+            <!-- 3. SATUA BALI (DIPERBAIKI DENGAN ONCLICK) -->
+            <a href="#sectionSatua" onclick="pilihPilarSatua(event)" class="relative h-[470px] rounded-lg overflow-hidden group block cursor-pointer">
 
                 <img src="{{ asset('images/satua.jpg') }}"
                     class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 duration-500"
@@ -114,7 +109,6 @@
                         Satua Bali
                     </h3>
 
-                    <!-- Tinggi Deskripsi Konsisten (min-h-[84px]) -->
                     <div class="min-h-[84px] flex items-start">
                         <p class="text-sm leading-7 text-white/90 line-clamp-3">
                             Ensiklopedia Satua Bali beserta pesan moral, nilai budaya, dan filosofi yang diwariskan
@@ -122,7 +116,6 @@
                         </p>
                     </div>
 
-                    <!-- Counter Dinamis Database -->
                     <div class="flex justify-between items-center mt-6 pt-2">
                         <span class="text-sm font-semibold">
                             {{ number_format($totalSatua ?? 0, 0, ',', '.') }} koleksi
@@ -134,8 +127,8 @@
 
             </a>
 
-            <!-- 4. ISTILAH BALI -->
-            <a href="#sectionIstilah" class="relative h-[470px] rounded-lg overflow-hidden group block">
+            <!-- 4. ISTILAH BALI (DIPERBAIKI DENGAN ONCLICK) -->
+            <a href="#sectionIstilah" onclick="pilihPilarIstilah(event)" class="relative h-[470px] rounded-lg overflow-hidden group block cursor-pointer">
 
                 <img src="{{ asset('images/istilah.jpeg') }}"
                     class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 duration-500"
@@ -155,14 +148,12 @@
                         Istilah Bali
                     </h3>
 
-                    <!-- Tinggi Deskripsi Konsisten (min-h-[84px]) -->
                     <div class="min-h-[84px] flex items-start">
                         <p class="text-sm leading-7 text-white/90 line-clamp-3">
                             Kumpulan istilah bahasa Bali dalam adat, agama, dan kehidupan sehari-hari.
                         </p>
                     </div>
 
-                    <!-- Counter Dinamis Database -->
                     <div class="flex justify-between items-center mt-6 pt-2">
                         <span class="text-sm font-semibold">
                             {{ number_format($totalIstilah ?? 0, 0, ',', '.') }} koleksi
@@ -179,3 +170,48 @@
     </div>
 
 </section>
+
+<!-- ========================================== -->
+<!-- SCRIPT JS HANDLER KLIK KARTU PILAR ARSIP   -->
+<!-- ========================================== -->
+<script>
+    function pilihPilarSatua(event) {
+        if (event) event.preventDefault();
+
+        // 1. Tampilkan section Satua Bali
+        if (typeof showSatua === 'function') {
+            showSatua();
+        } else {
+            const secSatua = document.getElementById("sectionSatua");
+            const secIstilah = document.getElementById("sectionIstilah");
+            if (secSatua) secSatua.classList.remove("hidden");
+            if (secIstilah) secIstilah.classList.add("hidden");
+        }
+
+        // 2. Smooth scroll ke lokasi section Satua
+        const el = document.getElementById("sectionSatua");
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    function pilihPilarIstilah(event) {
+        if (event) event.preventDefault();
+
+        // 1. Tampilkan section Istilah Bali
+        if (typeof showIstilah === 'function') {
+            showIstilah();
+        } else {
+            const secSatua = document.getElementById("sectionSatua");
+            const secIstilah = document.getElementById("sectionIstilah");
+            if (secSatua) secSatua.classList.add("hidden");
+            if (secIstilah) secIstilah.classList.remove("hidden");
+        }
+
+        // 2. Smooth scroll ke lokasi section Istilah
+        const el = document.getElementById("sectionIstilah") || document.getElementById("sectionSatua");
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+</script>

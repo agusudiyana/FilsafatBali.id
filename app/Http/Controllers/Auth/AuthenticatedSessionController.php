@@ -25,9 +25,16 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        // 1. Otorisasi Login & Tangkap Error Kredensial Salah
+        try {
+            $request->authenticate();
+        } catch (ValidationException $e) {
+            throw ValidationException::withMessages([
+                'email' => 'Email atau kata sandi yang Anda masukkan tidak sesuai.',
+            ]);
+        }
 
-        // CEK STATUS VERIFIKASI PENULIS
+        // 2. CEK STATUS VERIFIKASI PENULIS
         $user = Auth::user();
 
         if ($user->role === 'penulis' && !$user->is_verified) {

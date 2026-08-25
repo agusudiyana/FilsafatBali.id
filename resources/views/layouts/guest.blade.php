@@ -21,25 +21,14 @@
             <!-- KOTAK PUTIH UTAMA -->
             <div class="w-full sm:max-w-md mt-6 px-6 py-8 bg-white shadow-lg border border-[#E5D6BF] overflow-hidden sm:rounded-2xl">
                 
-                <!-- LOGO & TEKS FILSAFAT BALI DI DALAM KOTAK PUTIH -->
-                <div class="flex flex-col items-center justify-center mb-6">
-                    <a href="{{ url('/') }}" class="flex flex-col items-center gap-2 group">
-                        <!-- Gambar Logo Diperbesar -->
-                        <img src="{{ asset('images/logo.png') }}" alt="Logo Filsafat Bali" class="w-16 h-16 object-contain transition-transform duration-300 group-hover:scale-105">
-                        
-                        <!-- Teks Judul -->
-                        <span style="font-family: 'Cormorant Garamond', serif;" class="text-2xl font-bold tracking-tight text-[#8D2B1D] leading-none">
-                            FilsafatBali.id
-                        </span>
-                        
-                        <!-- Subtitle -->
-                        <span class="text-[9px] tracking-[2.5px] uppercase font-semibold text-[#C8A45A]">
-                            ARSIPAN BUDAYA
-                        </span>
+                <!-- LOGO UKURAN JUMBO (w-28 h-28) & TETAP PAS DI TENANGBAGIAN ATAS -->
+                <div class="flex flex-col items-center justify-center mt-6 mb-4">
+                    <a href="{{ url('/') }}" class="inline-block group">
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo Filsafat Bali" class="w-28 h-28 object-contain transition-transform duration-300 group-hover:scale-105">
                     </a>
                 </div>
 
-                <!-- Konten Form Login akan dirender di sini lewat $slot -->
+                <!-- Konten Form (Login/Register) -->
                 {{ $slot }}
             </div>
 

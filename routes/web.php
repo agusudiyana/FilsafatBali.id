@@ -96,9 +96,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/penulis', [AdminController::class, 'kelolaPenulis'])->name('admin.penulis.index');
         Route::get('/pengguna', [AdminController::class, 'kelolaPengguna'])->name('admin.pengguna.index');
         
-        // AKSI SETUJUI & TOLAK PENULIS
+        // AKSI SETUJUI & TOLAK PENULIS (MENDUKUNG PATCH DAN DELETE)
         Route::patch('/penulis/{id}/setujui', [AdminController::class, 'setujuiPenulis'])->name('admin.penulis.setujui');
-        Route::delete('/penulis/{id}/tolak', [AdminController::class, 'tolakPenulis'])->name('admin.penulis.tolak');
+        Route::match(['patch', 'delete'], '/penulis/{id}/tolak', [AdminController::class, 'tolakPenulis'])->name('admin.penulis.tolak');
 
         // Alias tambahan untuk fleksibilitas panggilan route sidebar
         Route::get('/manajemen/penulis', [AdminController::class, 'kelolaPenulis'])->name('admin.kelola.penulis');

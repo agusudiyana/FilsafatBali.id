@@ -183,14 +183,10 @@
                 <!-- CARD ARTIKEL DENGAN ONCLICK DIRECT -->
                 <div onclick="openModalForCard(this)"
                     class="card-artikel js-open-modal {{ $katClass }} bg-white rounded-xl overflow-hidden shadow duration-300 cursor-pointer group flex flex-col justify-between"
-                    data-id="{{ $item->id ?? '' }}"
-                    data-judul="{{ e($judulText) }}" 
-                    data-penulis="{{ e($penulisText) }}"
-                    data-tanggal="{{ strtoupper($tanggal) }}" 
-                    data-kategori="{{ strtoupper($kategoriText) }}"
-                    data-badge-color="{{ $colorHex }}" 
-                    data-gambar="{{ $gambarUrl }}"
-                    data-kesimpulan="{{ e($kesimpulanText) }}">
+                    data-id="{{ $item->id ?? '' }}" data-judul="{{ e($judulText) }}"
+                    data-penulis="{{ e($penulisText) }}" data-tanggal="{{ strtoupper($tanggal) }}"
+                    data-kategori="{{ strtoupper($kategoriText) }}" data-badge-color="{{ $colorHex }}"
+                    data-gambar="{{ $gambarUrl }}" data-kesimpulan="{{ e($kesimpulanText) }}">
 
                     <div>
                         <!-- Header Gambar + Badge -->
@@ -209,8 +205,10 @@
                                 class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300 transform group-hover:scale-100 scale-95 z-10">
                                 <span
                                     class="bg-[#FAF5ED]/90 backdrop-blur-sm text-[#992B20] border border-[#D6C5AE] text-[11px] font-bold tracking-[2px] uppercase px-5 py-2.5 rounded-lg shadow-lg flex items-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 stroke-[#992B20]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 stroke-[#992B20]"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                     </svg>
                                     BACA ARTIKEL
                                 </span>
@@ -225,8 +223,10 @@
                             <!-- BADGE TERVERIFIKASI DENGAN IKON CENTANG -->
                             <span
                                 class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-[#B8863B] text-[10px] tracking-[1px] font-bold px-3 py-1.5 rounded-full z-10 shadow-sm flex items-center gap-1.5 border border-[#B8863B]/20">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 fill-[#B8863B]" viewBox="0 0 24 24">
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 fill-[#B8863B]"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
                                 </svg>
                                 Terverifikasi
                             </span>
@@ -251,8 +251,7 @@
                         <span>{{ $tanggal }}</span>
 
                         <!-- COVER ICON SIMPAN KOTAK -->
-                        <button type="button" 
-                            onclick="handleBookmark(event, this, '{{ e($judulText) }}', 'artikel')"
+                        <button type="button" onclick="handleBookmark(event, this, '{{ e($judulText) }}', 'artikel')"
                             class="btn-bookmark w-9 h-9 rounded-lg flex items-center justify-center shadow-sm relative z-20 {{ $isSaved ? 'is-saved' : '' }}"
                             title="{{ $isSaved ? 'Batal Simpan' : 'Simpan Artikel' }}">
                             <i data-feather="bookmark" class="w-4 h-4"></i>
@@ -264,10 +263,13 @@
                 </div>
 
             @empty
-                <div class="col-span-full py-12 text-center text-[#8C7A65]">
-                    Belum ada data artikel yang disetujui.
-                </div>
             @endforelse
+
+            <!-- KETERANGAN OTOMATIS SAAT KARTU KOSONG / TIDAK ADA DATA -->
+            <div id="noArticleMessage"
+                class="hidden col-span-full py-12 text-center text-[#8C7A65] font-medium text-sm">
+                Belum ada data artikel yang disetujui.
+            </div>
 
         </div>
     </div>
@@ -276,7 +278,7 @@
 <!-- MODAL OVERLAY DETAIL BACA ARTIKEL -->
 <div id="overlayArtikel" onclick="closeModalArtikelGlobal()"
     class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden opacity-0 pointer-events-none transition-opacity duration-300 cursor-pointer">
-    
+
     <!-- Panel Isi Artikel -->
     <div id="panelArtikel" onclick="event.stopPropagation()"
         class="fixed inset-y-0 right-0 w-full max-w-2xl bg-[#FAF6F0] shadow-2xl p-8 overflow-y-auto transform translate-x-full transition-transform duration-300 ease-in-out border-l border-[#D6C5AE] cursor-default">
@@ -392,7 +394,8 @@
         if (elementData instanceof HTMLElement) {
             const cardElement = elementData.closest('.card-artikel') || elementData;
             ds = cardElement.dataset || {};
-            isiHtml = cardElement.querySelector('.hidden-isi-content') ? cardElement.querySelector('.hidden-isi-content').innerHTML : '';
+            isiHtml = cardElement.querySelector('.hidden-isi-content') ? cardElement.querySelector(
+                '.hidden-isi-content').innerHTML : '';
         } else {
             // Jika dipanggil langsung dari objek JS (Live Search)
             ds = elementData;
@@ -404,19 +407,19 @@
         const tanggalText = ds.tanggal || '';
         const kategoriText = ds.kategori || 'AJARAN TETUA';
         const badgeColorHex = ds.badgeColor || ds.badge_color || '#992B20';
-        const gambarSrc = ds.gambar || '{{ asset("images/subak.jpeg") }}';
+        const gambarSrc = ds.gambar || '{{ asset('images/subak.jpeg') }}';
         const kesimpulanText = ds.kesimpulan || '';
 
         // Tembak Data ke Elemen Overlay Modal
         if (document.getElementById('artTitle')) document.getElementById('artTitle').innerText = judulText;
         if (document.getElementById('artPenulis')) document.getElementById('artPenulis').innerText = penulisText;
         if (document.getElementById('artMeta')) document.getElementById('artMeta').innerText = tanggalText;
-        
+
         // Dekode HTML untuk Isi & Kesimpulan
         if (document.getElementById('artIsi')) {
             document.getElementById('artIsi').innerHTML = decodeHTMLEntities(isiHtml);
         }
-        
+
         if (document.getElementById('artAvatar')) {
             document.getElementById('artAvatar').innerText = (penulisText ? penulisText.charAt(0) : 'A').toUpperCase();
         }
@@ -432,7 +435,7 @@
 
         const kesimpulanBox = document.getElementById('boxKesimpulan');
         const artKesimpulanEl = document.getElementById('artKesimpulan');
-        
+
         if (kesimpulanBox && artKesimpulanEl) {
             const cleanKesimpulan = decodeHTMLEntities(kesimpulanText).trim();
             if (cleanKesimpulan !== '') {
@@ -490,13 +493,34 @@
     }
 
     // Alias Fungsi agar kompatibel jika dipanggil dengan nama berbeda
-    function closeArtikelModal() { closeModalArtikelGlobal(); }
-    function closeDetailArtikel() { closeModalArtikelGlobal(); }
+    function closeArtikelModal() {
+        closeModalArtikelGlobal();
+    }
+
+    function closeDetailArtikel() {
+        closeModalArtikelGlobal();
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof feather !== 'undefined') {
             feather.replace();
         }
+
+        // FUNGSI UNTUK CEK DAN TAMPILKAN PESAN KOSONG
+        function updateNoDataMessage(visibleCount) {
+            const msgEl = document.getElementById('noArticleMessage');
+            if (msgEl) {
+                if (visibleCount === 0) {
+                    msgEl.classList.remove('hidden');
+                } else {
+                    msgEl.classList.add('hidden');
+                }
+            }
+        }
+
+        // Cek awal saat halaman pertama kali di-load
+        const initialCards = document.querySelectorAll('.card-artikel');
+        updateNoDataMessage(initialCards.length);
 
         // Filter Tab JS Action + Efek Animasi Reveal
         document.querySelectorAll('.tab-btn-action').forEach(btn => {
@@ -510,6 +534,7 @@
 
                 const kategori = this.dataset.kategori;
                 const cards = document.querySelectorAll('.card-artikel');
+                let visibleCount = 0;
 
                 cards.forEach(card => {
                     card.classList.remove('card-reveal-anim');
@@ -518,6 +543,7 @@
                         card.style.display = 'flex';
                         void card.offsetWidth;
                         card.classList.add('card-reveal-anim');
+                        visibleCount++;
 
                         setTimeout(() => {
                             card.classList.remove('card-reveal-anim');
@@ -526,6 +552,9 @@
                         card.style.display = 'none';
                     }
                 });
+
+                // Perbarui status pesan kosong berdasarkan kartu yang terlihat
+                updateNoDataMessage(visibleCount);
             });
         });
 
@@ -541,7 +570,8 @@
             setTimeout(() => {
                 const cards = document.querySelectorAll('.card-artikel');
                 cards.forEach(card => {
-                    if (card.dataset.judul && card.dataset.judul.trim().toLowerCase() === decodedTitle) {
+                    if (card.dataset.judul && card.dataset.judul.trim().toLowerCase() ===
+                        decodedTitle) {
                         openModalForCard(card);
                     }
                 });

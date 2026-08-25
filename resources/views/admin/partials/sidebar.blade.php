@@ -14,7 +14,7 @@
                         FilsafatBali
                     </h1>
                     <p class="text-[11px] text-[#C7A56A] font-medium tracking-wide">
-                        Admin Panel
+                        Panel Admin
                     </p>
                 </div>
             </div>

@@ -17,12 +17,13 @@ class PasswordController extends Controller
     {
         $user = $request->user();
 
-        // Aturan validasi
+        // Aturan validasi dasar untuk kata sandi baru
         $rules = [
             'password' => ['required', Password::defaults(), 'confirmed'],
         ];
 
-        if ($user->password) {
+        // Jika akun BUKAN terhubung dari Google, wajibkan current_password
+        if (!$user->google_id) {
             $rules['current_password'] = ['required', 'current_password'];
         }
 
@@ -37,9 +38,10 @@ class PasswordController extends Controller
 
         $validated = $request->validateWithBag('updatePassword', $rules, $messages);
 
-        // Update password pengguna
+        // Update password pengguna dan lepaskan penanda google_id agar selanjutnya diperlakukan sebagai akun ber-password
         $user->update([
-            'password' => Hash::make($validated['password']),
+            'password'  => Hash::make($validated['password']),
+            'google_id' => null,
         ]);
 
         return back()->with('status', 'password-updated');
