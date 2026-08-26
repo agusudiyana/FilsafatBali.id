@@ -2,9 +2,9 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <!-- ========================================== -->
-<!-- SECTION HERO (FIX DROPDOWN OVERLAP Z-INDEX)-->
+<!-- SECTION HERO (PROPORTIONAL MOBILE HEIGHT)  -->
 <!-- ========================================== -->
-<section id="filsafat" class="relative z-30 min-h-screen flex items-start justify-center overflow-visible">
+<section id="filsafat" class="relative z-30 min-h-[85vh] sm:min-h-screen flex items-center justify-center overflow-visible">
 
     <!-- Swiper Background Container -->
     <div class="swiper heroSwiper absolute inset-0 w-full h-full -z-10">
@@ -24,68 +24,66 @@
     <div class="absolute inset-0 bg-black/55 pointer-events-none z-0"></div>
 
     <!-- Gradient Transition Bottom (Hitam Transparan) -->
-    <div class="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none z-0"></div>
+    <div class="absolute bottom-0 left-0 w-full h-32 sm:h-64 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none z-0"></div>
 
-    <!-- Konten Utama Hero -->
-    <div class="relative z-10 text-center max-w-4xl mx-auto px-6 pt-40">
+    <!-- Konten Utama Hero (Dipangkas Tinggi Vertikalnya di HP) -->
+    <div class="relative z-10 text-center max-w-4xl mx-auto px-4 sm:px-6 pt-20 sm:pt-36 pb-10 sm:pb-20">
 
         <!-- Subtitle Header (DIKUNCI KE WARNA KUNING #E2B75B) -->
-        <div class="anim-hero-tag max-w-lg mx-auto mb-10">
-            <p id="heroTagline" class="uppercase tracking-[8px] text-[9px] font-medium text-center whitespace-nowrap !text-[#E2B75B]" style="color: #E2B75B !important;">
+        <div class="anim-hero-tag max-w-lg mx-auto mb-3 sm:mb-8">
+            <p id="heroTagline" class="uppercase tracking-[3px] sm:tracking-[8px] text-[8px] sm:text-[10px] font-semibold text-center leading-tight !text-[#E2B75B]" style="color: #E2B75B !important;">
                 Arsip Digital Filsafat & Budaya Bali
             </p>
         </div>
 
-        <!-- Judul Utama Hero -->
-        <h1 style="font-family:'Cormorant Garamond',serif;" class="anim-hero-title font-bold leading-[0.9]">
-            <span class="block text-white text-[58px]">
+        <!-- Judul Utama Hero (Proporsional Ringkas di HP) -->
+        <h1 style="font-family:'Cormorant Garamond',serif;" class="anim-hero-title font-bold leading-[1.05] sm:leading-[0.95]">
+            <span class="block text-white text-3xl sm:text-5xl lg:text-[58px]">
                 Menjaga Warisan,
             </span>
-            <span id="heroTitleAccent" class="block text-[66px] mt-1 transition-colors duration-500 text-[#E2B75B]">
+            <span id="heroTitleAccent" class="block text-[32px] sm:text-5xl lg:text-[66px] mt-1 sm:mt-2 transition-colors duration-500 text-[#E2B75B]">
                 Menerangi Masa Depan
             </span>
         </h1>
 
         <!-- Deskripsi Singkat -->
-        <p class="anim-hero-sub mt-8 max-w-2xl mx-auto text-center text-[17px] md:text-[18px] font-normal leading-[36px] text-[#F3F1EC]"
+        <p class="anim-hero-sub mt-3 sm:mt-6 max-w-xl sm:max-w-2xl mx-auto text-center text-xs sm:text-base md:text-[18px] font-normal leading-relaxed sm:leading-[32px] text-[#F3F1EC] px-2"
             style="font-family:'Inter', sans-serif;">
-            Platform digital untuk mengakses, mempelajari, dan
-            <br>
-            melestarikan kearifan lokal Bali.
+            Platform digital untuk mengakses, mempelajari, dan melestarikan kearifan lokal Bali.
         </p>
 
         <!-- KOTAK PENCARIAN (STACKING CONTEXT UTAMA) -->
-        <div class="anim-hero-search mt-8 max-w-2xl mx-auto relative z-50">
+        <div class="anim-hero-search mt-5 sm:mt-8 max-w-2xl mx-auto relative z-50">
 
             <!-- Field Input Search -->
             <div id="searchBoxContainer"
-                class="bg-[#FAF5ED] rounded-xl px-5 h-[54px] flex items-center shadow-2xl transition-all duration-200 w-full shrink-0 ring-2 ring-transparent">
+                class="bg-[#FAF5ED] rounded-xl px-3.5 sm:px-5 h-[46px] sm:h-[54px] flex items-center shadow-2xl transition-all duration-200 w-full shrink-0 ring-2 ring-transparent">
 
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-[#8C7A65] mr-3 shrink-0" fill="none"
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5 text-[#8C7A65] mr-2.5 sm:mr-3 shrink-0" fill="none"
                     viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
                         d="M21 21l-4.35-4.35m1.85-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
 
                 <input id="searchInput" type="text" placeholder="Cari ajaran, istilah, satua, filsafat..."
-                    class="bg-transparent flex-1 w-full outline-none text-[16px] text-[#2B1A0E] placeholder-[#A0907E] font-medium h-full"
+                    class="bg-transparent flex-1 w-full outline-none text-xs sm:text-[16px] text-[#2B1A0E] placeholder-[#A0907E] font-medium h-full"
                     onfocus="aktifkanBorderMerah()" oninput="liveSearch(this.value)">
 
                 <button id="btnClearSearch" type="button" onclick="clearSearch()"
-                    class="hidden text-[#8C7A65] hover:text-[#8D2B1D] font-bold text-lg px-2 shrink-0 transition cursor-pointer">
+                    class="hidden text-[#8C7A65] hover:text-[#8D2B1D] font-bold text-base sm:text-lg px-2 shrink-0 transition cursor-pointer">
                     ✕
                 </button>
             </div>
 
             <!-- DROPDOWN HASIL PENCARIAN -->
             <div id="hasilCari"
-                class="hidden absolute left-0 top-full mt-2 w-full bg-[#FAF5ED] rounded-xl border border-[#E5D6BF] shadow-2xl overflow-y-auto max-h-[280px] divide-y divide-[#EADCC9] z-[100] text-left">
+                class="hidden absolute left-0 top-full mt-2 w-full bg-[#FAF5ED] rounded-xl border border-[#E5D6BF] shadow-2xl overflow-y-auto max-h-[260px] divide-y divide-[#EADCC9] z-[100] text-left">
             </div>
 
         </div>
 
-        <!-- KEYWORD CHIPS -->
-        <div id="keywordBox" class="anim-hero-chips mt-5 flex justify-center items-center flex-nowrap gap-2 md:gap-3 max-w-3xl mx-auto px-2 overflow-hidden">
+        <!-- KEYWORD CHIPS (RESPONSIF MULTI-BARIS DI HP) -->
+        <div id="keywordBox" class="anim-hero-chips mt-3.5 sm:mt-5 flex justify-center items-center flex-wrap gap-1.5 sm:gap-2 max-w-3xl mx-auto px-1">
         </div>
 
     </div>
@@ -229,13 +227,9 @@
         const tag = document.getElementById('heroTagline');
         const title = document.getElementById('heroTitleAccent');
 
-        // Tagline selalu dikunci kuning emas
         if (tag) tag.style.color = '#E2B75B';
-        
-        // Judul aksen slide 0 = Emas (#E2B75B) | Slide 1 = Hijau (#4ADE80)
         if (title) title.style.color = slideIndex === 0 ? '#E2B75B' : '#4ADE80';
 
-        // NAVBAR DIKUNCI: Tetap selalu menggunakan warna Emas/Kuning
         window.currentHeroAccentColor = '#E2B75B';
 
         if (typeof updateNavbarOnScroll === 'function') {
@@ -275,7 +269,6 @@
             navbar.style.paddingTop = "16px";
             navbar.style.paddingBottom = "16px";
 
-            // DIKUNCI MATI: Warna teks dynamic di navbar tetap Kuning (#E2B75B)
             dynamicElements.forEach(function(el) {
                 el.style.color = "#E2B75B";
             });
@@ -345,7 +338,6 @@
             });
         }
 
-        // PENANGANAN OTOMATIS SAAT USER KLIK NOTIFIKASI ("BACA SEKARANG")
         const urlParams = new URLSearchParams(window.location.search);
         const shouldOpenOverlay = urlParams.get('open_overlay');
         const articleId = urlParams.get('article_id');
@@ -502,7 +494,7 @@
         history.forEach(function(text) {
             var a = document.createElement("a");
             a.href = "#";
-            a.className = "inline-block max-w-[120px] md:max-w-[150px] truncate border border-white/40 rounded-md px-3 py-1.5 text-[10px] uppercase tracking-[2px] text-white font-medium hover:bg-white hover:text-black transition cursor-pointer shrink-0 text-center align-middle";
+            a.className = "inline-block max-w-[110px] sm:max-w-[150px] truncate border border-white/40 rounded-md px-2 sm:px-3 py-0.5 sm:py-1.5 text-[8.5px] sm:text-[10px] uppercase tracking-[1px] sm:tracking-[2px] text-white font-medium hover:bg-white hover:text-black transition cursor-pointer text-center align-middle";
             a.innerText = text;
             a.title = text;
             
@@ -702,15 +694,15 @@
             if (hasilCari) {
                 hasilCari.classList.remove("hidden");
                 hasilCari.innerHTML = results.map(item => `
-                    <div onclick="bukaDetailMateri('${item.id}', '${encodeURIComponent(item.judul)}', '${item.target_type}')" class="flex items-center gap-4 px-6 py-4 hover:bg-[#F0E6D8] transition duration-200 cursor-pointer text-left border-b border-[#EADCC9]">
-                        <span class="${getCategoryBadgeColor(item.kategori)} text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded shrink-0 shadow-sm">
+                    <div onclick="bukaDetailMateri('${item.id}', '${encodeURIComponent(item.judul)}', '${item.target_type}')" class="flex items-center gap-3 sm:gap-4 px-3.5 sm:px-6 py-2.5 sm:py-4 hover:bg-[#F0E6D8] transition duration-200 cursor-pointer text-left border-b border-[#EADCC9]">
+                        <span class="${getCategoryBadgeColor(item.kategori)} text-[8.5px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded shrink-0 shadow-sm">
                             ${item.kategori}
                         </span>
                         <div>
-                            <h4 class="text-[17px] font-bold text-[#2B1A0E] leading-tight">
+                            <h4 class="text-xs sm:text-[17px] font-bold text-[#2B1A0E] leading-tight">
                                 ${item.judul}
                             </h4>
-                            <p class="text-[13px] text-[#8C7A65] mt-0.5">
+                            <p class="text-[11px] sm:text-[13px] text-[#8C7A65] mt-0.5">
                                 ${item.penulis}
                             </p>
                         </div>
@@ -721,7 +713,7 @@
             if (hasilCari) {
                 hasilCari.classList.remove("hidden");
                 hasilCari.innerHTML = `
-                    <div class="px-6 py-5 text-center text-[#8C7A65] text-sm italic">
+                    <div class="px-4 sm:px-6 py-3.5 sm:py-5 text-center text-[#8C7A65] text-xs sm:text-sm italic">
                         Tidak ada hasil ditemukan untuk "<span class="font-semibold">${keyword}</span>"
                     </div>
                 `;

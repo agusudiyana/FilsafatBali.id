@@ -1,26 +1,26 @@
 <!-- SECTION CECIMPEDAN BALI -->
-<section id="cecimpedan" class="relative py-24 overflow-hidden bg-gradient-to-b from-[#EFE3CC] via-[#E8D8B8] to-[#E2CEAA]">
+<section id="cecimpedan" class="relative py-12 sm:py-24 overflow-hidden bg-gradient-to-b from-[#EFE3CC] via-[#E8D8B8] to-[#E2CEAA]">
 
     <div class="absolute top-0 left-0 w-full h-[1px] bg-[#E7D8B8]"></div>
 
-    <div class="relative max-w-7xl mx-auto px-8">
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-8">
 
         <!-- Header Section -->
-        <p class="uppercase tracking-[6px] text-[#C58A3C] text-xs mb-4 font-semibold">
+        <p class="uppercase tracking-[4px] sm:tracking-[6px] text-[#C58A3C] text-[10px] sm:text-xs mb-2 sm:mb-4 font-semibold">
             — TEKA-TEKI TRADISIONAL
         </p>
 
-        <h2 style="font-family:'Cormorant Garamond',serif;" class="text-5xl font-bold text-[#23160E]">
+        <h2 style="font-family:'Cormorant Garamond',serif;" class="text-3xl sm:text-5xl font-bold text-[#23160E] leading-tight">
             Cecimpedan Bali
         </h2>
 
-        <p class="mt-5 text-[#675A4D] text-lg max-w-2xl">
+        <p class="mt-3 sm:mt-5 text-[#675A4D] text-sm sm:text-lg max-w-2xl">
             Klik kartu untuk menjawab teka-teki, atau buka detail lengkap beserta filosofi maknanya.
         </p>
 
         <!-- Slider Card Cecimpedan dengan Touch & Smooth Scroll -->
-        <div id="sliderWrapper" class="mt-14 overflow-x-auto scrollbar-hide scroll-smooth cursor-grab active:cursor-grabbing">
-            <div id="cecimpedanSlider" class="flex gap-8 w-max pb-6">
+        <div id="sliderWrapper" class="mt-8 sm:mt-14 overflow-x-auto scrollbar-hide scroll-smooth cursor-grab active:cursor-grabbing -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div id="cecimpedanSlider" class="flex gap-4 sm:gap-8 w-max pb-4 sm:pb-6">
 
                 @forelse($cecimpedans as $index => $item)
                     @php
@@ -43,36 +43,36 @@
                         }
                     @endphp
 
-                    <div class="cardCecimpedan bg-white border border-[#E4D4BF] rounded-xl p-7 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 w-[380px] flex-shrink-0 flex flex-col justify-between select-none" data-id="{{ $item->id }}" data-judul="{{ strtolower($pertanyaan) }}">
+                    <div class="cardCecimpedan bg-white border border-[#E4D4BF] rounded-xl p-5 sm:p-7 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 w-[85vw] sm:w-[380px] flex-shrink-0 flex flex-col justify-between select-none" data-id="{{ $item->id }}" data-judul="{{ strtolower($pertanyaan) }}">
 
                         <div>
                             <!-- Header Card -->
                             <div class="flex justify-between items-center">
-                                <span class="{{ $badgeBg }} text-white text-[10px] tracking-[2px] uppercase px-3 py-1 rounded font-semibold shadow-sm">
+                                <span class="{{ $badgeBg }} text-white text-[9px] sm:text-[10px] tracking-[1.5px] sm:tracking-[2px] uppercase px-2.5 sm:px-3 py-1 rounded font-semibold shadow-sm">
                                     {{ $tingkat }}
                                 </span>
-                                <span class="text-[#7C6346] text-xs font-semibold">
+                                <span class="text-[#7C6346] text-[11px] sm:text-xs font-semibold">
                                     #{{ $nomor }}
                                 </span>
                             </div>
 
                             <!-- Teks Teka-Teki -->
-                            <h3 style="font-family:'Cormorant Garamond',serif;" class="italic text-[30px] leading-[42px] mt-6 text-[#23160E] font-bold">
+                            <h3 style="font-family:'Cormorant Garamond',serif;" class="italic text-xl sm:text-[30px] leading-snug sm:leading-[42px] mt-4 sm:mt-6 text-[#23160E] font-bold">
                                 "{{ $pertanyaan }}"
                             </h3>
 
                             <!-- Arti Bahasa Indonesia -->
-                            <p class="mt-4 text-[#675A4D] leading-7 text-sm">
+                            <p class="mt-3 sm:mt-4 text-[#675A4D] leading-relaxed sm:leading-7 text-xs sm:text-sm">
                                 {{ $arti }}
                             </p>
                         </div>
 
                         <!-- Bagian Bawah Card -->
-                        <div class="mt-6 pt-4 border-t border-[#E4D4BF] flex flex-col gap-2">
+                        <div class="mt-5 sm:mt-6 pt-3 sm:pt-4 border-t border-[#E4D4BF] flex flex-col gap-2">
 
                             <!-- 1. JAWAB TEKA TEKI KARTU -->
                             <button type="button" onclick="toggleCardAnswer(this)"
-                                class="btnToggleCard flex items-center gap-1.5 uppercase tracking-[1px] text-[11px] text-[#8B6D48] hover:text-[#C58A3C] font-semibold transition-all duration-300 w-fit cursor-pointer">
+                                class="btnToggleCard flex items-center gap-1.5 uppercase tracking-[1px] text-[10px] sm:text-[11px] text-[#8B6D48] hover:text-[#C58A3C] font-semibold transition-all duration-300 w-fit cursor-pointer">
                                 <i data-feather="key" class="w-3.5 h-3.5 text-[#C58A3C] pointer-events-none"></i>
                                 <span class="lblToggle pointer-events-none">Jawab Teka-Teki</span>
                             </button>
@@ -80,17 +80,17 @@
                             <!-- 2. DETAIL JAWABAN KARTU -->
                             <div class="cardAnswerContent max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out">
                                 <div class="pt-2 space-y-3 my-1">
-                                    <div class="border border-[#D7B88A] bg-gradient-to-r from-[#F8F0E5] to-[#FFF9F2] rounded-lg p-3.5 shadow-inner">
-                                        <p class="text-[10px] uppercase tracking-wider text-[#8B6D48] font-bold">Kunci Jawaban</p>
-                                        <h3 style="font-family:'Cormorant Garamond',serif;" class="text-[26px] leading-tight text-[#A53D24] font-bold mt-0.5">
+                                    <div class="border border-[#D7B88A] bg-gradient-to-r from-[#F8F0E5] to-[#FFF9F2] rounded-lg p-3 sm:p-3.5 shadow-inner">
+                                        <p class="text-[9px] sm:text-[10px] uppercase tracking-wider text-[#8B6D48] font-bold">Kunci Jawaban</p>
+                                        <h3 style="font-family:'Cormorant Garamond',serif;" class="text-xl sm:text-[26px] leading-tight text-[#A53D24] font-bold mt-0.5">
                                             {{ $jawaban }}
                                         </h3>
                                     </div>
 
                                     <div class="flex">
-                                        <div class="w-[2px] bg-[#D5A246] mr-2.5 shrink-0 rounded-full"></div>
+                                        <div class="w-[2px] bg-[#D5A246] mr-2 sm:mr-2.5 shrink-0 rounded-full"></div>
                                         <div>
-                                            <p class="uppercase tracking-[2px] text-[10px] text-[#C7962B] font-bold">Makna</p>
+                                            <p class="uppercase tracking-[1.5px] sm:tracking-[2px] text-[9px] sm:text-[10px] text-[#C7962B] font-bold">Makna</p>
                                             <p class="mt-0.5 text-[#6B5A45] text-xs leading-relaxed">
                                                 {{ $makna }}
                                             </p>
@@ -113,7 +113,7 @@
                                 data-variasi="{{ $variasi }}"
                                 data-asal="{{ $asal }}" 
                                 data-rekaman="{{ $rekaman }}"
-                                class="btnFilosofiCecimpedan flex items-center gap-1.5 text-[11px] uppercase tracking-[1px] text-[#6B5A45] hover:text-[#C58A3C] transition font-semibold w-fit mt-1 cursor-pointer">
+                                class="btnFilosofiCecimpedan flex items-center gap-1.5 text-[10px] sm:text-[11px] uppercase tracking-[1px] text-[#6B5A45] hover:text-[#C58A3C] transition font-semibold w-fit mt-1 cursor-pointer">
                                 <i data-feather="info" class="w-3.5 h-3.5 text-[#C58A3C] pointer-events-none"></i>
                                 <span class="pointer-events-none">Filosofi Lengkap</span>
                             </button>
@@ -122,7 +122,7 @@
 
                     </div>
                 @empty
-                    <div class="col-span-full py-12 text-center text-[#8B6D48]">
+                    <div class="col-span-full py-12 text-center text-[#8B6D48] text-sm sm:text-base">
                         Belum ada data Cecimpedan Bali.
                     </div>
                 @endforelse
@@ -137,33 +137,33 @@
 <!-- OVERLAY & PANEL DRAWER CECIMPEDAN -->
 <div id="cecimpedanOverlayFilosofi" onclick="closeCecimpedanDrawer()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[99999] hidden opacity-0 transition-opacity duration-300">
 
-    <div id="cecimpedanPanelFilosofi" onclick="event.stopPropagation()" class="fixed top-0 right-0 h-full w-full sm:w-[500px] md:w-[45%] bg-[#FAF5ED] shadow-2xl overflow-y-auto transform translate-x-full transition-transform duration-500 ease-in-out p-8 md:p-10">
+    <div id="cecimpedanPanelFilosofi" onclick="event.stopPropagation()" class="fixed top-0 right-0 h-full w-full max-w-full sm:w-[500px] md:w-[45%] bg-[#FAF5ED] shadow-2xl overflow-y-auto transform translate-x-full transition-transform duration-500 ease-in-out p-5 sm:p-8 md:p-10">
 
         <!-- Tombol Close -->
-        <button type="button" onclick="closeCecimpedanDrawer()" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-[#EFE3CC] hover:bg-[#E2D2B3] flex items-center justify-center text-[#23160E] font-bold transition cursor-pointer z-50">
+        <button type="button" onclick="closeCecimpedanDrawer()" class="absolute top-4 right-4 sm:top-6 sm:right-6 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#EFE3CC] hover:bg-[#E2D2B3] flex items-center justify-center text-[#23160E] font-bold transition cursor-pointer z-50 text-sm sm:text-base">
             ✕
         </button>
 
-        <div class="mt-4 text-center">
-            <span id="cecimpedanFilosofiTingkat" class="inline-block bg-[#C7962B] text-white text-[10px] tracking-[2px] uppercase px-4 py-1.5 rounded font-semibold">
+        <div class="mt-4 sm:mt-4 text-center">
+            <span id="cecimpedanFilosofiTingkat" class="inline-block bg-[#C7962B] text-white text-[9px] sm:text-[10px] tracking-[1.5px] sm:tracking-[2px] uppercase px-3 sm:px-4 py-1 sm:py-1.5 rounded font-semibold">
                 TINGKAT: SEDANG
             </span>
 
-            <p id="cecimpedanFilosofiNomor" class="mt-4 uppercase tracking-[4px] text-[11px] text-[#8B6D48] font-medium">
+            <p id="cecimpedanFilosofiNomor" class="mt-3 sm:mt-4 uppercase tracking-[3px] sm:tracking-[4px] text-[10px] sm:text-[11px] text-[#8B6D48] font-medium">
                 CECIMPEDAN #001
             </p>
 
-            <h2 id="cecimpedanFilosofiTeks" style="font-family:'Cormorant Garamond',serif;" class="italic text-2xl md:text-3xl text-[#23160E] font-bold mt-4 leading-relaxed">
+            <h2 id="cecimpedanFilosofiTeks" style="font-family:'Cormorant Garamond',serif;" class="italic text-xl sm:text-2xl md:text-3xl text-[#23160E] font-bold mt-3 sm:mt-4 leading-relaxed">
                 ""
             </h2>
 
-            <p id="cecimpedanFilosofiArti" class="mt-3 text-[#675A4D] italic text-sm">
+            <p id="cecimpedanFilosofiArti" class="mt-2 sm:mt-3 text-[#675A4D] italic text-xs sm:text-sm">
                 -
             </p>
 
             <!-- TOMBOL TAMPILKAN JAWABAN -->
-            <button type="button" onclick="window.toggleCecimpedanPanelJawaban(this)" class="mt-6 w-full border-2 border-[#D7B88A] rounded-lg p-4 bg-[#F8F0E5] hover:bg-[#F3E6D3] active:bg-[#EBD8C1] flex justify-between items-center cursor-pointer transition relative z-50 select-none shadow-sm">
-                <span class="text-xs uppercase tracking-[2px] text-[#8B6D48] font-bold flex items-center gap-2 pointer-events-none">
+            <button type="button" onclick="window.toggleCecimpedanPanelJawaban(this)" class="mt-5 sm:mt-6 w-full border-2 border-[#D7B88A] rounded-lg p-3.5 sm:p-4 bg-[#F8F0E5] hover:bg-[#F3E6D3] active:bg-[#EBD8C1] flex justify-between items-center cursor-pointer transition relative z-50 select-none shadow-sm">
+                <span class="text-[10px] sm:text-xs uppercase tracking-[1.5px] sm:tracking-[2px] text-[#8B6D48] font-bold flex items-center gap-2 pointer-events-none">
                     <i data-feather="key" class="w-3.5 h-3.5 text-[#C7962B] pointer-events-none"></i>
                     <span class="lbl-panel-jawaban pointer-events-none">TAMPILKAN JAWABAN</span>
                 </span>
@@ -171,41 +171,41 @@
             </button>
 
             <!-- Box Jawaban Tersembunyi -->
-            <div class="box-panel-jawaban-target hidden mt-3 p-4 bg-[#E8D8B8] rounded-lg text-left transition-all duration-300 border border-[#D5A246]">
-                <p class="text-xs text-[#8B6D48] uppercase tracking-wider font-semibold">Jawaban:</p>
-                <p id="cecimpedanJawabanPanelText" class="text-2xl font-bold text-[#A53D24] mt-1" style="font-family:'Cormorant Garamond',serif;">-</p>
+            <div class="box-panel-jawaban-target hidden mt-3 p-3.5 sm:p-4 bg-[#E8D8B8] rounded-lg text-left transition-all duration-300 border border-[#D5A246]">
+                <p class="text-[10px] sm:text-xs text-[#8B6D48] uppercase tracking-wider font-semibold">Jawaban:</p>
+                <p id="cecimpedanJawabanPanelText" class="text-xl sm:text-2xl font-bold text-[#A53D24] mt-1" style="font-family:'Cormorant Garamond',serif;">-</p>
             </div>
         </div>
 
-        <hr class="border-[#E4D4BF] my-8">
+        <hr class="border-[#E4D4BF] my-6 sm:my-8">
 
         <div>
-            <p class="uppercase tracking-[3px] text-xs text-[#C7962B] font-bold mb-4">
+            <p class="uppercase tracking-[2px] sm:tracking-[3px] text-[10px] sm:text-xs text-[#C7962B] font-bold mb-3 sm:mb-4">
                 NILAI FILOSOFIS
             </p>
-            <div id="cecimpedanFilosofiList" class="text-[#675A4D] text-sm md:text-base leading-relaxed whitespace-pre-line">
+            <div id="cecimpedanFilosofiList" class="text-[#675A4D] text-xs sm:text-sm md:text-base leading-relaxed whitespace-pre-line">
                 -
             </div>
         </div>
 
-        <div class="mt-8 p-5 rounded-lg border border-[#DDBF88] bg-[#F5EACF]">
-            <p class="uppercase tracking-[2px] text-[11px] text-[#8B6D48] font-bold">
+        <div class="mt-6 sm:mt-8 p-4 sm:p-5 rounded-lg border border-[#DDBF88] bg-[#F5EACF]">
+            <p class="uppercase tracking-[1.5px] sm:tracking-[2px] text-[10px] sm:text-[11px] text-[#8B6D48] font-bold">
                 VARIASI DAERAH
             </p>
-            <p id="cecimpedanFilosofiVariasi" class="mt-2 text-[#675A4D] text-sm leading-relaxed whitespace-pre-line">
+            <p id="cecimpedanFilosofiVariasi" class="mt-1.5 sm:mt-2 text-[#675A4D] text-xs sm:text-sm leading-relaxed whitespace-pre-line">
                 -
             </p>
         </div>
 
-        <div class="grid grid-cols-2 gap-4 mt-6">
-            <div class="bg-[#F5EACF] rounded-lg p-4">
-                <p class="uppercase text-[10px] tracking-[2px] text-[#8B6D48] font-bold">ASAL DAERAH</p>
-                <p id="cecimpedanFilosofiAsal" class="mt-1 text-xs md:text-sm text-[#23160E] font-medium">-</p>
+        <div class="grid grid-cols-2 gap-3 sm:gap-4 mt-5 sm:mt-6">
+            <div class="bg-[#F5EACF] rounded-lg p-3 sm:p-4">
+                <p class="uppercase text-[9px] sm:text-[10px] tracking-[1.5px] sm:tracking-[2px] text-[#8B6D48] font-bold">ASAL DAERAH</p>
+                <p id="cecimpedanFilosofiAsal" class="mt-1 text-xs sm:text-sm text-[#23160E] font-medium">-</p>
             </div>
 
-            <div class="bg-[#F5EACF] rounded-lg p-4">
-                <p class="uppercase text-[10px] tracking-[2px] text-[#8B6D48] font-bold">REKAMAN</p>
-                <p id="cecimpedanFilosofiRekaman" class="mt-1 text-xs md:text-sm text-[#23160E] font-medium">-</p>
+            <div class="bg-[#F5EACF] rounded-lg p-3 sm:p-4">
+                <p class="uppercase text-[9px] sm:text-[10px] tracking-[1.5px] sm:tracking-[2px] text-[#8B6D48] font-bold">REKAMAN</p>
+                <p id="cecimpedanFilosofiRekaman" class="mt-1 text-xs sm:text-sm text-[#23160E] font-medium">-</p>
             </div>
         </div>
 
@@ -225,7 +225,7 @@
             stopAutoSlide();
             autoSlideTimer = setInterval(() => {
                 if (!isHovered && wrapper && cards.length > 0) {
-                    const cardWidth = cards[0].offsetWidth + 32; // Lebar kartu + gap (gap-8 = 32px)
+                    const cardWidth = cards[0].offsetWidth + 16; // Lebar kartu + gap adaptif (gap-4 di HP = 16px)
                     const maxScrollLeft = wrapper.scrollWidth - wrapper.clientWidth;
 
                     // Jika sudah di paling ujung kanan, kembali ke paling awal (looping)

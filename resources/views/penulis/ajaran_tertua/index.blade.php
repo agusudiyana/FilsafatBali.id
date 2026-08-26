@@ -2,7 +2,7 @@
 
 @section('content')
 <!-- Container Utama: Mengunci tinggi area konten agar halaman tidak memiliki scrollbar luar -->
-<div class="max-w-7xl mx-auto px-4 py-4 flex flex-col h-[calc(100vh-100px)]">
+<div class="max-w-7xl mx-auto px-4 py-4 flex flex-col h-[calc(100vh-100px)] text-[#1A110A]">
 
     <!-- HEADER HALAMAN & TOMBOL TAMBAH (DIAM DI TEMPAT / TIDAK DI-SCROLL) -->
     <div class="flex-none">
@@ -13,9 +13,9 @@
             </div>
 
             <div class="flex items-center gap-3 w-full md:w-auto">
-                <!-- Dropdown Filter Status (Konsisten dengan tema Filsafat) -->
+                <!-- Dropdown Filter Status -->
                 <form method="GET" action="{{ route('penulis.ajaran-tertua.index') }}" class="flex items-center">
-                    <select name="status" onchange="this.form.submit()" class="text-xs font-semibold py-2.5 pl-3.5 pr-8 border border-[#E2D5C3] bg-[#F8EFE3] text-[#1A110A] rounded-xl focus:border-[#C38E2A] focus:ring-[#C38E2A]/20 cursor-pointer outline-none shadow-sm transition">
+                    <select name="status" onchange="this.form.submit()" class="text-xs font-semibold py-2.5 pl-3.5 pr-8 border border-[#E2D5C3] bg-white text-[#1A110A] rounded-xl focus:border-[#C38E2A] focus:ring-[#C38E2A]/20 cursor-pointer outline-none shadow-sm transition">
                         <option value="">Semua Status</option>
                         <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
                         <option value="disetujui" {{ request('status') == 'disetujui' ? 'selected' : '' }}>Disetujui</option>
@@ -41,23 +41,23 @@
         @endif
     </div>
 
-    <!-- HANYA TABEL YANG BISA DI-SCROLL (AREA INTERNAL SCROLL) -->
-    <div class="flex-1 bg-[#FBF6EE] border border-[#EFE3D3] rounded-2xl shadow-sm overflow-hidden flex flex-col min-h-0">
-        <div id="table-scroll-container" class="overflow-y-auto overflow-x-auto flex-1">
-            <table class="w-full text-left border-collapse">
+    <!-- AREA TABEL PUTIH FULL -->
+    <div class="bg-white flex-1 rounded-2xl shadow-sm border border-[#EFE3D3] overflow-hidden flex flex-col min-h-0">
+        <div id="table-scroll-container" class="overflow-y-auto overflow-x-auto flex-1 bg-white">
+            <table class="w-full text-left border-collapse bg-white">
                 <!-- Header Tabel Terkunci di Atas -->
-                <thead class="sticky top-0 z-10 shadow-sm">
-                    <tr class="text-gray-900 text-sm font-bold bg-[#F7EFE5] border-b border-[#EFE3D3]">
-                        <th class="py-4 px-6 w-16 text-center">No</th>
-                        <th class="py-4 px-6">Judul Ajaran</th>
-                        <th class="py-4 px-6">Penulis</th>
-                        <th class="py-4 px-6 text-center">Status</th>
-                        <th class="py-4 px-6 text-center w-36">Aksi</th>
+                <thead class="sticky top-0 z-10 shadow-sm bg-white">
+                    <tr class="text-gray-900 text-sm font-bold border-b border-[#EFE3D3] bg-white">
+                        <th class="py-4 px-6 w-16 text-center bg-white">No</th>
+                        <th class="py-4 px-6 bg-white">Judul Ajaran</th>
+                        <th class="py-4 px-6 bg-white">Penulis</th>
+                        <th class="py-4 px-6 text-center bg-white">Status</th>
+                        <th class="py-4 px-6 text-center w-36 bg-white">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-[#EFE3D3] bg-white text-sm">
                     @forelse($ajaranTertua as $index => $item)
-                        <tr class="hover:bg-[#FFFDF9] transition-colors">
+                        <tr class="hover:bg-[#FFFDF9] transition-colors bg-white">
                             <td class="py-4 px-6 font-semibold text-gray-800 text-center">{{ $index + 1 }}</td>
                             <td class="py-4 px-6 font-bold text-gray-900">{{ $item->judul }}</td>
                             <td class="py-4 px-6 text-gray-700 font-medium">{{ $item->user->name ?? 'Penulis' }}</td>
@@ -122,8 +122,8 @@
                             </td>
                         </tr>
                     @empty
-                        <tr>
-                            <td colspan="5" class="py-8 text-center text-gray-500 bg-white">
+                        <tr class="bg-white">
+                            <td colspan="5" class="py-12 text-center text-gray-500 bg-white">
                                 Belum ada data Ajaran Tertua yang sesuai dengan filter.
                             </td>
                         </tr>

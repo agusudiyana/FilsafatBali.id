@@ -2,7 +2,7 @@
 
 @section('content')
 <!-- Container Utama: Mengunci tinggi area konten agar halaman tidak memiliki scrollbar luar -->
-<div class="max-w-7xl mx-auto px-4 py-4 flex flex-col h-[calc(100vh-100px)]">
+<div class="max-w-7xl mx-auto px-4 py-4 flex flex-col h-[calc(100vh-100px)] text-[#1A110A]">
 
     <!-- HEADER HALAMAN & TOMBOL TAMBAH (DIAM DI TEMPAT / TIDAK DI-SCROLL) -->
     <div class="flex-none">
@@ -19,7 +19,7 @@
             <div class="flex items-center gap-3 w-full md:w-auto">
                 <!-- Dropdown Filter Status (Filter JavaScript Instan) -->
                 <div class="relative">
-                    <select id="status-filter" onchange="filterIstilahByStatus()" class="text-xs font-semibold py-2.5 pl-3.5 pr-8 border border-[#E2D5C3] bg-[#F8EFE3] text-[#1A110A] rounded-xl focus:border-[#C38E2A] focus:ring-[#C38E2A]/20 cursor-pointer outline-none shadow-sm transition">
+                    <select id="status-filter" onchange="filterIstilahByStatus()" class="text-xs font-semibold py-2.5 pl-3.5 pr-8 border border-[#E2D5C3] bg-white text-[#1A110A] rounded-xl focus:border-[#C38E2A] focus:ring-[#C38E2A]/20 cursor-pointer outline-none shadow-sm transition">
                         <option value="semua">Semua Status</option>
                         <option value="pending">Pending</option>
                         <option value="disetujui">Disetujui</option>
@@ -51,28 +51,28 @@
         @endif
     </div>
 
-    <!-- HANYA TABEL YANG BISA DI-SCROLL (AREA INTERNAL SCROLL) -->
-    <div class="flex-1 bg-white rounded-2xl shadow-sm border border-[#E6D5B8]/60 overflow-hidden flex flex-col min-h-0">
-        <div id="table-scroll-container" class="overflow-y-auto overflow-x-auto flex-1">
-            <table class="w-full text-left border-collapse">
+    <!-- AREA TABEL PUTIH FULL -->
+    <div class="bg-white flex-1 rounded-2xl shadow-sm border border-[#E6D5B8] overflow-hidden flex flex-col min-h-0">
+        <div id="table-scroll-container" class="overflow-y-auto overflow-x-auto flex-1 bg-white">
+            <table class="w-full text-left border-collapse bg-white">
 
                 <!-- Header Tabel Terkunci di Atas -->
-                <thead class="bg-[#F5E9D7] text-[#1A110A] font-bold text-sm border-b border-[#E6D5B8] sticky top-0 z-10 shadow-sm">
-                    <tr>
-                        <th class="p-4">No</th>
-                        <th class="p-4">Istilah</th>
-                        <th class="p-4">Kategori</th>
-                        <th class="p-4">Status</th>
-                        <th class="p-4 text-center">Aksi</th>
+                <thead class="bg-white text-[#1A110A] font-bold text-sm border-b border-[#E6D5B8] sticky top-0 z-10 shadow-sm">
+                    <tr class="bg-white">
+                        <th class="p-4 bg-white">No</th>
+                        <th class="p-4 bg-white">Istilah</th>
+                        <th class="p-4 bg-white">Kategori</th>
+                        <th class="p-4 bg-white">Status</th>
+                        <th class="p-4 text-center bg-white">Aksi</th>
                     </tr>
                 </thead>
 
-                <tbody class="divide-y divide-gray-100 text-sm">
+                <tbody class="divide-y divide-gray-100 bg-white text-sm">
                     @forelse($istilahs as $item)
                         @php
                             $statusNama = strtolower($item->status ?? 'pending');
                         @endphp
-                        <tr class="istilah-row hover:bg-[#FAF6F0] transition" data-status="{{ $statusNama }}">
+                        <tr class="istilah-row bg-white hover:bg-[#FAF6F0] transition" data-status="{{ $statusNama }}">
                             <td class="p-4 font-medium text-gray-500 row-number">
                                 {{ $loop->iteration }}
                             </td>
@@ -134,9 +134,9 @@
                             </td>
                         </tr>
                     @empty
-                        <tr id="empty-database-row">
+                        <tr id="empty-database-row" class="bg-white">
                             <td colspan="5" class="text-center p-8 text-gray-500 bg-white">
-                                <div class="flex flex-col items-center justify-center gap-2">
+                                <div class="flex flex-col items-center justify-center gap-2 bg-white">
                                     <i data-feather="inbox" class="w-8 h-8 text-gray-400"></i>
                                     <span>Belum ada data Istilah.</span>
                                 </div>
@@ -145,9 +145,9 @@
                     @endforelse
 
                     <!-- Pesan jika filter tidak menemukan data -->
-                    <tr id="no-filtered-data" class="hidden">
+                    <tr id="no-filtered-data" class="hidden bg-white">
                         <td colspan="5" class="text-center p-8 text-gray-500 bg-white">
-                            <div class="flex flex-col items-center justify-center gap-2">
+                            <div class="flex flex-col items-center justify-center gap-2 bg-white">
                                 <i data-feather="search" class="w-8 h-8 text-gray-400"></i>
                                 <span>Belum ada data Istilah yang sesuai dengan filter.</span>
                             </div>

@@ -94,34 +94,34 @@
 </style>
 
 <!-- SECTION ARTIKEL PILIHAN -->
-<section id="artikel" class="bg-[#F7F0E7] py-24">
-    <div class="max-w-7xl mx-auto px-8">
+<section id="artikel" class="bg-[#F7F0E7] py-12 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8">
 
-        <p class="uppercase tracking-[6px] text-[#B8863B] text-xs mb-3">TERBARU</p>
+        <p class="uppercase tracking-[4px] sm:tracking-[6px] text-[#B8863B] text-[10px] sm:text-xs mb-2 sm:mb-3">TERBARU</p>
         <h2 style="font-family:'Cormorant Garamond',serif;"
-            class="text-[64px] leading-none font-bold text-[#23160E] mb-12">
+            class="text-3xl sm:text-[64px] leading-tight sm:leading-none font-bold text-[#23160E] mb-6 sm:mb-12">
             Artikel Pilihan
         </h2>
 
-        <!-- MENU TAB FILTER KATEGORI -->
-        <div class="filter-tab-container flex gap-10 border-b border-[#DCCCB4] relative">
+        <!-- MENU TAB FILTER KATEGORI (SWIPEABLE DI HP) -->
+        <div class="filter-tab-container flex gap-6 sm:gap-10 border-b border-[#DCCCB4] relative overflow-x-auto whitespace-nowrap scrollbar-none pb-0.5">
             <button type="button" data-kategori="semua"
-                class="filter-tab-btn tab-btn-action tab-active pb-4 text-xs tracking-[2px] uppercase font-bold text-[#992B20]">Semua</button>
+                class="filter-tab-btn tab-btn-action tab-active pb-3 sm:pb-4 text-[10px] sm:text-xs tracking-[1.5px] sm:tracking-[2px] uppercase font-bold text-[#992B20] shrink-0">Semua</button>
             <button type="button" data-kategori="ajaran"
-                class="filter-tab-btn tab-btn-action pb-4 text-xs tracking-[2px] uppercase font-medium text-[#8C7A65] hover:text-[#992B20]">Ajaran
+                class="filter-tab-btn tab-btn-action pb-3 sm:pb-4 text-[10px] sm:text-xs tracking-[1.5px] sm:tracking-[2px] uppercase font-medium text-[#8C7A65] hover:text-[#992B20] shrink-0">Ajaran
                 Tetua</button>
             <button type="button" data-kategori="cecimpedan"
-                class="filter-tab-btn tab-btn-action pb-4 text-xs tracking-[2px] uppercase font-medium text-[#8C7A65] hover:text-[#992B20]">Cecimpedan</button>
+                class="filter-tab-btn tab-btn-action pb-3 sm:pb-4 text-[10px] sm:text-xs tracking-[1.5px] sm:tracking-[2px] uppercase font-medium text-[#8C7A65] hover:text-[#992B20] shrink-0">Cecimpedan</button>
             <button type="button" data-kategori="satua"
-                class="filter-tab-btn tab-btn-action pb-4 text-xs tracking-[2px] uppercase font-medium text-[#8C7A65] hover:text-[#992B20]">Satua
+                class="filter-tab-btn tab-btn-action pb-3 sm:pb-4 text-[10px] sm:text-xs tracking-[1.5px] sm:tracking-[2px] uppercase font-medium text-[#8C7A65] hover:text-[#992B20] shrink-0">Satua
                 Bali</button>
             <button type="button" data-kategori="istilah"
-                class="filter-tab-btn tab-btn-action pb-4 text-xs tracking-[2px] uppercase font-medium text-[#8C7A65] hover:text-[#992B20]">Istilah
+                class="filter-tab-btn tab-btn-action pb-3 sm:pb-4 text-[10px] sm:text-xs tracking-[1.5px] sm:tracking-[2px] uppercase font-medium text-[#8C7A65] hover:text-[#992B20] shrink-0">Istilah
                 Bali</button>
         </div>
 
         <!-- Grid Cards Artikel -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mt-6 sm:mt-10">
 
             @forelse($artikels as $item)
                 @php
@@ -193,7 +193,7 @@
                         <div class="relative overflow-hidden">
                             <img src="{{ $gambarUrl }}"
                                 onerror="this.onerror=null;this.src='{{ asset('images/subak.jpeg') }}';"
-                                class="w-full h-60 object-cover group-hover:scale-105 transition duration-500"
+                                class="w-full h-48 sm:h-60 object-cover group-hover:scale-105 transition duration-500"
                                 alt="{{ $judulText }}">
 
                             <div
@@ -204,8 +204,8 @@
                             <div
                                 class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300 transform group-hover:scale-100 scale-95 z-10">
                                 <span
-                                    class="bg-[#FAF5ED]/90 backdrop-blur-sm text-[#992B20] border border-[#D6C5AE] text-[11px] font-bold tracking-[2px] uppercase px-5 py-2.5 rounded-lg shadow-lg flex items-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 stroke-[#992B20]"
+                                    class="bg-[#FAF5ED]/90 backdrop-blur-sm text-[#992B20] border border-[#D6C5AE] text-[10px] sm:text-[11px] font-bold tracking-[1.5px] sm:tracking-[2px] uppercase px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg shadow-lg flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[#992B20]"
                                         fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -216,14 +216,14 @@
 
                             <!-- Badge Warna Sesuai Kategori -->
                             <span
-                                class="absolute top-4 left-4 {{ $badgeBg }} text-white text-[11px] tracking-[2px] uppercase font-semibold px-4 py-2 rounded-full z-10 shadow-sm">
+                                class="absolute top-3 left-3 sm:top-4 sm:left-4 {{ $badgeBg }} text-white text-[9px] sm:text-[11px] tracking-[1.5px] sm:tracking-[2px] uppercase font-semibold px-3 sm:px-4 py-1.5 sm:py-2 rounded-full z-10 shadow-sm">
                                 {{ strtoupper($kategoriText) }}
                             </span>
 
                             <!-- BADGE TERVERIFIKASI DENGAN IKON CENTANG -->
                             <span
-                                class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-[#B8863B] text-[10px] tracking-[1px] font-bold px-3 py-1.5 rounded-full z-10 shadow-sm flex items-center gap-1.5 border border-[#B8863B]/20">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 fill-[#B8863B]"
+                                class="absolute top-3 right-3 sm:top-4 sm:right-4 bg-white/90 backdrop-blur-sm text-[#B8863B] text-[9px] sm:text-[10px] tracking-[1px] font-bold px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full z-10 shadow-sm flex items-center gap-1 sm:gap-1.5 border border-[#B8863B]/20">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-[#B8863B]"
                                     viewBox="0 0 24 24">
                                     <path
                                         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
@@ -233,13 +233,13 @@
                         </div>
 
                         <!-- Judul dan Ringkasan -->
-                        <div class="p-6">
+                        <div class="p-5 sm:p-6">
                             <h3 style="font-family:'Cormorant Garamond',serif;"
-                                class="text-[28px] leading-snug font-bold text-[#2B1A12] group-hover:text-[#B8863B] transition line-clamp-2">
+                                class="text-xl sm:text-[28px] leading-snug font-bold text-[#2B1A12] group-hover:text-[#B8863B] transition line-clamp-2">
                                 {{ $judulText }}
                             </h3>
 
-                            <p class="mt-3 text-[#675A4D] leading-relaxed text-sm line-clamp-3">
+                            <p class="mt-2.5 sm:mt-3 text-[#675A4D] leading-relaxed text-xs sm:text-sm line-clamp-3">
                                 {{ $ringkasan }}
                             </p>
                         </div>
@@ -247,14 +247,14 @@
 
                     <!-- Footer Kartu (Hanya Menampilkan Tanggal Saja) -->
                     <div
-                        class="px-6 pb-6 pt-2 flex items-center justify-between text-[13px] text-[#8C7A65] border-t border-[#F3EBE0]">
+                        class="px-5 sm:px-6 pb-5 sm:pb-6 pt-2 flex items-center justify-between text-xs sm:text-[13px] text-[#8C7A65] border-t border-[#F3EBE0]">
                         <span>{{ $tanggal }}</span>
 
                         <!-- COVER ICON SIMPAN KOTAK -->
                         <button type="button" onclick="handleBookmark(event, this, '{{ e($judulText) }}', 'artikel')"
-                            class="btn-bookmark w-9 h-9 rounded-lg flex items-center justify-center shadow-sm relative z-20 {{ $isSaved ? 'is-saved' : '' }}"
+                            class="btn-bookmark w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center shadow-sm relative z-20 {{ $isSaved ? 'is-saved' : '' }}"
                             title="{{ $isSaved ? 'Batal Simpan' : 'Simpan Artikel' }}">
-                            <i data-feather="bookmark" class="w-4 h-4"></i>
+                            <i data-feather="bookmark" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
                         </button>
                     </div>
 
@@ -267,7 +267,7 @@
 
             <!-- KETERANGAN OTOMATIS SAAT KARTU KOSONG / TIDAK ADA DATA -->
             <div id="noArticleMessage"
-                class="hidden col-span-full py-12 text-center text-[#8C7A65] font-medium text-sm">
+                class="hidden col-span-full py-12 text-center text-[#8C7A65] font-medium text-xs sm:text-sm">
                 Belum ada data artikel yang disetujui.
             </div>
 
@@ -281,40 +281,40 @@
 
     <!-- Panel Isi Artikel -->
     <div id="panelArtikel" onclick="event.stopPropagation()"
-        class="fixed inset-y-0 right-0 w-full max-w-2xl bg-[#FAF6F0] shadow-2xl p-8 overflow-y-auto transform translate-x-full transition-transform duration-300 ease-in-out border-l border-[#D6C5AE] cursor-default">
+        class="fixed inset-y-0 right-0 w-full max-w-full sm:max-w-2xl bg-[#FAF6F0] shadow-2xl p-5 sm:p-8 overflow-y-auto transform translate-x-full transition-transform duration-300 ease-in-out border-l border-[#D6C5AE] cursor-default">
 
         <!-- Tombol Tutup -->
         <button id="closeModalBtn" type="button" onclick="closeModalArtikelGlobal()"
-            class="absolute top-6 right-6 w-10 h-10 rounded-full bg-[#EFE6D8] text-[#2B1A12] flex items-center justify-center hover:bg-[#992B20] hover:text-white transition duration-300 font-bold cursor-pointer">✕</button>
+            class="absolute top-4 right-4 sm:top-6 sm:right-6 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#EFE6D8] text-[#2B1A12] flex items-center justify-center hover:bg-[#992B20] hover:text-white transition duration-300 font-bold cursor-pointer text-sm">✕</button>
 
-        <div class="mb-4">
+        <div class="mb-3 sm:mb-4 pt-10 sm:pt-0">
             <span id="artKategoriBadge"
-                class="text-white text-[11px] tracking-[2px] uppercase font-semibold px-4 py-2 rounded-full">KATEGORI</span>
+                class="text-white text-[9px] sm:text-[11px] tracking-[1.5px] sm:tracking-[2px] uppercase font-semibold px-3 sm:px-4 py-1.5 sm:py-2 rounded-full">KATEGORI</span>
         </div>
 
         <h2 id="artTitle" style="font-family:'Cormorant Garamond',serif;"
-            class="text-3xl md:text-4xl font-bold text-[#2B1A12] leading-tight mb-4">Judul Artikel</h2>
+            class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#2B1A12] leading-tight mb-4">Judul Artikel</h2>
 
-        <div class="flex items-center gap-3 pb-6 mb-6 border-b border-[#E5D8C5]">
+        <div class="flex items-center gap-3 pb-4 sm:pb-6 mb-4 sm:mb-6 border-b border-[#E5D8C5]">
             <div id="artAvatar"
-                class="w-10 h-10 rounded-full bg-[#992B20] text-white font-bold flex items-center justify-center text-sm">
+                class="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#992B20] text-white font-bold flex items-center justify-center text-xs sm:text-sm">
                 A</div>
             <div>
-                <h4 id="artPenulis" class="text-sm font-bold text-[#2B1A12]">Nama Penulis</h4>
-                <p id="artMeta" class="text-xs text-[#8C7A65]"></p>
+                <h4 id="artPenulis" class="text-xs sm:text-sm font-bold text-[#2B1A12]">Nama Penulis</h4>
+                <p id="artMeta" class="text-[11px] sm:text-xs text-[#8C7A65]"></p>
             </div>
         </div>
 
-        <div class="rounded-xl overflow-hidden mb-6 shadow-md bg-[#EFE6D8]">
+        <div class="rounded-xl overflow-hidden mb-5 sm:mb-6 shadow-md bg-[#EFE6D8]">
             <img id="artImage" src="" onerror="this.onerror=null;this.src='{{ asset('images/subak.jpeg') }}';"
-                class="w-full h-64 object-cover" alt="Gambar Artikel">
+                class="w-full h-48 sm:h-64 object-cover" alt="Gambar Artikel">
         </div>
 
-        <div id="artIsi" class="text-[#4A3E35] leading-relaxed space-y-4 text-base"></div>
+        <div id="artIsi" class="text-[#4A3E35] leading-relaxed space-y-3 sm:space-y-4 text-sm sm:text-base"></div>
 
-        <div id="boxKesimpulan" class="mt-8 p-5 bg-[#EFE4D3] border-l-4 border-[#992B20] rounded-r-lg">
-            <h4 class="font-bold text-[#2B1A12] text-sm uppercase tracking-wider mb-1">Kesimpulan</h4>
-            <div id="artKesimpulan" class="text-sm text-[#675A4D] italic leading-relaxed"></div>
+        <div id="boxKesimpulan" class="mt-6 sm:mt-8 p-4 sm:p-5 bg-[#EFE4D3] border-l-4 border-[#992B20] rounded-r-lg">
+            <h4 class="font-bold text-[#2B1A12] text-xs sm:text-sm uppercase tracking-wider mb-1">Kesimpulan</h4>
+            <div id="artKesimpulan" class="text-xs sm:text-sm text-[#675A4D] italic leading-relaxed"></div>
         </div>
     </div>
 </div>

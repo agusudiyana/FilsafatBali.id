@@ -1,26 +1,24 @@
-<header class="relative bg-[#52130D] border-b border-[#3D0C07] px-8 py-3.5 flex justify-end items-center z-40" x-data="{ open: false }">
+<header class="relative bg-white border-b border-gray-200 px-4 sm:px-8 py-3.5 flex justify-end items-center z-40" x-data="{ open: false }">
 
     <!-- 1. ORNAMEN RANTING POHON ELEGAN (SISI KIRI) -->
     <div class="absolute inset-0 pointer-events-none overflow-hidden">
         <svg class="absolute top-0 left-0 h-full w-[80%] sm:w-[65%] md:w-[55%]" viewBox="0 0 700 100" preserveAspectRatio="none">
             <g fill="#1A110A" stroke="none">
-                <path d="M0,0 L600,0 C500,8 400,18 310,28 C220,38 120,65 0,100 Z" />
-                <path d="M180,38 C280,32 380,24 480,18 C540,14 610,12 670,2 C600,8 520,12 450,20 C360,28 260,38 160,52 Z" opacity="0.95" />
-                <path d="M90,70 C180,58 270,46 360,38 C430,32 500,28 580,18 C510,24 430,30 350,38 C250,48 150,62 70,80 Z" opacity="0.9" />
-                <path d="M320,28 C340,18 355,22 345,30 C335,28 325,30 320,28 Z" opacity="0.8" />
-                <path d="M480,18 C500,8 515,12 505,20 C495,18 485,20 480,18 Z" opacity="0.8" />
+                <path d="M0,0 L600,0 C500,8 400,18 310,28 C220,38 120,65 0,100 Z" opacity="0.05" />
+                <path d="M180,38 C280,32 380,24 480,18 C540,14 610,12 670,2 C600,8 520,12 450,20 C360,28 260,38 160,52 Z" opacity="0.04" />
+                <path d="M90,70 C180,58 270,46 360,38 C430,32 500,28 580,18 C510,24 430,30 350,38 C250,48 150,62 70,80 Z" opacity="0.03" />
             </g>
         </svg>
 
-        <!-- Gradien Pudar Halus -->
-        <div class="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-[#52130D] via-[#52130D]/80 to-transparent"></div>
+        <!-- Gradien Pudar Halus ke Putih -->
+        <div class="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-white via-white/80 to-transparent"></div>
     </div>
 
-    <!-- 2. AKSEN 4 SPEKTRUM PITA TIPIS (TERKUNCI DI PALING BAWAH HEADER) -->
-    <div class="absolute bottom-0 left-0 right-0 w-full pointer-events-none flex flex-col z-20">
-        <div class="h-[1px] w-full bg-[#7A2219]"></div>
-        <div class="h-[1px] w-full bg-[#992B20]"></div>
-        <div class="h-[1px] w-full bg-[#B83E31]"></div>
+    <!-- 2. AKSEN 4 SPEKTRUM PITA TIPIS -->
+    <div class="absolute bottom-0 left-0 right-0 w-full pointer-events-none flex flex-col z-10 overflow-hidden">
+        <div class="h-[1px] w-full bg-gray-100"></div>
+        <div class="h-[1px] w-full bg-[#992B20]/30"></div>
+        <div class="h-[1px] w-full bg-[#B83E31]/40"></div>
         <div class="h-[1.5px] w-full bg-[#D4A64A]"></div>
     </div>
 
@@ -29,7 +27,7 @@
 
         <!-- Tombol Quick Link: Lihat Website Utama -->
         <a href="{{ url('/') }}" target="_blank"
-            class="hidden sm:inline-flex items-center gap-2 bg-[#C48D2D] hover:bg-[#A67320] text-white text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-xl shadow-md transition-all duration-200 hover:scale-[1.02]">
+            class="hidden sm:inline-flex items-center gap-2 bg-[#C48D2D] hover:bg-[#A67320] text-white text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-xl shadow-sm transition-all duration-200 hover:scale-[1.02]">
             <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -38,14 +36,15 @@
         </a>
 
         <!-- Pemisah Vertikal -->
-        <div class="h-5 w-[1px] bg-[#8B2D24] hidden sm:block"></div>
+        <div class="h-5 w-[1px] bg-gray-200 hidden sm:block"></div>
 
         <!-- Profil User Dropdown -->
         <div class="relative">
             <button @click="open = !open" @click.outside="open = false" type="button"
-                class="flex items-center gap-3 focus:outline-none bg-[#F7F0E7] hover:bg-[#EFE3CC] border border-[#E6D5B8] px-3.5 py-1.5 rounded-xl shadow-md transition-all duration-200 cursor-pointer relative z-50">
+                class="flex items-center gap-3 focus:outline-none bg-[#F7F0E7] hover:bg-[#EFE3CC] border border-[#E6D5B8] px-3.5 py-1.5 rounded-xl shadow-sm transition-all duration-200 cursor-pointer relative z-50">
 
-                <div class="w-8 h-8 rounded-lg bg-[#52130D] text-[#D4A64A] flex items-center justify-center font-bold text-sm shadow-sm">
+                <!-- LOGO AVATAR HURUF LINGKARAN -->
+                <div class="w-8 h-8 rounded-full bg-[#52130D] text-[#D4A64A] flex items-center justify-center font-bold text-sm shadow-sm">
                     {{ strtoupper(substr(Auth::user()->name ?? 'P', 0, 1)) }}
                 </div>
 
@@ -61,7 +60,7 @@
                 </svg>
             </button>
 
-            <!-- Dropdown Menu Box (Dihilangkan Celah mt-2 & Ditutup rapat tanpa garis putih di atasnya) -->
+            <!-- Dropdown Menu Box -->
             <div x-show="open" 
                 x-transition:enter="transition ease-out duration-150"
                 x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
@@ -69,7 +68,7 @@
                 x-transition:leave="transition ease-in duration-100"
                 x-transition:leave-start="opacity-100 scale-100 translate-y-0"
                 x-transition:leave-end="opacity-0 scale-95 -translate-y-1"
-                class="absolute right-0 top-full mt-1.5 w-60 bg-white border border-[#E6D5B8] rounded-xl shadow-2xl p-3 z-50 outline-none"
+                class="absolute right-0 top-full mt-1.5 w-60 bg-white border border-[#E6D5B8] rounded-xl shadow-xl p-3 z-50 outline-none"
                 style="display: none;">
 
                 <div class="pb-2.5 border-b border-gray-100 px-1">

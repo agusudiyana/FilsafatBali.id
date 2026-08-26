@@ -27,44 +27,44 @@
 <!-- ========================================== -->
 <!-- SECTION ISTILAH BALI                      -->
 <!-- ========================================== -->
-<section id="sectionIstilah" class="bg-[#1A110A] py-24 hidden">
-    <div class="max-w-7xl mx-auto px-8">
+<section id="sectionIstilah" class="bg-[#1A110A] py-12 sm:py-24 hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8">
 
         <!-- Header Istilah -->
-        <div class="flex justify-between items-start mb-12">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-start mb-8 sm:mb-12 gap-6 md:gap-0">
             <div>
-                <p class="uppercase tracking-[5px] text-[#C89438] text-xs mb-3">
+                <p class="uppercase tracking-[4px] sm:tracking-[5px] text-[#C89438] text-[10px] sm:text-xs mb-2 sm:mb-3">
                     — ENSIKLOPEDIA
                 </p>
-                <h2 style="font-family:'Cormorant Garamond',serif;" class="text-6xl font-bold text-white">
+                <h2 style="font-family:'Cormorant Garamond',serif;" class="text-3xl sm:text-6xl font-bold text-white leading-tight">
                     Satua & Istilah Bali
                 </h2>
-                <p class="text-[#B9986D] mt-3 text-lg">
+                <p class="text-[#B9986D] mt-2 sm:mt-3 text-sm sm:text-lg">
                     Klik item untuk membuka informasi lengkap.
                 </p>
             </div>
 
             <!-- Tab Istilah -->
-            <div class="flex border border-[#6E4E1E] rounded-lg overflow-hidden shrink-0 mt-2">
+            <div class="flex border border-[#6E4E1E] rounded-lg overflow-hidden shrink-0 w-full sm:w-auto mt-0 md:mt-2">
                 <button id="btnSatua" onclick="showSatua()"
-                    class="w-36 md:w-40 py-3 bg-transparent text-[#C58A3C] uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all">
+                    class="flex-1 sm:w-36 md:w-40 py-2.5 sm:py-3 bg-transparent text-[#C58A3C] uppercase tracking-[1.5px] sm:tracking-[2px] text-[11px] sm:text-xs font-semibold text-center shrink-0 transition-all">
                     SATUA BALI
                 </button>
                 <button id="btnIstilah" onclick="showIstilah()"
-                    class="w-36 md:w-40 py-3 bg-[#C58A3C] text-white uppercase tracking-[2px] text-xs font-semibold text-center shrink-0 transition-all">
+                    class="flex-1 sm:w-36 md:w-40 py-2.5 sm:py-3 bg-[#C58A3C] text-white uppercase tracking-[1.5px] sm:tracking-[2px] text-[11px] sm:text-xs font-semibold text-center shrink-0 transition-all">
                     ISTILAH BALI
                 </button>
             </div>
         </div>
 
         <!-- Search Input khusus Cari Judul saja -->
-        <div class="mb-10 relative max-w-md">
+        <div class="mb-6 sm:mb-10 relative max-w-full sm:max-w-md">
             <input id="searchIstilahInput" type="text" placeholder="Cari judul istilah..."
                 oninput="filterIstilahList(this.value)"
-                class="w-full bg-transparent border border-[#3E2D1E] rounded-md px-5 py-3 pr-10 text-[#D8C7AE] placeholder:text-[#6E5B45] outline-none focus:border-[#C48D2D] transition duration-200">
+                class="w-full bg-transparent border border-[#3E2D1E] rounded-md px-4 sm:px-5 py-2.5 sm:py-3 pr-10 text-sm sm:text-base text-[#D8C7AE] placeholder:text-[#6E5B45] outline-none focus:border-[#C48D2D] transition duration-200">
 
             <button id="btnClearSearchIstilah" onclick="clearSearchIstilah()"
-                class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-[#6E5B45] hover:text-[#D8C7AE] transition font-bold">
+                class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-[#6E5B45] hover:text-[#D8C7AE] transition font-bold text-sm sm:text-base">
                 ✕
             </button>
         </div>
@@ -86,7 +86,7 @@
                         ->exists();
                 @endphp
 
-                <div class="item-istilah grid grid-cols-[170px_120px_1fr_auto] py-6 items-center gap-4 hover:bg-[#2A1A10] hover:px-4 transition-all duration-300 rounded-lg">
+                <div class="item-istilah flex flex-col sm:grid sm:grid-cols-[170px_120px_1fr_auto] py-4 sm:py-6 items-start sm:items-center gap-3 sm:gap-4 hover:bg-[#2A1A10] px-3 sm:px-4 transition-all duration-300 rounded-lg">
                     
                     <!-- AREA KLIK DETAIL MODAL -->
                     <div onclick="openIstilah(
@@ -97,34 +97,36 @@
                             '{{ addslashes($contohIst) }}',
                             '{{ addslashes($padananIst) }}'
                         )" 
-                        class="col-span-3 grid grid-cols-[170px_120px_1fr] items-center cursor-pointer">
+                        class="w-full sm:col-span-3 flex flex-col sm:grid sm:grid-cols-[170px_120px_1fr] items-start sm:items-center gap-2 sm:gap-4 cursor-pointer">
                         
-                        <h3 class="text-white text-4xl font-bold" style="font-family:'Cormorant Garamond',serif;">
+                        <h3 class="text-white text-2xl sm:text-4xl font-bold leading-tight" style="font-family:'Cormorant Garamond',serif;">
                             {{ $judulIstilah }}
                         </h3>
 
-                        <span class="text-[10px] uppercase tracking-[2px] border border-[#6A5135] text-[#C89438] rounded px-3 py-1 w-fit">
+                        <span class="text-[9px] sm:text-[10px] uppercase tracking-[1.5px] sm:tracking-[2px] border border-[#6A5135] text-[#C89438] rounded px-2.5 sm:px-3 py-0.5 sm:py-1 w-fit">
                             {{ $kategoriIst }}
                         </span>
 
-                        <p class="text-[#C8B299] leading-8 line-clamp-2">
+                        <p class="text-[#C8B299] text-xs sm:text-base leading-relaxed sm:leading-8 line-clamp-2 mt-1 sm:mt-0">
                             {{ $artiIst }}
                         </p>
                     </div>
 
                     <!-- TOMBOL SIMPAN / BOOKMARK -->
-                    <button type="button"
-                        onclick="handleBookmarkAction(event, this, '{{ addslashes($judulIstilah) }}', 'Istilah Bali')"
-                        data-saved="{{ $isSavedIstilah ? 'true' : 'false' }}"
-                        title="{{ $isSavedIstilah ? 'Batal Simpan' : 'Simpan ke Arsip' }}"
-                        class="btn-bookmark-custom relative z-10 p-2 rounded-lg border border-[#6E4E1E] bg-transparent hover:bg-[#3E2D1E] transition shrink-0 flex items-center justify-center">
-                        <i data-feather="bookmark"
-                            class="w-4 h-4 {{ $isSavedIstilah ? 'text-[#C58A3C]' : 'text-[#8F7A61]' }}"
-                            style="{{ $isSavedIstilah ? 'fill:#C58A3C; color:#C58A3C;' : '' }}"></i>
-                    </button>
+                    <div class="w-full sm:w-auto flex justify-end mt-1 sm:mt-0 pt-2 sm:pt-0 border-t border-[#3E2D1E]/40 sm:border-t-0">
+                        <button type="button"
+                            onclick="handleBookmarkAction(event, this, '{{ addslashes($judulIstilah) }}', 'Istilah Bali')"
+                            data-saved="{{ $isSavedIstilah ? 'true' : 'false' }}"
+                            title="{{ $isSavedIstilah ? 'Batal Simpan' : 'Simpan ke Arsip' }}"
+                            class="btn-bookmark-custom relative z-10 p-2 rounded-lg border border-[#6E4E1E] bg-transparent hover:bg-[#3E2D1E] transition shrink-0 flex items-center justify-center">
+                            <i data-feather="bookmark"
+                                class="w-4 h-4 {{ $isSavedIstilah ? 'text-[#C58A3C]' : 'text-[#8F7A61]' }}"
+                                style="{{ $isSavedIstilah ? 'fill:#C58A3C; color:#C58A3C;' : '' }}"></i>
+                        </button>
+                    </div>
                 </div>
             @empty
-                <div class="py-12 text-center text-[#B9986D]">
+                <div class="py-12 text-center text-[#B9986D] text-xs sm:text-base">
                     Belum ada Istilah Bali yang terverifikasi / disetujui.
                 </div>
             @endforelse
@@ -138,60 +140,60 @@
 
 <!-- Panel Detail -->
 <div id="detailPanel"
-    class="fixed top-0 right-0 w-[520px] max-w-full h-full bg-[#F6E9D7] shadow-2xl translate-x-full transition-all duration-500 z-50 overflow-y-auto">
+    class="fixed top-0 right-0 w-full sm:w-[520px] max-w-full h-full bg-[#F6E9D7] shadow-2xl translate-x-full transition-all duration-500 z-50 overflow-y-auto">
 
-    <div class="p-8">
+    <div class="p-5 sm:p-8 pt-16 sm:pt-8">
         <!-- tombol tutup -->
         <button onclick="closeDetail()"
-            class="absolute top-5 right-5 w-10 h-10 rounded-full bg-[#E8D6BD] hover:bg-[#D8C3A3] flex items-center justify-center font-bold text-[#5C4836] transition">
+            class="absolute top-4 right-4 sm:top-5 sm:right-5 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#E8D6BD] hover:bg-[#D8C3A3] flex items-center justify-center font-bold text-[#5C4836] transition text-sm">
             ✕
         </button>
 
         <!-- Judul -->
-        <h2 id="detailTitle" style="font-family:'Cormorant Garamond',serif;" class="text-6xl font-bold text-[#24160E]">
+        <h2 id="detailTitle" style="font-family:'Cormorant Garamond',serif;" class="text-3xl sm:text-6xl font-bold text-[#24160E] leading-tight">
             -
         </h2>
 
         <!-- Kategori -->
         <span id="detailKategori"
-            class="inline-block mt-4 border border-[#C79A4A] text-[#B57D27] uppercase tracking-[2px] text-[11px] px-3 py-1 rounded">
+            class="inline-block mt-3 sm:mt-4 border border-[#C79A4A] text-[#B57D27] uppercase tracking-[1.5px] sm:tracking-[2px] text-[10px] sm:text-[11px] px-2.5 sm:px-3 py-0.5 sm:py-1 rounded">
             -
         </span>
 
         <!-- Deskripsi / Arti -->
-        <p id="detailDesc" class="mt-8 text-[#675A4D] leading-10 text-[18px] whitespace-pre-line">
+        <p id="detailDesc" class="mt-5 sm:mt-8 text-[#675A4D] leading-relaxed sm:leading-10 text-sm sm:text-[18px] whitespace-pre-line">
             -
         </p>
 
         <!-- Sejarah -->
-        <div class="mt-10">
-            <p class="uppercase tracking-[4px] text-[11px] text-[#C58A3C] font-semibold">
+        <div class="mt-8 sm:mt-10">
+            <p class="uppercase tracking-[3px] sm:tracking-[4px] text-[10px] sm:text-[11px] text-[#C58A3C] font-semibold">
                 SEJARAH
             </p>
-            <div id="detailSejarah" class="mt-4 text-[#675A4D] leading-9 whitespace-pre-line">
+            <div id="detailSejarah" class="mt-2 sm:mt-4 text-[#675A4D] leading-relaxed sm:leading-9 text-xs sm:text-base whitespace-pre-line">
                 -
             </div>
         </div>
 
-        <hr class="my-8 border-[#E5D6BF]">
+        <hr class="my-6 sm:my-8 border-[#E5D6BF]">
 
         <!-- Contoh -->
-        <p class="uppercase text-xs tracking-[3px] text-[#B7832E] font-semibold">
+        <p class="uppercase text-[10px] sm:text-xs tracking-[2px] sm:tracking-[3px] text-[#B7832E] font-semibold">
             Contoh Penggunaan
         </p>
 
-        <div class="mt-3 bg-[#F1DFC3] border border-[#D7BE99] rounded-lg p-5">
-            <p id="detailContoh" class="italic text-[#5D4937] whitespace-pre-line">
+        <div class="mt-2.5 sm:mt-3 bg-[#F1DFC3] border border-[#D7BE99] rounded-lg p-4 sm:p-5">
+            <p id="detailContoh" class="italic text-[#5D4937] text-xs sm:text-base whitespace-pre-line">
                 -
             </p>
         </div>
 
         <!-- Padanan -->
-        <p class="uppercase text-xs tracking-[3px] text-[#B7832E] font-semibold mt-8">
+        <p class="uppercase text-[10px] sm:text-xs tracking-[2px] sm:tracking-[3px] text-[#B7832E] font-semibold mt-6 sm:mt-8">
             Padanan Kata
         </p>
 
-        <p id="detailPadanan" class="mt-3 text-[#5C4836] whitespace-pre-line">
+        <p id="detailPadanan" class="mt-2.5 sm:mt-3 text-[#5C4836] text-xs sm:text-base whitespace-pre-line">
             -
         </p>
     </div>
@@ -287,7 +289,7 @@
                 const judulText = judulEl.innerText.trim().toLowerCase();
 
                 if (query === "" || judulText.includes(query)) {
-                    item.style.setProperty("display", "grid", "important");
+                    item.style.setProperty("display", "flex", "important");
                 } else {
                     item.style.setProperty("display", "none", "important");
                 }

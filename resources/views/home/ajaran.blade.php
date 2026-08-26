@@ -35,14 +35,14 @@
     }
 </style>
 
-<section id="ajaran" class="bg-[#1A120C] py-24">
-    <div class="max-w-[1200px] mx-auto px-6">
+<section id="ajaran" class="bg-[#1A120C] py-12 sm:py-24">
+    <div class="max-w-[1200px] mx-auto px-4 sm:px-6">
 
-        <p class="uppercase tracking-[6px] text-[#D4A64A] text-xs mb-3">
+        <p class="uppercase tracking-[4px] sm:tracking-[6px] text-[#D4A64A] text-[10px] sm:text-xs mb-2 sm:mb-3">
             SOROTAN
         </p>
 
-        <h2 class="text-[66px] leading-[0.95] font-semibold mb-12 text-[#F7F1E8]"
+        <h2 class="text-3xl sm:text-[66px] leading-tight sm:leading-[0.95] font-semibold mb-6 sm:mb-12 text-[#F7F1E8]"
             style="font-family:'Cormorant Garamond',serif;">
             Ajaran Tetua Bali 
         </h2>
@@ -54,10 +54,10 @@
         @endphp
 
         @if ($firstAjaran)
-            <div class="grid lg:grid-cols-[540px_1fr] gap-14 items-center" id="containerAjaranHero">
+            <div class="grid grid-cols-1 lg:grid-cols-[540px_1fr] gap-6 sm:gap-14 items-center" id="containerAjaranHero">
 
                 <!-- FOTO UTAMA DENGAN OVERLAY HOVER -->
-                <div class="relative w-[540px] h-[420px] rounded-xl overflow-hidden shadow-xl group cursor-pointer"
+                <div class="relative w-full max-w-[540px] h-[280px] sm:h-[420px] mx-auto rounded-xl overflow-hidden shadow-xl group cursor-pointer"
                     onclick="openAjaran()">
                     @php
                         $imgMain = trim((string) ($firstAjaran->gambar ?? ''));
@@ -81,9 +81,9 @@
 
                     <!-- Badge Lokasi -->
                     <div
-                        class="absolute bottom-4 left-4 z-10 flex items-center gap-1.5 bg-black/40 backdrop-blur-md px-3 py-1.5 rounded-md text-[#D4A64A] text-xs">
-                        <i data-feather="map-pin" class="w-3.5 h-3.5"></i>
-                        <span id="mainLocation" class="uppercase tracking-wider font-medium text-[10px]">
+                        class="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-10 flex items-center gap-1.5 bg-black/40 backdrop-blur-md px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md text-[#D4A64A] text-[10px] sm:text-xs">
+                        <i data-feather="map-pin" class="w-3 h-3 sm:w-3.5 sm:h-3.5"></i>
+                        <span id="mainLocation" class="uppercase tracking-wider font-medium text-[9px] sm:text-[10px]">
                             {{ strtoupper($firstAjaran->lokasi ?? 'BALI') }}
                         </span>
                     </div>
@@ -92,8 +92,8 @@
                     <div
                         class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                         <button type="button"
-                            class="bg-[#F7F1E8] text-[#241308] px-6 py-3 rounded-md text-xs tracking-[2px] font-semibold uppercase flex items-center gap-2 shadow-lg hover:bg-[#E2D6C5] transition transform translate-y-2 group-hover:translate-y-0 duration-300">
-                            <i data-feather="info" class="w-4 h-4 text-[#8D6627]"></i>
+                            class="bg-[#F7F1E8] text-[#241308] px-4 sm:px-6 py-2.5 sm:py-3 rounded-md text-[10px] sm:text-xs tracking-[1.5px] sm:tracking-[2px] font-semibold uppercase flex items-center gap-2 shadow-lg hover:bg-[#E2D6C5] transition transform translate-y-2 group-hover:translate-y-0 duration-300">
+                            <i data-feather="info" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#8D6627]"></i>
                             Baca Selengkapnya
                         </button>
                     </div>
@@ -102,20 +102,20 @@
                 <!-- KONTEN BACAAN UTAMA -->
                 <div id="mainContentBox">
                     <span id="mainTag"
-                        class="inline-block border border-[#8B6528] text-[#D4A64A] bg-transparent text-[10px] tracking-[3px] uppercase px-4 py-2 rounded-md">
+                        class="inline-block border border-[#8B6528] text-[#D4A64A] bg-transparent text-[9px] sm:text-[10px] tracking-[2px] sm:tracking-[3px] uppercase px-3 sm:px-4 py-1.5 sm:py-2 rounded-md">
                         {{ strtoupper($firstAjaran->tags ?? 'AJARAN TETUA') }}
                     </span>
 
-                    <h2 id="mainTitle" class="mt-6 text-[64px] leading-[0.95] font-semibold text-[#F7F1E8]"
+                    <h2 id="mainTitle" class="mt-3 sm:mt-6 text-3xl sm:text-[64px] leading-tight sm:leading-[0.95] font-semibold text-[#F7F1E8]"
                         style="font-family:'Cormorant Garamond',serif;">
                         {{ $firstAjaran->judul }}
                     </h2>
 
-                    <p id="mainDesc" class="mt-7 text-[#E5D7C8] text-[19px] leading-[38px] font-normal line-clamp-3">
+                    <p id="mainDesc" class="mt-3 sm:mt-7 text-[#E5D7C8] text-sm sm:text-[19px] leading-relaxed sm:leading-[38px] font-normal line-clamp-3 sm:line-clamp-4">
                         {{ \Illuminate\Support\Str::limit(strip_tags($firstAjaran->deskripsi ?? ''), 180) }}
                     </p>
 
-                    <div class="flex justify-between items-end mt-10">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mt-6 sm:mt-10 gap-4 sm:gap-0">
                         <!-- Profil Penulis & Tanggal -->
                         @php
                             $authorName = $firstAjaran->penulis ?? ($firstAjaran->user->name ?? 'Tim Balinesia');
@@ -126,16 +126,16 @@
                         @endphp
                         <div id="mainProfile" class="flex items-center">
                             <div
-                                class="w-14 h-14 rounded-full bg-[#7C5216] flex items-center justify-center border border-[#D4A64A]/30">
+                                class="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-[#7C5216] flex items-center justify-center border border-[#D4A64A]/30 shrink-0">
                                 <span id="mainAvatarInitial"
-                                    class="text-[#D4A64A] font-semibold text-xl">{{ $initialAvatar }}</span>
+                                    class="text-[#D4A64A] font-semibold text-base sm:text-xl">{{ $initialAvatar }}</span>
                             </div>
-                            <div class="ml-4">
-                                <h4 id="mainAuthor" class="text-[#F8F2E8] text-[28px] font-semibold leading-tight"
+                            <div class="ml-3 sm:ml-4">
+                                <h4 id="mainAuthor" class="text-[#F8F2E8] text-xl sm:text-[28px] font-semibold leading-tight"
                                     style="font-family:'Cormorant Garamond',serif;">
                                     {{ $authorName }}
                                 </h4>
-                                <p id="mainRole" class="text-[#A98C67] uppercase tracking-[2px] text-[11px] mt-0.5">
+                                <p id="mainRole" class="text-[#A98C67] uppercase tracking-[1.5px] sm:tracking-[2px] text-[9px] sm:text-[11px] mt-0.5">
                                     {{ $tanggalDibuat }}
                                 </p>
                             </div>
@@ -143,7 +143,7 @@
 
                         <!-- Tombol Detail -->
                         <button id="mainButton" type="button" onclick="openAjaran()"
-                            class="border border-[#8D6627] text-[#D4A64A] px-8 py-3 rounded-md hover:bg-[#D4A64A] hover:text-[#241308] transition font-medium text-sm cursor-pointer">
+                            class="w-full sm:w-auto text-center border border-[#8D6627] text-[#D4A64A] px-6 sm:px-8 py-2.5 sm:py-3 rounded-md hover:bg-[#D4A64A] hover:text-[#241308] transition font-medium text-xs sm:text-sm cursor-pointer">
                             DETAIL →
                         </button>
                     </div>
@@ -152,8 +152,8 @@
             </div>
 
             <!-- THUMBNAIL CAROUSEL -->
-            <div class="mt-10 flex flex-col items-center">
-                <div class="flex gap-4 items-center flex-wrap justify-center">
+            <div class="mt-8 sm:mt-10 flex flex-col items-center">
+                <div class="flex gap-2.5 sm:gap-4 items-center overflow-x-auto w-full justify-start sm:justify-center pb-2 sm:pb-0 scrollbar-none">
                     @foreach ($listAjaran->take(3) as $index => $thumbItem)
                         @php
                             $itemId = (string) $thumbItem->id;
@@ -174,19 +174,19 @@
                         @endphp
 
                         <div onclick="changeSlide('{{ $itemId }}')" id="thumb-{{ $itemId }}"
-                            class="thumb-card relative w-[360px] h-[90px] rounded-xl overflow-hidden cursor-pointer border-2 {{ $borderClass }} transition-all duration-500 bg-[#241710]">
+                            class="thumb-card relative min-w-[260px] sm:min-w-0 sm:w-[360px] h-[70px] sm:h-[90px] rounded-xl overflow-hidden cursor-pointer border-2 {{ $borderClass }} transition-all duration-500 bg-[#241710] shrink-0 sm:shrink">
                             <img src="{{ $thumbImgUrl }}"
                                 onerror="this.onerror=null; this.src='{{ $defaultFallback }}';"
                                 class="w-full h-full object-cover">
                             <div class="absolute inset-0 bg-black/50"></div>
                             <span
-                                class="absolute bottom-3 left-3 text-white font-semibold truncate max-w-[320px]">{{ $thumbItem->judul }}</span>
+                                class="absolute bottom-2.5 left-3 text-white text-xs sm:text-base font-semibold truncate max-w-[230px] sm:max-w-[320px]">{{ $thumbItem->judul }}</span>
                         </div>
                     @endforeach
                 </div>
 
                 <!-- DOT INDICATORS -->
-                <div class="flex justify-center gap-2 mt-5">
+                <div class="flex justify-center gap-2 mt-4 sm:mt-5">
                     @foreach ($listAjaran->take(3) as $index => $dotItem)
                         @php
                             $dotId = (string) $dotItem->id;
@@ -198,7 +198,7 @@
                 </div>
             </div>
         @else
-            <div class="py-12 text-center text-[#A98C67]">
+            <div class="py-12 text-center text-[#A98C67] text-sm sm:text-base">
                 Belum ada data Ajaran Tetua yang disetujui saat ini.
             </div>
         @endif
@@ -213,50 +213,50 @@
         class="fixed top-0 right-0 h-full w-full sm:w-[550px] md:w-[50%] bg-[#FAF5ED] shadow-2xl overflow-y-auto transform translate-x-full transition-transform duration-500 ease-in-out">
 
         <!-- Header Banner Image -->
-        <div class="relative h-64 md:h-80 w-full bg-[#241710]">
+        <div class="relative h-52 sm:h-64 md:h-80 w-full bg-[#241710]">
             <img id="panelImage" src="" onerror="this.onerror=null; this.src='{{ $defaultFallback }}';"
                 class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-[#FAF5ED] via-black/40 to-black/20"></div>
 
             <button onclick="closeAjaran()" type="button"
-                class="absolute top-6 right-6 w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center font-bold transition backdrop-blur-sm z-20 cursor-pointer">
+                class="absolute top-4 right-4 sm:top-6 sm:right-6 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center font-bold transition backdrop-blur-sm z-20 cursor-pointer text-sm">
                 ✕
             </button>
 
-            <div class="absolute bottom-6 left-8 right-8">
-                <div id="panelTags" class="flex gap-2 mb-2">
+            <div class="absolute bottom-4 left-5 right-5 sm:bottom-6 sm:left-8 sm:right-8">
+                <div id="panelTags" class="flex gap-2 mb-1.5 sm:mb-2">
                     <span id="panelTagBadge"
-                        class="bg-[#C7962B]/80 text-white text-[9px] tracking-[2px] uppercase px-3 py-1 rounded backdrop-blur-sm font-semibold">FILOSOFI</span>
+                        class="bg-[#C7962B]/80 text-white text-[8px] sm:text-[9px] tracking-[1.5px] sm:tracking-[2px] uppercase px-2.5 sm:px-3 py-0.5 sm:py-1 rounded backdrop-blur-sm font-semibold">FILOSOFI</span>
                 </div>
                 <h2 id="panelTitle" style="font-family:'Cormorant Garamond',serif;"
-                    class="text-3xl md:text-5xl font-bold text-[#23160E] leading-tight">
+                    class="text-2xl sm:text-3xl md:text-5xl font-bold text-[#23160E] leading-tight">
                     Judul Ajaran
                 </h2>
-                <p id="panelSubHeader" class="text-xs text-[#8B6D48] mt-1 font-medium tracking-wider">
+                <p id="panelSubHeader" class="text-[10px] sm:text-xs text-[#8B6D48] mt-1 font-medium tracking-wider">
                     📍 DENPASAR • DIDIRIKAN TAHUN 1965
                 </p>
             </div>
         </div>
 
         <!-- Body Content -->
-        <div class="p-8 md:p-10 space-y-8">
+        <div class="p-5 sm:p-8 md:p-10 space-y-6 sm:space-y-8">
             <div>
-                <p class="uppercase tracking-[3px] text-xs text-[#C7962B] font-bold mb-3">PENJELASAN LENGKAP</p>
-                <div id="panelPenjelasan" class="text-[#675A4D] text-base leading-relaxed space-y-4"></div>
+                <p class="uppercase tracking-[2px] sm:tracking-[3px] text-[10px] sm:text-xs text-[#C7962B] font-bold mb-2 sm:mb-3">PENJELASAN LENGKAP</p>
+                <div id="panelPenjelasan" class="text-[#675A4D] text-sm sm:text-base leading-relaxed space-y-3 sm:space-y-4"></div>
             </div>
 
             <div id="boxPrinsipWrapper">
-                <p class="uppercase tracking-[3px] text-xs text-[#C7962B] font-bold mb-4">PRINSIP UTAMA</p>
-                <div id="panelPrinsip" class="space-y-4 pl-4 border-l-2 border-[#C7962B]"></div>
+                <p class="uppercase tracking-[2px] sm:tracking-[3px] text-[10px] sm:text-xs text-[#C7962B] font-bold mb-3 sm:mb-4">PRINSIP UTAMA</p>
+                <div id="panelPrinsip" class="space-y-3 sm:space-y-4 pl-3 sm:pl-4 border-l-2 border-[#C7962B]"></div>
             </div>
 
-            <div id="boxPenerapanWrapper" class="p-6 rounded-lg border border-[#DDBF88] bg-[#F5EACF]">
-                <p class="uppercase tracking-[2px] text-[11px] text-[#8B6D48] font-bold mb-2">CONTOH PENERAPAN</p>
-                <p id="panelPenerapan" class="text-[#675A4D] text-sm italic leading-relaxed"></p>
+            <div id="boxPenerapanWrapper" class="p-4 sm:p-6 rounded-lg border border-[#DDBF88] bg-[#F5EACF]">
+                <p class="uppercase tracking-[1.5px] sm:tracking-[2px] text-[10px] sm:text-[11px] text-[#8B6D48] font-bold mb-1.5 sm:mb-2">CONTOH PENERAPAN</p>
+                <p id="panelPenerapan" class="text-[#675A4D] text-xs sm:text-sm italic leading-relaxed"></p>
             </div>
 
-            <div class="border-t border-[#E4D4BF] pt-6">
-                <p class="uppercase tracking-[2px] text-[10px] text-[#8B6D48] font-bold">SUMBER & REFERENSI</p>
+            <div class="border-t border-[#E4D4BF] pt-4 sm:pt-6">
+                <p class="uppercase tracking-[1.5px] sm:tracking-[2px] text-[9px] sm:text-[10px] text-[#8B6D48] font-bold">SUMBER & REFERENSI</p>
                 <p id="panelSumber" class="text-xs text-[#8B6D48] mt-1"></p>
             </div>
         </div>
@@ -441,79 +441,17 @@
         }
     });
 
-    function changeSlide(id) {
-        id = String(id);
-        if (!AJARAN_DATA[id]) return;
-
-        activeAjaranId = id;
-        var data = AJARAN_DATA[id];
-
-        var imgMain = document.getElementById('mainImage');
-        var contentBox = document.getElementById('mainContentBox');
-
-        // 1. Animasi
-        if (imgMain) {
-            imgMain.classList.remove('animate-fade-left');
-            void imgMain.offsetWidth;
-            imgMain.classList.add('animate-fade-left');
-        }
-
-        if (contentBox) {
-            contentBox.classList.remove('animate-fade-up');
-            void contentBox.offsetWidth;
-            contentBox.classList.add('animate-fade-up');
-        }
-
-        // 2. Update Konten Utama
-        if (imgMain) imgMain.src = data.gambar;
-        if (document.getElementById('mainLocation')) document.getElementById('mainLocation').innerText = data.lokasi;
-        if (document.getElementById('mainTag')) document.getElementById('mainTag').innerText = data.tags;
-        if (document.getElementById('mainTitle')) document.getElementById('mainTitle').innerText = data.judul;
-        if (document.getElementById('mainDesc')) document.getElementById('mainDesc').innerText = data.deskripsi;
-        if (document.getElementById('mainAuthor')) document.getElementById('mainAuthor').innerText = data.penulis;
-        if (document.getElementById('mainAvatarInitial')) document.getElementById('mainAvatarInitial').innerText = data.inisial;
-        if (document.getElementById('mainRole')) document.getElementById('mainRole').innerText = data.tahun;
-
-        // 3. Reset Border Thumbnail & Dot
-        var thumbs = document.querySelectorAll('.thumb-card');
-        thumbs.forEach(function(t) {
-            t.classList.remove('border-[#D4A64A]');
-            t.classList.add('border-transparent');
-        });
-        var selectedThumb = document.getElementById('thumb-' + id);
-        if (selectedThumb) {
-            selectedThumb.classList.remove('border-transparent');
-            selectedThumb.classList.add('border-[#D4A64A]');
-        }
-
-        var dots = document.querySelectorAll('.dot-card');
-        dots.forEach(function(d) {
-            d.classList.remove('bg-[#D9B35D]');
-            d.classList.add('bg-[#665548]');
-        });
-        var selectedDot = document.getElementById('dot-' + id);
-        if (selectedDot) {
-            selectedDot.classList.remove('bg-[#665548]');
-            selectedDot.classList.add('bg-[#D9B35D]');
-        }
-    }
-
-    // ==========================================
-   
     function openAjaran(targetParam) {
         stopAjaranAutoSlide();
 
         var targetId = activeAjaranId;
 
-        // Jika dipanggil membawa parameter ID (misal dari pencarian: 5 atau "5")
         if (targetParam !== undefined && targetParam !== null && targetParam !== "") {
             var paramStr = String(targetParam).trim();
             
-            // 1. Pencocokan langsung berdasarkan ID
             if (AJARAN_DATA[paramStr]) {
                 targetId = paramStr;
             } else {
-                // 2. Pencocokan berdasarkan nama Judul (Toleran Spasi/Huruf)
                 for (var key in AJARAN_DATA) {
                     var judulLower = AJARAN_DATA[key].judul.toLowerCase().replace(/\s+/g, ' ').trim();
                     var searchLower = paramStr.toLowerCase().replace(/\s+/g, ' ').trim();
@@ -527,12 +465,10 @@
 
         if (!targetId || !AJARAN_DATA[targetId]) return;
 
-        // Pindahkan slide aktif ke item yang dipilih
         changeSlide(targetId);
 
         var data = AJARAN_DATA[targetId];
 
-        // Isikan Data ke Modal Drawer
         if (document.getElementById('panelImage')) document.getElementById('panelImage').src = data.gambar;
         if (document.getElementById('panelTagBadge')) document.getElementById('panelTagBadge').innerText = data.tags;
         if (document.getElementById('panelTitle')) document.getElementById('panelTitle').innerText = data.judul;
@@ -549,7 +485,7 @@
                 if (prinsipWrapper) prinsipWrapper.classList.remove('hidden');
                 data.prinsip.forEach(function(p) {
                     var item = document.createElement('div');
-                    item.innerHTML = '<h4 class="font-bold text-[#23160E] text-lg" style="font-family:\'Cormorant Garamond\',serif;">' + p.nama + '</h4><p class="text-sm text-[#675A4D] mt-1">' + p.deskripsi + '</p>';
+                    item.innerHTML = '<h4 class="font-bold text-[#23160E] text-base sm:text-lg" style="font-family:\'Cormorant Garamond\',serif;">' + p.nama + '</h4><p class="text-xs sm:text-sm text-[#675A4D] mt-0.5 sm:mt-1">' + p.deskripsi + '</p>';
                     prinsipContainer.appendChild(item);
                 });
             } else {

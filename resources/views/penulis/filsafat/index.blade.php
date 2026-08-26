@@ -13,9 +13,9 @@
             </div>
             
             <div class="flex items-center gap-3 w-full md:w-auto">
-                <!-- Dropdown Filter Status dengan Padding Kanan Pas (pr-8) -->
+                <!-- Dropdown Filter Status -->
                 <form method="GET" action="{{ route('penulis.filsafat.index') }}" class="flex items-center">
-                    <select name="status" onchange="this.form.submit()" class="text-xs font-semibold py-2.5 pl-3.5 pr-8 border border-[#E2D5C3] bg-[#F8EFE3] text-[#1A110A] rounded-xl focus:border-[#C38E2A] focus:ring-[#C38E2A]/20 cursor-pointer outline-none shadow-sm transition">
+                    <select name="status" onchange="this.form.submit()" class="text-xs font-semibold py-2.5 pl-3.5 pr-8 border border-[#E2D5C3] bg-white text-[#1A110A] rounded-xl focus:border-[#C38E2A] focus:ring-[#C38E2A]/20 cursor-pointer outline-none shadow-sm transition">
                         <option value="">Semua Status</option>
                         <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
                         <option value="disetujui" {{ request('status') == 'disetujui' ? 'selected' : '' }}>Disetujui</option>
@@ -47,23 +47,23 @@
         @endif
     </div>
 
-    <!-- HANYA TABEL YANG BISA DI-SCROLL (AREA INTERNAL SCROLL) -->
-    <div style="background-color: #F8EFE3;" class="flex-1 rounded-2xl shadow-sm border border-[#E2D5C3] overflow-hidden flex flex-col min-h-0">
-        <div id="table-scroll-container" class="overflow-y-auto overflow-x-auto flex-1">
-            <table class="w-full text-left border-collapse">
+    <!-- AREA TABEL PUTIH FULL -->
+    <div class="bg-white flex-1 rounded-2xl shadow-sm border border-[#E2D5C3] overflow-hidden flex flex-col min-h-0">
+        <div id="table-scroll-container" class="overflow-y-auto overflow-x-auto flex-1 bg-white">
+            <table class="w-full text-left border-collapse bg-white">
                 <!-- Header Tabel Terkunci di Atas -->
-                <thead class="sticky top-0 z-10 shadow-sm" style="background-color: #F8EFE3;">
-                    <tr class="text-[#1A110A] text-sm font-bold border-b border-[#E2D5C3]">
-                        <th class="py-4 px-6 w-12">No</th>
-                        <th class="py-4 px-6">Judul</th>
-                        <th class="py-4 px-6">Kategori</th>
-                        <th class="py-4 px-6">Status</th>
-                        <th class="py-4 px-6 text-center w-36">Aksi</th>
+                <thead class="sticky top-0 z-10 shadow-sm bg-white">
+                    <tr class="text-[#1A110A] text-sm font-bold border-b border-[#E2D5C3] bg-white">
+                        <th class="py-4 px-6 w-12 bg-white">No</th>
+                        <th class="py-4 px-6 bg-white">Judul</th>
+                        <th class="py-4 px-6 bg-white">Kategori</th>
+                        <th class="py-4 px-6 bg-white">Status</th>
+                        <th class="py-4 px-6 text-center w-36 bg-white">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-[#E2D5C3] text-sm font-medium text-[#2D241E]">
                     @forelse($filsafat as $index => $item)
-                        <tr class="hover:bg-[#FAF6F0] transition">
+                        <tr class="hover:bg-[#FAF6F0] transition bg-white">
                             <td class="py-4 px-6 text-[#1A110A]">
                                 {{ $filsafat->firstItem() + $index }}
                             </td>
@@ -98,7 +98,6 @@
                                         Ditolak
                                     </span>
                                 @else
-                                    <!-- Badge Pending Soft Kuning Kapsul -->
                                     <span style="background-color: #FEF9C3; color: #A16207;" 
                                           class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full">
                                         <svg class="w-3.5 h-3.5" style="color: #A16207;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -142,8 +141,8 @@
                             </td>
                         </tr>
                     @empty
-                        <tr>
-                            <td colspan="5" class="py-8 text-center text-[#8C7B6C]">
+                        <tr class="bg-white">
+                            <td colspan="5" class="py-12 text-center text-[#8C7B6C] bg-white">
                                 Belum ada data filsafat yang sesuai dengan filter.
                             </td>
                         </tr>

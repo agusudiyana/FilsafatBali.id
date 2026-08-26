@@ -1,15 +1,15 @@
-<section id="jenis-filsafat" class="bg-[#F7F0E7] py-24">
-    <div class="max-w-7xl mx-auto px-8">
+<section id="jenis-filsafat" class="bg-[#F7F0E7] py-12 sm:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-8">
 
         <!-- Judul Section -->
-        <div class="text-center mb-16">
-            <p class="uppercase tracking-[6px] text-[#C58A3C] text-xs mb-4">
+        <div class="text-center mb-10 sm:mb-16">
+            <p class="uppercase tracking-[4px] sm:tracking-[6px] text-[#C58A3C] text-[10px] sm:text-xs mb-2 sm:mb-4">
                 — WAWASAN FILSAFAT
             </p>
-            <h2 style="font-family:'Cormorant Garamond',serif;" class="text-[60px] font-bold text-[#23160E]">
+            <h2 style="font-family:'Cormorant Garamond',serif;" class="text-3xl sm:text-[60px] font-bold text-[#23160E] leading-tight">
                 Jenis-Jenis Filsafat di Dunia
             </h2>
-            <p class="mt-6 max-w-3xl mx-auto text-[#675A4D] leading-8 text-lg">
+            <p class="mt-4 sm:mt-6 max-w-3xl mx-auto text-[#675A4D] leading-relaxed sm:leading-8 text-sm sm:text-lg px-2">
                 Filsafat berkembang di berbagai belahan dunia dengan beragam
                 sudut pandang dalam memahami manusia, kehidupan,
                 pengetahuan, moral, dan hubungan dengan Tuhan.
@@ -27,7 +27,7 @@
         @endphp
 
         <!-- GRID CARDS (DINAMIS DARI DATABASE) -->
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             @forelse($listFilsafat as $item)
                 @php
                     $idKey = $item->id;
@@ -35,9 +35,7 @@
                     $colorText = $item->warna_teks ?? 'text-[#B27A27]';
                     $deskripsiTampil = $item->deskripsi ?? 'Mengkaji nilai-nilai kehidupan dan pandangan hidup secara mendalam.';
                     
-                    // =========================================================
                     // LOGIKA EKSTRAKSI SEMUA NAMA TOKOH UNTUK BADGE KARTU DEPAN
-                    // =========================================================
                     $tokohStr = $item->tokoh_terkenal ?? '';
                     $tokohList = [];
 
@@ -58,33 +56,33 @@
 
                 <div onclick="openFilsafat('{{ $idKey }}')"
                     class="group bg-white rounded-xl border border-[#E5D6BF]
-                    p-8 hover:-translate-y-2 hover:shadow-xl
+                    p-6 sm:p-8 hover:-translate-y-2 hover:shadow-xl
                     duration-300 cursor-pointer flex flex-col justify-between h-full">
 
                     <!-- Content Top Wrapper -->
                     <div class="flex flex-col flex-1">
                         <!-- Icon -->
                         <div
-                            class="w-14 h-14 rounded-full {{ $bgIkon }} flex items-center justify-center text-white text-2xl mb-6 shrink-0">
+                            class="w-12 h-12 sm:w-14 sm:h-14 rounded-full {{ $bgIkon }} flex items-center justify-center text-white text-xl sm:text-2xl mb-4 sm:mb-6 shrink-0">
                             {{ $item->ikon ?? '🏛' }}
                         </div>
 
                         <!-- Judul -->
                         <h3 style="font-family:'Cormorant Garamond',serif;"
-                            class="text-[38px] font-bold text-[#23160E] leading-tight">
+                            class="text-2xl sm:text-[38px] font-bold text-[#23160E] leading-tight">
                             {{ $item->judul }}
                         </h3>
 
                         <!-- Deskripsi -->
-                        <p class="mt-4 text-[#675A4D] leading-7 flex-1">
+                        <p class="mt-3 sm:mt-4 text-[#675A4D] leading-relaxed sm:leading-7 text-sm sm:text-base flex-1">
                             {{ Str::limit($deskripsiTampil, 120) }}
                         </p>
 
                         <!-- Tokoh Pill Badges (MENAMPILKAN SEMUA TOKOH) -->
-                        <div class="mt-6 flex flex-wrap gap-2 pt-2">
+                        <div class="mt-5 sm:mt-6 flex flex-wrap gap-1.5 sm:gap-2 pt-2">
                             @if (!empty($tokohList))
                                 @foreach ($tokohList as $namaTokoh)
-                                    <span class="px-3 py-1 rounded-full bg-[#F8F1E6] {{ $colorText }} text-xs font-medium">
+                                    <span class="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-[#F8F1E6] {{ $colorText }} text-[11px] sm:text-xs font-medium">
                                         {{ $namaTokoh }}
                                     </span>
                                 @endforeach
@@ -93,17 +91,17 @@
                     </div>
 
                     <!-- Footer Bottom Wrapper -->
-                    <div class="mt-8 pt-6 border-t border-[#E5D6BF] flex items-center justify-between shrink-0">
-                        <span class="uppercase tracking-[2px] text-[11px] font-bold {{ $colorText }}">
+                    <div class="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-[#E5D6BF] flex items-center justify-between shrink-0">
+                        <span class="uppercase tracking-[1.5px] sm:tracking-[2px] text-[10px] sm:text-[11px] font-bold {{ $colorText }}">
                             Lihat Informasi
                         </span>
                         <i data-feather="arrow-right"
-                            class="w-5 h-5 {{ $colorText }} group-hover:translate-x-1 duration-300"></i>
+                            class="w-4 h-4 sm:w-5 sm:h-5 {{ $colorText }} group-hover:translate-x-1 duration-300"></i>
                     </div>
 
                 </div>
             @empty
-                <div class="col-span-3 text-center py-12 text-[#675A4D]">
+                <div class="col-span-1 md:col-span-2 lg:col-span-3 text-center py-12 text-[#675A4D] text-sm sm:text-base">
                     Belum ada data filsafat yang disetujui di database.
                 </div>
             @endforelse
@@ -115,66 +113,66 @@
 <!-- OVERLAY DRAWER SIDE-PANEL -->
 <div id="overlayBarat" onclick="handleOverlayClick(event)" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden z-50 transition-opacity duration-300">
     <div id="panelBarat" onclick="event.stopPropagation()"
-        class="absolute right-0 top-0 w-full max-w-[500px] h-full bg-[#FAF5ED] overflow-y-auto translate-x-full shadow-2xl transition-transform duration-500 ease-in-out">
+        class="absolute right-0 top-0 w-full max-w-full sm:max-w-[500px] h-full bg-[#FAF5ED] overflow-y-auto translate-x-full shadow-2xl transition-transform duration-500 ease-in-out">
 
         <!-- Close Button -->
         <button type="button" onclick="closeBarat()"
-            class="absolute top-6 right-6 w-11 h-11 rounded-full bg-[#EFE3CC] hover:bg-[#E5D4B7] flex items-center justify-center font-bold text-[#23160E] transition cursor-pointer">
+            class="absolute top-4 right-4 sm:top-6 sm:right-6 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-[#EFE3CC] hover:bg-[#E5D4B7] flex items-center justify-center font-bold text-[#23160E] transition cursor-pointer z-10 text-sm sm:text-base">
             ✕
         </button>
 
-        <div class="p-10">
-            <p class="uppercase tracking-[4px] text-[#C58A3C] text-xs font-semibold">
+        <div class="p-5 sm:p-10 pt-16 sm:pt-10">
+            <p class="uppercase tracking-[3px] sm:tracking-[4px] text-[#C58A3C] text-[10px] sm:text-xs font-semibold">
                 WAWASAN FILSAFAT
             </p>
 
             <h2 id="judulFilsafat" style="font-family:'Cormorant Garamond',serif;"
-                class="text-5xl font-bold mt-4 text-[#23160E]">
+                class="text-3xl sm:text-5xl font-bold mt-2 sm:mt-4 text-[#23160E] leading-tight">
             </h2>
 
-            <p id="ringkasanFilsafat" class="mt-6 text-[#675A4D] leading-8 text-[15px]">
+            <p id="ringkasanFilsafat" class="mt-4 sm:mt-6 text-[#675A4D] leading-relaxed sm:leading-8 text-sm sm:text-[15px]">
             </p>
 
-            <div class="border-t border-[#E4D4BF] my-8"></div>
+            <div class="border-t border-[#E4D4BF] my-6 sm:my-8"></div>
 
-            <h3 style="font-family:'Cormorant Garamond',serif;" class="text-3xl text-[#23160E]">
+            <h3 style="font-family:'Cormorant Garamond',serif;" class="text-2xl sm:text-3xl text-[#23160E]">
                 Asal
             </h3>
-            <p id="asalFilsafat" class="mt-4 text-[#675A4D] leading-8 text-[15px]">
+            <p id="asalFilsafat" class="mt-2 sm:mt-4 text-[#675A4D] leading-relaxed sm:leading-8 text-sm sm:text-[15px]">
             </p>
 
-            <div class="border-t border-[#E4D4BF] my-8"></div>
+            <div class="border-t border-[#E4D4BF] my-6 sm:my-8"></div>
 
-            <h3 style="font-family:'Cormorant Garamond',serif;" class="text-3xl text-[#23160E]">
+            <h3 style="font-family:'Cormorant Garamond',serif;" class="text-2xl sm:text-3xl text-[#23160E]">
                 Fokus
             </h3>
-            <p id="fokusFilsafat" class="mt-4 text-[#675A4D] leading-8 text-[15px]">
+            <p id="fokusFilsafat" class="mt-2 sm:mt-4 text-[#675A4D] leading-relaxed sm:leading-8 text-sm sm:text-[15px]">
             </p>
 
-            <div class="border-t border-[#E4D4BF] my-8"></div>
+            <div class="border-t border-[#E4D4BF] my-6 sm:my-8"></div>
 
-            <h3 style="font-family:'Cormorant Garamond',serif;" class="text-3xl text-[#23160E]">
+            <h3 style="font-family:'Cormorant Garamond',serif;" class="text-2xl sm:text-3xl text-[#23160E]">
                 Tokoh Terkenal
             </h3>
             <!-- Container untuk Card Tokoh Terkenal -->
-            <div id="tokohFilsafat" class="mt-6 space-y-4">
+            <div id="tokohFilsafat" class="mt-4 sm:mt-6 space-y-3 sm:space-y-4">
             </div>
 
-            <div class="border-t border-[#E4D4BF] my-8"></div>
+            <div class="border-t border-[#E4D4BF] my-6 sm:my-8"></div>
 
-            <h3 style="font-family:'Cormorant Garamond',serif;" class="text-3xl text-[#23160E]">
+            <h3 style="font-family:'Cormorant Garamond',serif;" class="text-2xl sm:text-3xl text-[#23160E]">
                 Karakteristik
             </h3>
             <!-- Container untuk List Karakteristik Bullets -->
-            <ul id="karakteristikFilsafat" class="mt-6 space-y-3 text-[#675A4D] leading-7 list-disc pl-5 text-[15px]">
+            <ul id="karakteristikFilsafat" class="mt-4 sm:mt-6 space-y-2 sm:space-y-3 text-[#675A4D] leading-relaxed sm:leading-7 list-disc pl-5 text-sm sm:text-[15px]">
             </ul>
 
-            <div class="border-t border-[#E4D4BF] my-8"></div>
+            <div class="border-t border-[#E4D4BF] my-6 sm:my-8"></div>
 
-            <h3 style="font-family:'Cormorant Garamond',serif;" class="text-3xl text-[#23160E]">
+            <h3 style="font-family:'Cormorant Garamond',serif;" class="text-2xl sm:text-3xl text-[#23160E]">
                 Pengaruh / Implikasi
             </h3>
-            <p id="pengaruhFilsafat" class="mt-4 text-[#675A4D] leading-8 text-[15px]">
+            <p id="pengaruhFilsafat" class="mt-2 sm:mt-4 text-[#675A4D] leading-relaxed sm:leading-8 text-sm sm:text-[15px]">
             </p>
         </div>
     </div>
@@ -232,16 +230,13 @@
             if (document.getElementById("pengaruhFilsafat")) 
                 document.getElementById("pengaruhFilsafat").innerText = data.pengaruh || '-';
 
-            // =========================================================
             // PARSER TOKOH TERKENAL (CARD BOXES PUTIH)
-            // =========================================================
             var tokohContainer = document.getElementById("tokohFilsafat");
             if (tokohContainer) {
                 tokohContainer.innerHTML = "";
                 var rawTokoh = data.tokoh_raw.trim();
 
                 if (rawTokoh !== "") {
-                    // Split berdasarkan titik (.) untuk memisahkan antar tokoh
                     var items = rawTokoh.split(/(?<=\.)\s+/);
                     var htmlTokoh = "";
 
@@ -254,9 +249,9 @@
 
                             if (namaTokoh) {
                                 htmlTokoh += `
-                                    <div class="bg-white border border-[#E5D6BF] rounded-xl p-5 shadow-sm text-left">
-                                        <h4 class="font-bold text-[#8C281E] text-[16px]">${namaTokoh}</h4>
-                                        ${deskTokoh ? `<p class="mt-2 text-[#675A4D] text-[14px] leading-relaxed">${deskTokoh}</p>` : ''}
+                                    <div class="bg-white border border-[#E5D6BF] rounded-xl p-4 sm:p-5 shadow-sm text-left">
+                                        <h4 class="font-bold text-[#8C281E] text-sm sm:text-[16px]">${namaTokoh}</h4>
+                                        ${deskTokoh ? `<p class="mt-1.5 sm:mt-2 text-[#675A4D] text-xs sm:text-[14px] leading-relaxed">${deskTokoh}</p>` : ''}
                                     </div>
                                 `;
                             }
@@ -264,18 +259,16 @@
                     });
 
                     tokohContainer.innerHTML = htmlTokoh !== "" ? htmlTokoh : `
-                        <div class="bg-white border border-[#E5D6BF] rounded-xl p-5 shadow-sm text-left">
-                            <h4 class="font-bold text-[#8C281E] text-[16px]">${rawTokoh}</h4>
+                        <div class="bg-white border border-[#E5D6BF] rounded-xl p-4 sm:p-5 shadow-sm text-left">
+                            <h4 class="font-bold text-[#8C281E] text-sm sm:text-[16px]">${rawTokoh}</h4>
                         </div>
                     `;
                 } else {
-                    tokohContainer.innerHTML = `<p class="text-[#675A4D] text-sm italic">-</p>`;
+                    tokohContainer.innerHTML = `<p class="text-[#675A4D] text-xs sm:text-sm italic">-</p>`;
                 }
             }
 
-            // =========================================================
             // PARSER KARAKTERISTIK (BULLET LIST)
-            // =========================================================
             var karakContainer = document.getElementById("karakteristikFilsafat");
             if (karakContainer) {
                 karakContainer.innerHTML = "";
@@ -302,7 +295,6 @@
         if (typeof feather !== 'undefined') feather.replace();
     }
 
-    // Fungsi Penanganan Klik Kiri Overlay Samping
     function handleOverlayClick(e) {
         if (e.target === document.getElementById("overlayBarat")) {
             closeBarat();
@@ -316,7 +308,6 @@
         if (panel) panel.classList.add("translate-x-full");
         setTimeout(function() {
             if (overlay) overlay.classList.add("hidden");
-            // Kembalikan scroll layar utama ke normal
             document.body.style.overflow = "auto";
         }, 300);
     }
