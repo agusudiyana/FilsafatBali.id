@@ -1,7 +1,7 @@
 <!-- CSRF TOKEN FOR AJAX -->
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<!-- Style Khusus Bookmark -->
+<!-- Style Khusus Bookmark & Efek Animasi -->
 <style>
     .btn-bookmark-custom {
         cursor: pointer !important;
@@ -21,6 +21,22 @@
         fill: none !important;
         color: #8F7A61 !important;
         stroke: #8F7A61 !important;
+    }
+
+    /* Efek Animasi Muncul Halus (Fade & Slide Up) */
+    .tab-fade-effect {
+        animation: tabFadeIn 0.35s ease-out forwards;
+    }
+
+    @keyframes tabFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 </style>
 
@@ -44,14 +60,14 @@
                 </p>
             </div>
 
-            <!-- Tab Istilah -->
+            <!-- Tab Istilah dengan Efek Transisi Tambahan -->
             <div class="flex border border-[#6E4E1E] rounded-lg overflow-hidden shrink-0 w-full sm:w-auto mt-0 md:mt-2">
-                <button id="btnSatua" onclick="showSatua()"
-                    class="flex-1 sm:w-36 md:w-40 py-2.5 sm:py-3 bg-transparent text-[#C58A3C] uppercase tracking-[1.5px] sm:tracking-[2px] text-[11px] sm:text-xs font-semibold text-center shrink-0 transition-all">
+                <button id="btnSatua" onclick="triggerShowSatua()"
+                    class="flex-1 sm:w-36 md:w-40 py-2.5 sm:py-3 bg-transparent text-[#C58A3C] uppercase tracking-[1.5px] sm:tracking-[2px] text-[11px] sm:text-xs font-semibold text-center shrink-0 transition-all duration-300 ease-out active:scale-95 cursor-pointer">
                     SATUA BALI
                 </button>
-                <button id="btnIstilah" onclick="showIstilah()"
-                    class="flex-1 sm:w-36 md:w-40 py-2.5 sm:py-3 bg-[#C58A3C] text-white uppercase tracking-[1.5px] sm:tracking-[2px] text-[11px] sm:text-xs font-semibold text-center shrink-0 transition-all">
+                <button id="btnIstilah" onclick="triggerShowIstilah()"
+                    class="flex-1 sm:w-36 md:w-40 py-2.5 sm:py-3 bg-[#C58A3C] text-white uppercase tracking-[1.5px] sm:tracking-[2px] text-[11px] sm:text-xs font-semibold text-center shrink-0 transition-all duration-300 ease-out active:scale-95 cursor-pointer">
                     ISTILAH BALI
                 </button>
             </div>
@@ -70,7 +86,7 @@
         </div>
 
         <!-- LIST ISTILAH (DARI DATABASE + TOMBOL SIMPAN) -->
-        <div id="listIstilahContainer" class="divide-y divide-[#3E2D1E]">
+        <div id="listIstilahContainer" class="divide-y divide-[#3E2D1E] tab-fade-effect">
             @forelse($istilahs as $item)
                 @php
                     $judulIstilah = $item->istilah ?? ($item->judul ?? '-');
@@ -86,7 +102,7 @@
                         ->exists();
                 @endphp
 
-                <div class="item-istilah flex flex-col sm:grid sm:grid-cols-[170px_120px_1fr_auto] py-4 sm:py-6 items-start sm:items-center gap-3 sm:gap-4 hover:bg-[#2A1A10] px-3 sm:px-4 transition-all duration-300 rounded-lg">
+                <div class="item-istilah flex flex-col sm:grid sm:grid-cols-[170px_120px_1fr_auto] py-4 sm:py-6 items-start sm:items-center gap-3 sm:gap-4 hover:bg-[#2A1A10] px-3 sm:px-4 transition-all duration-300 rounded-lg group">
                     
                     <!-- AREA KLIK DETAIL MODAL -->
                     <div onclick="openIstilah(
@@ -99,7 +115,7 @@
                         )" 
                         class="w-full sm:col-span-3 flex flex-col sm:grid sm:grid-cols-[170px_120px_1fr] items-start sm:items-center gap-2 sm:gap-4 cursor-pointer">
                         
-                        <h3 class="text-white text-2xl sm:text-4xl font-bold leading-tight" style="font-family:'Cormorant Garamond',serif;">
+                        <h3 class="text-white text-2xl sm:text-4xl font-bold leading-tight group-hover:text-[#C89438] transition-colors duration-200" style="font-family:'Cormorant Garamond',serif;">
                             {{ $judulIstilah }}
                         </h3>
 
@@ -118,7 +134,7 @@
                             onclick="handleBookmarkAction(event, this, '{{ addslashes($judulIstilah) }}', 'Istilah Bali')"
                             data-saved="{{ $isSavedIstilah ? 'true' : 'false' }}"
                             title="{{ $isSavedIstilah ? 'Batal Simpan' : 'Simpan ke Arsip' }}"
-                            class="btn-bookmark-custom relative z-10 p-2 rounded-lg border border-[#6E4E1E] bg-transparent hover:bg-[#3E2D1E] transition shrink-0 flex items-center justify-center">
+                            class="btn-bookmark-custom relative z-10 p-2 rounded-lg border border-[#6E4E1E] bg-transparent hover:bg-[#3E2D1E] transition shrink-0 flex items-center justify-center active:scale-90 duration-150">
                             <i data-feather="bookmark"
                                 class="w-4 h-4 {{ $isSavedIstilah ? 'text-[#C58A3C]' : 'text-[#8F7A61]' }}"
                                 style="{{ $isSavedIstilah ? 'fill:#C58A3C; color:#C58A3C;' : '' }}"></i>
@@ -135,17 +151,17 @@
     </div>
 </section>
 
-<!-- Overlay -->
-<div id="overlay" onclick="closeDetail()" class="fixed inset-0 bg-black/60 hidden z-40"></div>
+<!-- Overlay dengan Efek Backdrop Blur Halus -->
+<div id="overlay" onclick="closeDetail()" class="fixed inset-0 bg-black/60 backdrop-blur-xs hidden z-40 transition-opacity duration-300"></div>
 
 <!-- Panel Detail -->
 <div id="detailPanel"
-    class="fixed top-0 right-0 w-full sm:w-[520px] max-w-full h-full bg-[#F6E9D7] shadow-2xl translate-x-full transition-all duration-500 z-50 overflow-y-auto">
+    class="fixed top-0 right-0 w-full sm:w-[520px] max-w-full h-full bg-[#F6E9D7] shadow-2xl translate-x-full transition-transform duration-500 ease-out z-50 overflow-y-auto">
 
     <div class="p-5 sm:p-8 pt-16 sm:pt-8">
         <!-- tombol tutup -->
         <button onclick="closeDetail()"
-            class="absolute top-4 right-4 sm:top-5 sm:right-5 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#E8D6BD] hover:bg-[#D8C3A3] flex items-center justify-center font-bold text-[#5C4836] transition text-sm">
+            class="absolute top-4 right-4 sm:top-5 sm:right-5 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#E8D6BD] hover:bg-[#D8C3A3] flex items-center justify-center font-bold text-[#5C4836] transition text-sm active:scale-90 duration-150">
             ✕
         </button>
 
@@ -203,6 +219,42 @@
 <script>
     const IS_USER_AUTH = @json(auth()->check());
     const PAGE_LOGIN_URL = "{{ route('login') }}";
+
+    // Trigger Animasi Transisi Saat Tukar Tab
+    function triggerShowIstilah() {
+        const btnSatua = document.getElementById("btnSatua");
+        const btnIstilah = document.getElementById("btnIstilah");
+        const container = document.getElementById("listIstilahContainer");
+
+        if (btnSatua && btnIstilah) {
+            btnSatua.className = "flex-1 sm:w-36 md:w-40 py-2.5 sm:py-3 bg-transparent text-[#C58A3C] uppercase tracking-[1.5px] sm:tracking-[2px] text-[11px] sm:text-xs font-semibold text-center shrink-0 transition-all duration-300 ease-out active:scale-95 cursor-pointer";
+            btnIstilah.className = "flex-1 sm:w-36 md:w-40 py-2.5 sm:py-3 bg-[#C58A3C] text-white uppercase tracking-[1.5px] sm:tracking-[2px] text-[11px] sm:text-xs font-semibold text-center shrink-0 transition-all duration-300 ease-out active:scale-95 cursor-pointer";
+        }
+
+        if (container) {
+            container.classList.remove("tab-fade-effect");
+            void container.offsetWidth; // Refresh trigger animasi
+            container.classList.add("tab-fade-effect");
+        }
+
+        if (typeof showIstilah === 'function') {
+            showIstilah();
+        }
+    }
+
+    function triggerShowSatua() {
+        const btnSatua = document.getElementById("btnSatua");
+        const btnIstilah = document.getElementById("btnIstilah");
+
+        if (btnSatua && btnIstilah) {
+            btnIstilah.className = "flex-1 sm:w-36 md:w-40 py-2.5 sm:py-3 bg-transparent text-[#C58A3C] uppercase tracking-[1.5px] sm:tracking-[2px] text-[11px] sm:text-xs font-semibold text-center shrink-0 transition-all duration-300 ease-out active:scale-95 cursor-pointer";
+            btnSatua.className = "flex-1 sm:w-36 md:w-40 py-2.5 sm:py-3 bg-[#C58A3C] text-white uppercase tracking-[1.5px] sm:tracking-[2px] text-[11px] sm:text-xs font-semibold text-center shrink-0 transition-all duration-300 ease-out active:scale-95 cursor-pointer";
+        }
+
+        if (typeof showSatua === 'function') {
+            showSatua();
+        }
+    }
 
     // 1. Fungsi Toggle Simpan / Bookmark via AJAX
     function handleBookmarkAction(event, btnElement, title, type) {
@@ -320,8 +372,8 @@
 
             // Cek jika Hash mengarah ke #sectionIstilah
             if (window.location.hash === '#sectionIstilah') {
-                if (typeof showIstilah === 'function') {
-                    showIstilah(); // Buka tab Istilah Bali
+                if (typeof triggerShowIstilah === 'function') {
+                    triggerShowIstilah(); // Buka tab Istilah Bali
                 }
 
                 setTimeout(() => {

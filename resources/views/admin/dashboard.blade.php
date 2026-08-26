@@ -23,12 +23,12 @@
         </div>
     </div>
 
-    <!-- Grid Statistik Utama (5 Kolom) -->
+    <!-- Grid Statistik Utama (5 Kolom - Filter Berfungsi Saat Diklik) -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 mb-8">
 
-        <!-- 1. Total Ajaran -->
-        <div
-            class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-md relative overflow-hidden group">
+        <!-- 1. Total Ajaran (Menampilkan Semua Konten dari 6 Modul) -->
+        <a href="{{ route('admin.verifikasi.semua-ajaran') }}"
+            class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-md relative overflow-hidden group block cursor-pointer">
             <div class="absolute top-0 left-0 right-0 h-1 bg-[#992B20]"></div>
             <div class="flex items-center justify-between mb-3">
                 <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">Total Ajaran</span>
@@ -46,11 +46,11 @@
                 {{ number_format($totalAjaran ?? 0) }}
             </h2>
             <p class="text-xs text-gray-400 mt-2">Artikel & Kumpulan ajaran</p>
-        </div>
+        </a>
 
-        <!-- 2. Menunggu Verifikasi -->
-        <div
-            class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-md relative overflow-hidden group">
+        <!-- 2. Menunggu Verifikasi (Menampilkan Konten Pending dari 6 Modul) -->
+        <a href="{{ route('admin.verifikasi.semua-pending') }}"
+            class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-md relative overflow-hidden group block cursor-pointer">
             <div class="absolute top-0 left-0 right-0 h-1 bg-[#C48D2D]"></div>
             <div class="flex items-center justify-between mb-3">
                 <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">Verifikasi</span>
@@ -67,11 +67,11 @@
                 {{ number_format($pending ?? 0) }}
             </h2>
             <p class="text-xs text-gray-400 mt-2">Perlu peninjauan admin</p>
-        </div>
+        </a>
 
-        <!-- 3. Total Disetujui -->
-        <div
-            class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-md relative overflow-hidden group">
+        <!-- 3. Total Disetujui (Menampilkan Konten Disetujui dari 6 Modul) -->
+        <a href="{{ route('admin.verifikasi.disetujui') }}"
+            class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-md relative overflow-hidden group block cursor-pointer">
             <div class="absolute top-0 left-0 right-0 h-1 bg-emerald-600"></div>
             <div class="flex items-center justify-between mb-3">
                 <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">Disetujui</span>
@@ -88,11 +88,11 @@
                 {{ number_format($disetujui ?? 0) }}
             </h2>
             <p class="text-xs text-gray-400 mt-2">Terpublikasi di platform</p>
-        </div>
+        </a>
 
         <!-- 4. Total Penulis -->
-        <div
-            class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-md relative overflow-hidden group">
+        <a href="{{ route('admin.penulis.index') }}"
+            class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-md relative overflow-hidden group block cursor-pointer">
             <div class="absolute top-0 left-0 right-0 h-1 bg-amber-700"></div>
             <div class="flex items-center justify-between mb-3">
                 <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">Total Penulis</span>
@@ -110,11 +110,11 @@
                 {{ number_format($totalPenulis ?? 0) }}
             </h2>
             <p class="text-xs text-gray-400 mt-2">Kontributor aktif</p>
-        </div>
+        </a>
 
         <!-- 5. Total Pengguna -->
-        <div
-            class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-md relative overflow-hidden group">
+        <a href="{{ route('admin.pengguna.index') }}"
+            class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 transition-all duration-200 hover:-translate-y-1 hover:shadow-md relative overflow-hidden group block cursor-pointer">
             <div class="absolute top-0 left-0 right-0 h-1 bg-[#1A110A]"></div>
             <div class="flex items-center justify-between mb-3">
                 <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">Total Pengguna</span>
@@ -132,7 +132,7 @@
                 {{ number_format($totalPengguna ?? 0) }}
             </h2>
             <p class="text-xs text-gray-400 mt-2">Akun terdaftar</p>
-        </div>
+        </a>
 
     </div>
 

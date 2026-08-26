@@ -5,14 +5,14 @@
             <!-- Header Kartu Akun & Navigasi Kembali -->
             <div class="bg-white border border-[#E5D6BF] rounded-2xl p-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
                 <div class="flex items-center gap-5">
-                    <!-- Avatar Profil -->
-                    <div class="w-16 h-16 rounded-2xl bg-[#8D2B1D] text-[#FAF6F0] border-2 border-[#C8A45A] overflow-hidden flex items-center justify-center font-bold text-2xl shrink-0 shadow-sm">
+                    <!-- Avatar Profil (Sudah Diubah Jadi Lingkaran Sempurna) -->
+                    <div class="w-16 h-16 rounded-full bg-[#8D2B1D] text-[#FAF6F0] border-2 border-[#C8A45A] overflow-hidden flex items-center justify-center font-bold text-2xl shrink-0 shadow-sm">
                         @if (isset(Auth::user()->avatar) && Auth::user()->avatar)
                             <img src="{{ asset('storage/' . Auth::user()->avatar) }}" alt="{{ Auth::user()->name }}"
-                                class="w-full h-full object-cover">
+                                class="w-full h-full object-cover rounded-full">
                         @elseif (isset(Auth::user()->foto) && Auth::user()->foto)
                             <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="{{ Auth::user()->name }}"
-                                class="w-full h-full object-cover">
+                                class="w-full h-full object-cover rounded-full">
                         @else
                             {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                         @endif

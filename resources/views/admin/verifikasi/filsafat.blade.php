@@ -14,13 +14,14 @@
 
     <div class="bg-white rounded-xl shadow overflow-hidden">
         <table class="w-full border-collapse">
-            <thead class="bg-[#F5E6CC]">
+            <!-- Header tabel diubah menjadi bg-white dengan border bawah -->
+            <thead class="bg-white border-b border-gray-100">
                 <tr>
-                    <th class="p-4 w-12 text-center">No</th>
-                    <th class="p-4 text-left">Judul</th>
-                    <th class="p-4 text-left">Penulis</th>
-                    <th class="p-4 text-center">Status</th>
-                    <th class="p-4 text-center">AKSI VERIFIKASI</th>
+                    <th class="p-4 w-12 text-center text-[#1A110A] font-bold">No</th>
+                    <th class="p-4 text-left text-[#1A110A] font-bold">Judul</th>
+                    <th class="p-4 text-left text-[#1A110A] font-bold">Penulis</th>
+                    <th class="p-4 text-center text-[#1A110A] font-bold">Status</th>
+                    <th class="p-4 text-center text-[#1A110A] font-bold">AKSI VERIFIKASI</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">

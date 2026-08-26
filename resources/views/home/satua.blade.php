@@ -1,3 +1,42 @@
+<!-- Style Khusus Bookmark & Transisi Animasi -->
+<style>
+    .btn-bookmark-custom {
+        cursor: pointer !important;
+        transition: all 0.25s ease-in-out;
+    }
+    .btn-bookmark-custom * {
+        pointer-events: none !important;
+    }
+    .btn-bookmark-custom[data-saved="true"] svg,
+    .btn-bookmark-custom[data-saved="true"] i {
+        fill: #C58A3C !important;
+        color: #C58A3C !important;
+        stroke: #C58A3C !important;
+    }
+    .btn-bookmark-custom[data-saved="false"] svg,
+    .btn-bookmark-custom[data-saved="false"] i {
+        fill: none !important;
+        color: #8F7A61 !important;
+        stroke: #8F7A61 !important;
+    }
+
+    /* Efek Animasi Muncul Halus (Fade & Slide Up) saat Tukar Tab */
+    .tab-fade-effect {
+        animation: tabFadeIn 0.35s ease-out forwards;
+    }
+
+    @keyframes tabFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
 <!-- ========================================== -->
 <!-- SECTION SATUA BALI                         -->
 <!-- ========================================== -->
@@ -20,19 +59,19 @@
 
             <!-- Tab Satua & Istilah -->
             <div class="flex border border-[#6E4E1E] rounded-lg overflow-hidden shrink-0 w-full sm:w-auto mt-0 md:mt-2">
-                <button id="btnSatua" onclick="showSatua()"
-                    class="flex-1 sm:w-36 md:w-40 py-2.5 sm:py-3 bg-[#C58A3C] text-white uppercase tracking-[1.5px] sm:tracking-[2px] text-[11px] sm:text-xs font-semibold text-center shrink-0 transition-all cursor-pointer">
+                <button id="btnSatua" onclick="triggerShowSatua()"
+                    class="flex-1 sm:w-36 md:w-40 py-2.5 sm:py-3 bg-[#C58A3C] text-white uppercase tracking-[1.5px] sm:tracking-[2px] text-[11px] sm:text-xs font-semibold text-center shrink-0 transition-all duration-300 ease-out active:scale-95 cursor-pointer">
                     SATUA BALI
                 </button>
-                <button id="btnIstilah" onclick="showIstilah()"
-                    class="flex-1 sm:w-36 md:w-40 py-2.5 sm:py-3 bg-transparent text-[#C58A3C] uppercase tracking-[1.5px] sm:tracking-[2px] text-[11px] sm:text-xs font-semibold text-center shrink-0 transition-all cursor-pointer">
+                <button id="btnIstilah" onclick="triggerShowIstilah()"
+                    class="flex-1 sm:w-36 md:w-40 py-2.5 sm:py-3 bg-transparent text-[#C58A3C] uppercase tracking-[1.5px] sm:tracking-[2px] text-[11px] sm:text-xs font-semibold text-center shrink-0 transition-all duration-300 ease-out active:scale-95 cursor-pointer">
                     ISTILAH BALI
                 </button>
             </div>
         </div>
 
         <!-- GRID CARDS SATUA BALI (DATABASE) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="gridSatuaContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 tab-fade-effect">
 
             @forelse($satuas as $item)
                 @php
@@ -83,7 +122,7 @@
 
                             <div class="p-5 sm:p-6 pb-0">
                                 <h3 style="font-family:'Cormorant Garamond',serif;"
-                                    class="text-2xl sm:text-4xl text-white font-bold mb-1 leading-tight">
+                                    class="text-2xl sm:text-4xl text-white font-bold mb-1 leading-tight group-hover:text-[#C58A3C] transition-colors duration-200">
                                     {{ $judulSatua }}
                                 </h3>
                                 @if(!empty($subJudul))
@@ -115,7 +154,7 @@
                                 onclick="handleBookmarkAction(event, this, '{{ addslashes($judulSatua) }}', 'Satua Bali')"
                                 data-saved="{{ $isSaved ? 'true' : 'false' }}"
                                 title="{{ $isSaved ? 'Batal Simpan' : 'Simpan ke Arsip' }}"
-                                class="btn-bookmark-custom relative z-10 p-2 rounded-lg border border-[#6E4E1E] bg-transparent hover:bg-[#3E2D1E] transition shrink-0 flex items-center justify-center">
+                                class="btn-bookmark-custom relative z-10 p-2 rounded-lg border border-[#6E4E1E] bg-transparent hover:bg-[#3E2D1E] transition shrink-0 flex items-center justify-center active:scale-90 duration-150">
                                 <i data-feather="bookmark"
                                     class="w-4 h-4 {{ $isSaved ? 'text-[#C58A3C]' : 'text-[#8F7A61]' }}"
                                     style="{{ $isSaved ? 'fill:#C58A3C; color:#C58A3C;' : '' }}"></i>
@@ -137,13 +176,13 @@
 <!-- ========================================== -->
 <!-- DRAWER & OVERLAY (DETAIL SATUA BALI)       -->
 <!-- ========================================== -->
-<div id="overlaySatua" onclick="closeSatua()" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-[100] cursor-pointer">
+<div id="overlaySatua" onclick="closeSatua()" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-[100] cursor-pointer transition-opacity duration-300">
     
     <div id="panelSatua" onclick="event.stopPropagation()"
-        class="absolute right-0 top-0 w-full sm:w-[500px] md:w-[42%] max-w-full h-full bg-[#F8F0E5] overflow-y-auto translate-x-full transition-all duration-500 shadow-2xl cursor-default">
+        class="absolute right-0 top-0 w-full sm:w-[500px] md:w-[42%] max-w-full h-full bg-[#F8F0E5] overflow-y-auto translate-x-full transition-transform duration-500 ease-out shadow-2xl cursor-default">
         
         <button onclick="closeSatua()"
-            class="absolute top-4 right-4 sm:top-5 sm:right-5 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#EBD9BF] hover:bg-[#D4A64A] transition font-bold text-base sm:text-lg z-20 text-[#5F4B3A] cursor-pointer">
+            class="absolute top-4 right-4 sm:top-5 sm:right-5 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#EBD9BF] hover:bg-[#D4A64A] transition font-bold text-base sm:text-lg z-20 text-[#5F4B3A] cursor-pointer active:scale-90 duration-150">
             ✕
         </button>
 
@@ -193,6 +232,42 @@
     // Status Login User
     const IS_LOGGED_IN = @json(auth()->check());
     const URL_LOGIN_PAGE = "{{ route('login') }}";
+
+    // Trigger Animasi Transisi Saat Tukar Tab
+    function triggerShowSatua() {
+        const btnSatua = document.getElementById("btnSatua");
+        const btnIstilah = document.getElementById("btnIstilah");
+        const container = document.getElementById("gridSatuaContainer");
+
+        if (btnSatua && btnIstilah) {
+            btnSatua.className = "flex-1 sm:w-36 md:w-40 py-2.5 sm:py-3 bg-[#C58A3C] text-white uppercase tracking-[1.5px] sm:tracking-[2px] text-[11px] sm:text-xs font-semibold text-center shrink-0 transition-all duration-300 ease-out active:scale-95 cursor-pointer";
+            btnIstilah.className = "flex-1 sm:w-36 md:w-40 py-2.5 sm:py-3 bg-transparent text-[#C58A3C] uppercase tracking-[1.5px] sm:tracking-[2px] text-[11px] sm:text-xs font-semibold text-center shrink-0 transition-all duration-300 ease-out active:scale-95 cursor-pointer";
+        }
+
+        if (container) {
+            container.classList.remove("tab-fade-effect");
+            void container.offsetWidth; // Refresh trigger animasi
+            container.classList.add("tab-fade-effect");
+        }
+
+        if (typeof showSatua === 'function') {
+            showSatua();
+        }
+    }
+
+    function triggerShowIstilah() {
+        const btnSatua = document.getElementById("btnSatua");
+        const btnIstilah = document.getElementById("btnIstilah");
+
+        if (btnSatua && btnIstilah) {
+            btnSatua.className = "flex-1 sm:w-36 md:w-40 py-2.5 sm:py-3 bg-transparent text-[#C58A3C] uppercase tracking-[1.5px] sm:tracking-[2px] text-[11px] sm:text-xs font-semibold text-center shrink-0 transition-all duration-300 ease-out active:scale-95 cursor-pointer";
+            btnIstilah.className = "flex-1 sm:w-36 md:w-40 py-2.5 sm:py-3 bg-[#C58A3C] text-white uppercase tracking-[1.5px] sm:tracking-[2px] text-[11px] sm:text-xs font-semibold text-center shrink-0 transition-all duration-300 ease-out active:scale-95 cursor-pointer";
+        }
+
+        if (typeof showIstilah === 'function') {
+            showIstilah();
+        }
+    }
 
     // FUNCTION ACTION BOOKMARK VIA AJAX
     function handleBookmarkAction(event, btnElement, title, type) {
@@ -314,7 +389,7 @@
 
         if (itemToOpen && window.location.hash === '#sectionSatua') {
             const decodedTitle = decodeURIComponent(itemToOpen).trim().toLowerCase();
-            showSatua();
+            triggerShowSatua();
 
             setTimeout(() => {
                 const cards = document.querySelectorAll('#sectionSatua [data-nama]');

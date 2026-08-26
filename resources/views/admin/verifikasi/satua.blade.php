@@ -16,7 +16,8 @@
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
-                <thead class="bg-[#F5E9D7] text-[#2C221E] text-xs uppercase font-semibold">
+                <!-- Header tabel diubah menjadi bg-white dengan border bawah -->
+                <thead class="bg-white border-b border-gray-100 text-[#2C221E] text-xs uppercase font-semibold">
                     <tr>
                         <th class="p-4 text-center w-12">No</th>
                         <th class="p-4">Judul Satua</th>

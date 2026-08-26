@@ -63,7 +63,7 @@ Route::get('/auth/google/callback', [SocialiteController::class, 'handleGoogleCa
 
 Route::middleware(['auth'])->group(function () {
 
-    // Pengalihan Dashboard Utama Berdasarkan Role
+    // Pengalihan Utama Berdasarkan Role Setelah Login
     Route::get('/dashboard', function () {
         $role = auth()->user()->role;
 
@@ -75,8 +75,8 @@ Route::middleware(['auth'])->group(function () {
             return redirect()->route('penulis.dashboard');
         }
 
-        // Pengguna biasa diarahkan ke dashboard pengguna
-        return redirect()->route('pengguna.dashboard');
+        // Pengguna biasa langsung diarahkan ke Halaman Utama Website (Home)
+        return redirect()->route('home');
     })->name('dashboard');
 
     /*
@@ -107,6 +107,12 @@ Route::middleware(['auth'])->group(function () {
         // VERIFIKASI AKUN PENULIS BARU
         Route::get('/verifikasi/penulis', [AuthorVerificationController::class, 'index'])->name('admin.verifikasi.penulis');
         Route::patch('/verifikasi/penulis/{id}', [AuthorVerificationController::class, 'verify'])->name('admin.verifikasi.penulis.setujui');
+
+        // DAFTAR KONTEN TERPADU (TOTAL AJARAN, PENDING, & DISETUJUI)
+        Route::get('/verifikasi/semua-ajaran', [AdminController::class, 'semuaAjaran'])->name('admin.verifikasi.semua-ajaran');
+        Route::get('/verifikasi/semua-pending', [AdminController::class, 'semuaPending'])->name('admin.verifikasi.semua-pending');
+        Route::get('/verifikasi/disetujui', [AdminController::class, 'semuaDisetujui'])->name('admin.verifikasi.disetujui');
+        Route::delete('/verifikasi/hapus-konten/{type}/{id}', [AdminController::class, 'hapusKontenDisetujui'])->name('admin.verifikasi.hapus-konten');
 
         // VERIFIKASI ARTIKEL
         Route::get('/verifikasi/artikel', [AdminController::class, 'verifikasiAjaran'])->name('admin.verifikasi.artikel');

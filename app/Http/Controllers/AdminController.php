@@ -20,17 +20,38 @@ class AdminController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
-    | Dashboard Admin
+    | Dashboard Admin (Statistik Dinamis Real-Time)
     |--------------------------------------------------------------------------
     */
 
     public function index(): View
     {
-        $totalAjaran   = Artikel::count();
-        $pending       = Artikel::where('status', 'pending')->count();
-        $disetujui     = Artikel::where('status', 'disetujui')->count();
-        $totalPenulis  = User::where('role', 'penulis')->count();
-        $totalPengguna = User::count();
+        // 1. Total Semua Konten Ajaran dari 5 Modul Utama
+        $totalAjaran = Filsafat::count() 
+            + AjaranTertua::count() 
+            + Cecimpedan::count() 
+            + Satua::count() 
+            + Istilah::count();
+
+        // 2. Perlu Verifikasi (Status Pending dari 5 Modul)
+        $pending = Filsafat::where('status', 'pending')->count()
+            + AjaranTertua::where('status', 'pending')->count()
+            + Cecimpedan::where('status', 'pending')->count()
+            + Satua::where('status', 'pending')->count()
+            + Istilah::where('status', 'pending')->count();
+
+        // 3. Total Disetujui (Status Disetujui dari 5 Modul)
+        $disetujui = Filsafat::where('status', 'disetujui')->count()
+            + AjaranTertua::where('status', 'disetujui')->count()
+            + Cecimpedan::where('status', 'disetujui')->count()
+            + Satua::where('status', 'disetujui')->count()
+            + Istilah::where('status', 'disetujui')->count();
+
+        // 4. Total Penulis
+        $totalPenulis = User::where('role', 'penulis')->count();
+
+        // 5. Total Pengguna Terdaftar
+        $totalPengguna = User::where('role', 'pengguna')->count();
 
         return view('admin.dashboard', compact(
             'totalAjaran',
@@ -91,15 +112,119 @@ class AdminController extends Controller
 
     /*
     |--------------------------------------------------------------------------
+    | DAFTAR TERPADU: TOTAL AJARAN, PENDING & DISETUJUI
+    |--------------------------------------------------------------------------
+    */
+
+    // 1. Menampilkan Semua Ajaran (Kartu 1)
+    public function semuaAjaran(): View
+    {
+        $artikels     = Artikel::with('user')->get()->map(fn($item) => $item->setAttribute('kategori_modul', 'Artikel'));
+        $filsafats    = Filsafat::with('user')->get()->map(fn($item) => $item->setAttribute('kategori_modul', 'Filsafat'));
+        $ajaranTertua = AjaranTertua::with('user')->get()->map(fn($item) => $item->setAttribute('kategori_modul', 'Ajaran Tertua'));
+        $cecimpedans  = Cecimpedan::with('user')->get()->map(fn($item) => $item->setAttribute('kategori_modul', 'Cecimpedan'));
+        $satuas       = Satua::with('user')->get()->map(fn($item) => $item->setAttribute('kategori_modul', 'Satua Bali'));
+        $istilahs     = Istilah::with('user')->get()->map(fn($item) => $item->setAttribute('kategori_modul', 'Istilah Bali'));
+
+        $semuaAjaran = $artikels->concat($filsafats)
+            ->concat($ajaranTertua)
+            ->concat($cecimpedans)
+            ->concat($satuas)
+            ->concat($istilahs)
+            ->sortByDesc('updated_at');
+
+        return view('admin.verifikasi.semua-ajaran', compact('semuaAjaran'));
+    }
+
+    // 2. Menampilkan Semua Konten Pending (Kartu 2)
+    public function semuaPending(): View
+    {
+        $artikels     = Artikel::with('user')->where('status', 'pending')->get()->map(fn($item) => $item->setAttribute('kategori_modul', 'Artikel'));
+        $filsafats    = Filsafat::with('user')->where('status', 'pending')->get()->map(fn($item) => $item->setAttribute('kategori_modul', 'Filsafat'));
+        $ajaranTertua = AjaranTertua::with('user')->where('status', 'pending')->get()->map(fn($item) => $item->setAttribute('kategori_modul', 'Ajaran Tertua'));
+        $cecimpedans  = Cecimpedan::with('user')->where('status', 'pending')->get()->map(fn($item) => $item->setAttribute('kategori_modul', 'Cecimpedan'));
+        $satuas       = Satua::with('user')->where('status', 'pending')->get()->map(fn($item) => $item->setAttribute('kategori_modul', 'Satua Bali'));
+        $istilahs     = Istilah::with('user')->where('status', 'pending')->get()->map(fn($item) => $item->setAttribute('kategori_modul', 'Istilah Bali'));
+
+        $semuaPending = $artikels->concat($filsafats)
+            ->concat($ajaranTertua)
+            ->concat($cecimpedans)
+            ->concat($satuas)
+            ->concat($istilahs)
+            ->sortByDesc('updated_at');
+
+        return view('admin.verifikasi.semua-pending', compact('semuaPending'));
+    }
+
+    // 3. Menampilkan Semua Konten Disetujui (Kartu 3)
+    public function semuaDisetujui(): View
+    {
+        $artikels     = Artikel::with('user')->where('status', 'disetujui')->get()->map(fn($item) => $item->setAttribute('kategori_modul', 'Artikel'));
+        $filsafats    = Filsafat::with('user')->where('status', 'disetujui')->get()->map(fn($item) => $item->setAttribute('kategori_modul', 'Filsafat'));
+        $ajaranTertua = AjaranTertua::with('user')->where('status', 'disetujui')->get()->map(fn($item) => $item->setAttribute('kategori_modul', 'Ajaran Tertua'));
+        $cecimpedans  = Cecimpedan::with('user')->where('status', 'disetujui')->get()->map(fn($item) => $item->setAttribute('kategori_modul', 'Cecimpedan'));
+        $satuas       = Satua::with('user')->where('status', 'disetujui')->get()->map(fn($item) => $item->setAttribute('kategori_modul', 'Satua Bali'));
+        $istilahs     = Istilah::with('user')->where('status', 'disetujui')->get()->map(fn($item) => $item->setAttribute('kategori_modul', 'Istilah Bali'));
+
+        $semuaDisetujui = $artikels->concat($filsafats)
+            ->concat($ajaranTertua)
+            ->concat($cecimpedans)
+            ->concat($satuas)
+            ->concat($istilahs)
+            ->sortByDesc('updated_at');
+
+        return view('admin.verifikasi.disetujui', compact('semuaDisetujui'));
+    }
+
+    // 4. Hapus Konten Terpublikasi Secara Langsung
+    public function hapusKontenDisetujui(string $type, int $id): RedirectResponse
+    {
+        switch ($type) {
+            case 'Artikel':
+                $konten = Artikel::findOrFail($id);
+                break;
+            case 'Filsafat':
+                $konten = Filsafat::findOrFail($id);
+                break;
+            case 'Ajaran Tertua':
+                $konten = AjaranTertua::findOrFail($id);
+                break;
+            case 'Cecimpedan':
+                $konten = Cecimpedan::findOrFail($id);
+                break;
+            case 'Satua Bali':
+                $konten = Satua::findOrFail($id);
+                break;
+            case 'Istilah Bali':
+                $konten = Istilah::findOrFail($id);
+                break;
+            default:
+                return redirect()->back()->with('error', 'Kategori konten tidak ditemukan.');
+        }
+
+        $konten->delete();
+
+        return redirect()->back()->with('success', "Konten {$type} berhasil dihapus dari platform!");
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | VERIFIKASI ARTIKEL
     |--------------------------------------------------------------------------
     */
 
-    public function verifikasiAjaran(): View
+    public function verifikasiAjaran(Request $request): View
     {
-        $ajaran = Artikel::where('status', 'pending')->latest()->get();
+        $status = $request->query('status', 'pending');
+        $query = Artikel::query();
 
-        return view('admin.verifikasi.artikel', compact('ajaran'));
+        if ($status !== 'semua') {
+            $query->where('status', $status);
+        }
+
+        $ajaran = $query->latest()->get();
+
+        return view('admin.verifikasi.artikel', compact('ajaran', 'status'));
     }
 
     public function detailAjaran(int $id): View
@@ -114,7 +239,6 @@ class AdminController extends Controller
         $ajaran = Artikel::findOrFail($id);
         $ajaran->update(['status' => 'disetujui']);
 
-        // KIRIM NOTIFIKASI KE PENGGUNA
         $penggunas = User::where('role', 'pengguna')->get();
         if ($penggunas->count() > 0) {
             Notification::send($penggunas, new ArtikelBaruNotification($ajaran));
@@ -137,14 +261,18 @@ class AdminController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function verifikasiAjaranTertua(): View
+    public function verifikasiAjaranTertua(Request $request): View
     {
-        $ajaranTertua = AjaranTertua::with('user')
-            ->where('status', 'pending')
-            ->latest()
-            ->paginate(10);
+        $status = $request->query('status', 'pending');
+        $query = AjaranTertua::with('user');
 
-        return view('admin.verifikasi.ajaran-tertua', compact('ajaranTertua'));
+        if ($status !== 'semua') {
+            $query->where('status', $status);
+        }
+
+        $ajaranTertua = $query->latest()->paginate(10);
+
+        return view('admin.verifikasi.ajaran-tertua', compact('ajaranTertua', 'status'));
     }
 
     public function detailAjaranTertua(int $id): View
@@ -179,7 +307,6 @@ class AdminController extends Controller
         $ajaran = AjaranTertua::findOrFail($id);
         $ajaran->update(['status' => 'disetujui']);
 
-        // KIRIM NOTIFIKASI KE PENGGUNA
         $penggunas = User::where('role', 'pengguna')->get();
         if ($penggunas->count() > 0) {
             Notification::send($penggunas, new ArtikelBaruNotification($ajaran));
@@ -202,13 +329,18 @@ class AdminController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function verifikasiFilsafat(): View
+    public function verifikasiFilsafat(Request $request): View
     {
-        $filsafats = Filsafat::where('status', 'pending')
-            ->latest()
-            ->paginate(10);
+        $status = $request->query('status', 'pending');
+        $query = Filsafat::query();
 
-        return view('admin.verifikasi.filsafat', compact('filsafats'));
+        if ($status !== 'semua') {
+            $query->where('status', $status);
+        }
+
+        $filsafats = $query->latest()->paginate(10);
+
+        return view('admin.verifikasi.filsafat', compact('filsafats', 'status'));
     }
 
     public function detailFilsafat(int $id): View
@@ -223,7 +355,6 @@ class AdminController extends Controller
         $filsafat = Filsafat::findOrFail($id);
         $filsafat->update(['status' => 'disetujui']);
 
-        // KIRIM NOTIFIKASI KE PENGGUNA
         $penggunas = User::where('role', 'pengguna')->get();
         if ($penggunas->count() > 0) {
             Notification::send($penggunas, new ArtikelBaruNotification($filsafat));
@@ -246,13 +377,18 @@ class AdminController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function verifikasiCecimpedan(): View
+    public function verifikasiCecimpedan(Request $request): View
     {
-        $cecimpedans = Cecimpedan::where('status', 'pending')
-            ->latest()
-            ->paginate(10);
+        $status = $request->query('status', 'pending');
+        $query = Cecimpedan::query();
 
-        return view('admin.verifikasi.cecimpedan', compact('cecimpedans'));
+        if ($status !== 'semua') {
+            $query->where('status', $status);
+        }
+
+        $cecimpedans = $query->latest()->paginate(10);
+
+        return view('admin.verifikasi.cecimpedan', compact('cecimpedans', 'status'));
     }
 
     public function detailCecimpedan(int $id): View
@@ -267,7 +403,6 @@ class AdminController extends Controller
         $cecimpedan = Cecimpedan::findOrFail($id);
         $cecimpedan->update(['status' => 'disetujui']);
 
-        // KIRIM NOTIFIKASI KE PENGGUNA
         $penggunas = User::where('role', 'pengguna')->get();
         if ($penggunas->count() > 0) {
             Notification::send($penggunas, new ArtikelBaruNotification($cecimpedan));
@@ -290,13 +425,18 @@ class AdminController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function verifikasiSatua(): View
+    public function verifikasiSatua(Request $request): View
     {
-        $satuas = Satua::where('status', 'pending')
-            ->latest()
-            ->paginate(10);
+        $status = $request->query('status', 'pending');
+        $query = Satua::query();
 
-        return view('admin.verifikasi.satua', compact('satuas'));
+        if ($status !== 'semua') {
+            $query->where('status', $status);
+        }
+
+        $satuas = $query->latest()->paginate(10);
+
+        return view('admin.verifikasi.satua', compact('satuas', 'status'));
     }
 
     public function detailSatua(int $id): View
@@ -311,7 +451,6 @@ class AdminController extends Controller
         $satua = Satua::findOrFail($id);
         $satua->update(['status' => 'disetujui']);
 
-        // KIRIM NOTIFIKASI KE PENGGUNA
         $penggunas = User::where('role', 'pengguna')->get();
         if ($penggunas->count() > 0) {
             Notification::send($penggunas, new ArtikelBaruNotification($satua));
@@ -334,13 +473,18 @@ class AdminController extends Controller
     |--------------------------------------------------------------------------
     */
 
-    public function verifikasiIstilah(): View
+    public function verifikasiIstilah(Request $request): View
     {
-        $istilahs = Istilah::where('status', 'pending')
-            ->latest()
-            ->paginate(10);
+        $status = $request->query('status', 'pending');
+        $query = Istilah::query();
 
-        return view('admin.verifikasi.istilah', compact('istilahs'));
+        if ($status !== 'semua') {
+            $query->where('status', $status);
+        }
+
+        $istilahs = $query->latest()->paginate(10);
+
+        return view('admin.verifikasi.istilah', compact('istilahs', 'status'));
     }
 
     public function detailIstilah(int $id): View
@@ -355,7 +499,6 @@ class AdminController extends Controller
         $istilah = Istilah::findOrFail($id);
         $istilah->update(['status' => 'disetujui']);
 
-        // KIRIM NOTIFIKASI KE PENGGUNA
         $penggunas = User::where('role', 'pengguna')->get();
         if ($penggunas->count() > 0) {
             Notification::send($penggunas, new ArtikelBaruNotification($istilah));
@@ -392,9 +535,6 @@ class AdminController extends Controller
         return view('admin.manajemen.pengguna', compact('pengguna'));
     }
 
-    /**
-     * Menyetujui/memverifikasi akun penulis (is_verified -> 1)
-     */
     public function setujuiPenulis(int $id): RedirectResponse
     {
         $author = User::where('role', 'penulis')->findOrFail($id);
@@ -406,9 +546,6 @@ class AdminController extends Controller
         return redirect()->back()->with('status', "Akun Penulis '{$author->name}' berhasil disetujui (Aktif)!");
     }
 
-    /**
-     * Menolak pendaftaran penulis (is_verified -> 2)
-     */
     public function tolakPenulis(int $id): RedirectResponse
     {
         $author = User::where('role', 'penulis')->findOrFail($id);

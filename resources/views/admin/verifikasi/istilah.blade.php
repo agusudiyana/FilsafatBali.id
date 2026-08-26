@@ -14,27 +14,28 @@
 
     <div class="bg-white rounded-xl shadow overflow-hidden">
         <table class="w-full">
-            <thead class="bg-[#F5E6CC]">
+            <!-- Header tabel diubah menjadi bg-white dengan border bawah -->
+            <thead class="bg-white border-b border-gray-100">
                 <tr>
-                    <th class="p-4">No</th>
-                    <th class="p-4 text-left">Istilah</th>
-                    <th class="p-4 text-left">Kategori</th>
-                    <th class="p-4">Status</th>
-                    <th class="p-4">AKSI VERIFIKASI</th>
+                    <th class="p-4 text-center text-[#1A110A] font-bold">No</th>
+                    <th class="p-4 text-left text-[#1A110A] font-bold">Istilah</th>
+                    <th class="p-4 text-left text-[#1A110A] font-bold">Kategori</th>
+                    <th class="p-4 text-center text-[#1A110A] font-bold">Status</th>
+                    <th class="p-4 text-center text-[#1A110A] font-bold">AKSI VERIFIKASI</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($istilahs as $istilah)
-                    <tr class="border-b">
-                        <td class="p-4 text-center">
+                    <tr class="border-b hover:bg-gray-50 transition">
+                        <td class="p-4 text-center font-medium text-gray-500">
                             {{ $loop->iteration }}
                         </td>
 
-                        <td class="p-4">
+                        <td class="p-4 font-semibold text-[#1A110A]">
                             {{ $istilah->istilah }}
                         </td>
 
-                        <td class="p-4">
+                        <td class="p-4 text-gray-700">
                             {{ $istilah->kategori }}
                         </td>
 
