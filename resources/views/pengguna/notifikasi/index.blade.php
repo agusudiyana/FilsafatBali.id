@@ -10,10 +10,9 @@
                 </h2>
             </div>
 
-            <!-- TOMBOL KEMBALI STYLE PILL -->
+            <!-- TOMBOL KEMBALI STYLE PILL (TANPA SIMBOL PANAH) -->
             <a href="{{ route('pengguna.dashboard') }}"
-                class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#FAF6F0] border border-[#E5D6BF] text-[#8D2B1D] hover:bg-[#8D2B1D] hover:text-white text-xs font-bold tracking-wider uppercase transition shadow-sm">
-                <span>&larr;</span>
+                class="inline-flex items-center px-5 py-2 rounded-full bg-[#FAF6F0] border border-[#E5D6BF] text-[#8D2B1D] hover:bg-[#8D2B1D] hover:text-white text-xs font-bold tracking-wider uppercase transition shadow-sm">
                 <span>Dashboard Pengguna</span>
             </a>
         </div>
@@ -32,6 +31,10 @@
                         @if (isset($unreadCount) && $unreadCount > 0)
                             <span class="bg-[#8D2B1D] text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">
                                 {{ $unreadCount }} Belum Dibaca
+                            </span>
+                        @else
+                            <span class="bg-[#F0FDF4] text-[#166534] border border-[#BBF7D0] text-[11px] font-bold px-2.5 py-0.5 rounded-full">
+                                Semua Sudah Dibaca
                             </span>
                         @endif
                     </div>
@@ -56,9 +59,9 @@
                         @endphp
 
                         <div
-                            class="p-4 rounded-xl border transition-all flex items-start justify-between gap-4 {{ $isUnread ? 'bg-[#FAF6F0] border-[#C8A45A]' : 'bg-white border-[#E5D6BF] opacity-75' }}">
+                            class="p-4 rounded-xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 {{ $isUnread ? 'bg-[#FAF6F0] border-[#C8A45A]' : 'bg-white border-[#E5D6BF] opacity-75' }}">
+                            
                             <div class="flex items-start gap-3">
-
                                 <!-- TITIK MERAH (HANYA MUNCUL JIKA BELUM DIBACA) -->
                                 @if ($isUnread)
                                     <div class="w-2.5 h-2.5 rounded-full bg-[#8D2B1D] mt-1.5 shrink-0"></div>
@@ -83,32 +86,25 @@
                                         {{ $data['judul'] ?? '' }}
                                     </p>
 
-                                    <!-- KODE BARU DENGAN PARAMETER OPEN -->
+                                    <!-- BACA SEKARANG (BERSIH TANPA PANAH) -->
                                     <a href="{{ route('notifikasi.buka', ['id' => $notif->id, 'open' => $data['judul'] ?? ($data['title'] ?? '')]) }}"
-                                        class="inline-flex items-center gap-1 text-xs font-bold text-[#8D2B1D] hover:underline mt-2">
+                                        class="inline-flex items-center text-xs font-bold text-[#8D2B1D] hover:underline mt-2">
                                         <span>Baca Sekarang</span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                        </svg>
                                     </a>
                                 </div>
                             </div>
 
-                            <!-- TOMBOL CENTANG UNTUK TANDAI SUDAH DIBACA TANPA BUKA LINK -->
+                            <!-- TOMBOL TANDAI SUDAH DIBACA -->
                             @if ($isUnread)
-                                <form action="{{ route('notifikasi.baca', $notif->id) }}" method="POST">
-                                    @csrf
-                                    <button type="submit" title="Tandai sudah dibaca"
-                                        class="text-[#675A4D] hover:text-[#8D2B1D] p-1.5 rounded-lg hover:bg-black/5 transition cursor-pointer">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </button>
-                                </form>
+                                <div class="shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#E5D6BF]/60">
+                                    <form action="{{ route('notifikasi.baca', $notif->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit"
+                                            class="px-3 py-1.5 rounded-lg bg-white border border-[#E5D6BF] hover:bg-[#8D2B1D] hover:text-white text-[#675A4D] text-xs font-bold transition shadow-2xs cursor-pointer">
+                                            Tandai Sudah Dibaca
+                                        </button>
+                                    </form>
+                                </div>
                             @endif
                         </div>
                     @empty

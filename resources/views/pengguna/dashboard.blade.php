@@ -1,25 +1,29 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-[#2B1A0E] leading-tight" style="font-family: 'Cormorant Garamond', serif;">
-                {{ __('Dashboard Pengguna') }}
-            </h2>
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <h2 class="font-bold text-2xl sm:text-3xl text-[#2B1A0E] leading-tight" style="font-family: 'Cormorant Garamond', serif;">
+                    {{ __('Dashboard Pengguna') }}
+                </h2>
+                <p class="text-xs sm:text-sm text-[#7A624A] mt-0.5">
+                    Ruang kelola arsip pribadi & pusat aktivitas kebudayaan Anda.
+                </p>
+            </div>
             
-            <!-- TOMBOL BERBENTUK PERSEGI PANJANG (BOX BUTTON) -->
-            <a href="{{ url('/') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-[#E5D6BF] hover:border-[#8D2B1D] text-[#8D2B1D] text-xs font-semibold rounded-xl shadow-sm hover:shadow transition-all duration-200 group cursor-pointer">
-                <span class="transition-transform duration-200 group-hover:-translate-x-1">&larr;</span>
+            <!-- TOMBOL KEMBALI KE BERANDA (TANPA PANAH) -->
+            <a href="{{ url('/') }}" class="inline-flex items-center px-4 py-2 bg-white border border-[#E5D6BF] hover:border-[#8D2B1D] text-[#8D2B1D] text-xs font-semibold rounded-xl shadow-sm hover:shadow transition-all duration-200 cursor-pointer shrink-0">
                 <span>Kembali ke Beranda</span>
             </a>
         </div>
     </x-slot>
 
-    <div class="py-12 bg-[#FAF6F0] min-h-screen">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
+    <div class="py-8 sm:py-10 bg-[#FAF6F0] min-h-screen">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
             
             <!-- SAMBUTAN & INFORMASI USER -->
-            <div class="bg-white border border-[#E5D6BF] p-8 rounded-2xl shadow-sm flex items-center justify-between gap-6">
+            <div class="bg-white border border-[#E5D6BF] p-6 sm:p-8 rounded-2xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative overflow-hidden">
                 <div class="flex items-center gap-5">
-                    <div class="w-16 h-16 rounded-full bg-[#8D2B1D] text-white flex items-center justify-center font-bold text-2xl border-2 border-[#C8A45A] shrink-0 overflow-hidden">
+                    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#8D2B1D] text-white flex items-center justify-center font-bold text-2xl sm:text-3xl border-2 border-[#C8A45A] shrink-0 overflow-hidden shadow">
                         @if(auth()->user()->foto ?? false)
                             <img src="{{ asset('storage/' . auth()->user()->foto) }}" alt="{{ auth()->user()->name }}" class="w-full h-full object-cover rounded-full">
                         @else
@@ -27,10 +31,10 @@
                         @endif
                     </div>
                     <div>
-                        <h1 style="font-family:'Cormorant Garamond',serif;" class="text-3xl font-bold text-[#2B1A0E]">
+                        <h1 style="font-family:'Cormorant Garamond',serif;" class="text-2xl sm:text-4xl font-bold text-[#2B1A0E]">
                             Rahajeng Rauh, {{ auth()->user()->name }}!
                         </h1>
-                        <p class="text-[#675A4D] text-sm mt-1">
+                        <p class="text-[#675A4D] text-xs sm:text-sm mt-1 max-w-2xl leading-relaxed">
                             Selamat datang di Ruang Pengguna Arsipan Budaya FilsafatBali.id. Kelola koleksi arsip tersimpan dan cek pembaruan notifikasi Anda di sini.
                         </p>
                     </div>
@@ -56,20 +60,18 @@
                         <h3 style="font-family:'Cormorant Garamond',serif;" class="text-2xl font-bold text-[#2B1A0E]">
                             Koleksi Arsip Tersimpan
                         </h3>
-                        <p class="text-sm text-[#675A4D] mt-2">
+                        <p class="text-sm text-[#675A4D] mt-2 leading-relaxed">
                             Akses kembali naskah kebudayaan, satua, dan artikel filsafat favorit yang telah Anda simpan.
                         </p>
                     </div>
                     <div class="mt-6 pt-4 border-t border-[#E5D6BF]">
                         @if(Route::has('pengguna.arsip.index'))
-                            <a href="{{ route('pengguna.arsip.index') }}" class="group w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#8D2B1D] text-white text-xs font-semibold rounded-xl hover:bg-[#732216] transition shadow-sm cursor-pointer">
+                            <a href="{{ route('pengguna.arsip.index') }}" class="w-full inline-flex items-center justify-center px-5 py-2.5 bg-[#8D2B1D] text-white text-xs font-semibold rounded-xl hover:bg-[#732216] transition shadow-sm cursor-pointer">
                                 <span>Buka Koleksi Tersimpan</span>
-                                <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
                             </a>
                         @else
-                            <a href="{{ url('/') }}#jenis-filsafat" class="group w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#8D2B1D] text-white text-xs font-semibold rounded-xl hover:bg-[#732216] transition shadow-sm cursor-pointer">
+                            <a href="{{ url('/') }}#jenis-filsafat" class="w-full inline-flex items-center justify-center px-5 py-2.5 bg-[#8D2B1D] text-white text-xs font-semibold rounded-xl hover:bg-[#732216] transition shadow-sm cursor-pointer">
                                 <span>Jelajahi Beranda</span>
-                                <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
                             </a>
                         @endif
                     </div>
@@ -99,14 +101,13 @@
                         <h3 style="font-family:'Cormorant Garamond',serif;" class="text-2xl font-bold text-[#2B1A0E]">
                             Pusat Notifikasi
                         </h3>
-                        <p class="text-sm text-[#675A4D] mt-2">
+                        <p class="text-sm text-[#675A4D] mt-2 leading-relaxed">
                             Pantau pembaruan artikel, ajaran baru, serta pengumuman kearifan lokal Bali langsung di sini.
                         </p>
                     </div>
                     <div class="mt-6 pt-4 border-t border-[#E5D6BF]">
-                        <a href="{{ route('pengguna.notifikasi.index') }}" class="group w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#8D2B1D] text-white text-xs font-semibold rounded-xl hover:bg-[#732216] transition shadow-sm cursor-pointer">
+                        <a href="{{ route('pengguna.notifikasi.index') }}" class="w-full inline-flex items-center justify-center px-5 py-2.5 bg-[#8D2B1D] text-white text-xs font-semibold rounded-xl hover:bg-[#732216] transition shadow-sm cursor-pointer">
                             <span>Lihat Semua Notifikasi</span>
-                            <span class="transition-transform group-hover:translate-x-1">&rarr;</span>
                         </a>
                     </div>
                 </div>

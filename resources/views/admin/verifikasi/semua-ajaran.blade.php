@@ -15,7 +15,7 @@
 
         <div class="flex items-center gap-3 self-start md:self-auto">
             <select id="filterModul" onchange="filterModulTabel()" class="text-xs font-semibold border border-[#E6D5B8] rounded-xl px-3 py-2 bg-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#C48D2D] shadow-sm cursor-pointer min-w-[140px]">
-                <option value="semua">Semua Modul</option>
+                <option value="semua">Semua</option>
                 <option value="Artikel">Artikel</option>
                 <option value="Filsafat">Filsafat</option>
                 <option value="Ajaran Tertua">Ajaran Tertua</option>

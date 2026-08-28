@@ -9,11 +9,7 @@
                 </h2>
             </div>
             <a href="{{ route('pengguna.dashboard') }}"
-                class="inline-flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-[#8D2B1D] bg-[#EFE4D3]/60 hover:bg-[#8D2B1D] hover:text-white px-4 py-2 rounded-xl transition-all duration-300 border border-[#C8A45A]/30">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
+                class="inline-flex items-center text-xs font-bold tracking-wider uppercase text-[#8D2B1D] bg-[#EFE4D3]/60 hover:bg-[#8D2B1D] hover:text-white px-4 py-2 rounded-xl transition-all duration-300 border border-[#C8A45A]/30">
                 <span>Dashboard Pengguna</span>
             </a>
         </div>
@@ -143,13 +139,8 @@
                             <!-- Tombol Baca Selengkapnya Berfungsi Sebagai Link Penghubung -->
                             <div class="pt-4 border-t border-[#FAF6F0] flex justify-between items-center">
                                 <a href="{{ $finalUrl }}"
-                                    class="inline-flex items-center gap-1.5 text-xs font-bold text-[#8D2B1D] hover:underline group-hover:translate-x-1 transition-transform">
+                                    class="inline-flex items-center text-xs font-bold text-[#8D2B1D] hover:underline">
                                     <span>Baca Selengkapnya</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                                    </svg>
                                 </a>
                             </div>
                         </div>
@@ -176,7 +167,7 @@
                     <p class="text-xs text-[#675A4D] mt-2 max-w-md mx-auto">Anda belum menyimpan naskah atau kisah satua
                         favorit. Jelajahi beranda dan tekan tombol simpan untuk menambahkannya ke sini.</p>
                     <a href="{{ url('/') }}"
-                        class="mt-6 inline-flex items-center gap-2 px-6 py-2.5 bg-[#8D2B1D] hover:bg-[#732216] text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-md">
+                        class="mt-6 inline-flex items-center px-6 py-2.5 bg-[#8D2B1D] hover:bg-[#732216] text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-md">
                         <span>Jelajahi Beranda Utama</span>
                     </a>
                 </div>
